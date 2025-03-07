@@ -43,11 +43,11 @@ function Navbar() {
             tabIndex={0}
           />
           <ul className="flex w-full justify-between items-center h-full font-medium text-white">
-            <li className="nav-items relative cursor-pointer "><NavLink to="/">Home</NavLink></li>
-            <li className="nav-items relative cursor-pointer "><NavLink to="/products">Products</NavLink></li>
-            <li className="nav-items relative cursor-pointer "><NavLink to="/">Services</NavLink></li>
-            <li className="nav-items relative cursor-pointer "><NavLink to="/about">About</NavLink></li>
-            <li className="nav-items relative cursor-pointer "><NavLink to="/">Contact</NavLink> us</li>
+            <li className="nav-items relative cursor-pointer " onClick={()=>setMenuClose(true)}><NavLink to="/">Home</NavLink></li>
+            <li className="nav-items relative cursor-pointer " onClick={()=>setMenuClose(true)}><NavLink to="/products">Products</NavLink></li>
+            <li className="nav-items relative cursor-pointer " onClick={()=>setMenuClose(true)}><NavLink to="/">Services</NavLink></li>
+            <li className="nav-items relative cursor-pointer " onClick={()=>setMenuClose(true)}><NavLink to="/about">About</NavLink></li>
+            <li className="nav-items relative cursor-pointer " onClick={()=>setMenuClose(true)}><NavLink to="/">Contact</NavLink> us</li>
           </ul>
         </div>
         <div className=" rounded-2xl">
