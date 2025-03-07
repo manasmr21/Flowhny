@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+
+
+@import "tailwindcss";
+
+
+@theme{
+  --color-themegreen : #009900;
+  --color-themedark : #262525;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+.dm-serif-text-regular {
+  font-family: "DM Serif Text", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.great-vibes-regular {
+  font-family: "Great Vibes", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.patrick-hand-regular {
+  font-family: "Patrick Hand", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+::selection {
+  background-color: #009900;
+  color: #fff;
+}

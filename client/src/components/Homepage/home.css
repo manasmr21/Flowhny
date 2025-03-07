@@ -1,0 +1,11 @@
+
+
+@media only screen and (max-width : 350px) {
+    .search-content{
+        margin-top: 5px;
+    }
+
+    .btn-nav{
+        margin-top: 15px;
+    }
+}

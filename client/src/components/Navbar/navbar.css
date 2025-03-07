@@ -1,0 +1,46 @@
+.burger{
+    display: none;
+}
+
+@media only screen and (min-width : 900px){
+    .nav-items::after{
+        content: "";
+        position: absolute;
+        height: 2px;
+        background: white;
+        width: 100%;
+        border-radius: 5px;
+        bottom: 0;
+        left: 0;
+        transform: scaleX(0);
+        transition: all ease-in-out 0.15s;
+    }
+    
+    .nav-items:hover:after{
+        transform: scaleX(1);
+    }
+    
+}
+
+@media only screen and (max-width : 600px) {
+    .burger{
+        display: block;
+    }
+    .navigations{
+        position: absolute;
+        height: 100vh;
+        overflow: hidden;
+        width: 100%;
+        backdrop-filter: blur(10px);
+        background: #00990069;
+        right: 0;
+        bottom: 0;
+        display: grid;
+        place-items: center;
+    }
+
+    .navigations ul{
+        flex-direction: column;
+        height: 50%;
+    }
+}
