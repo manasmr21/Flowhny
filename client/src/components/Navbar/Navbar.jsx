@@ -46,7 +46,7 @@ function Navbar() {
             <li className="nav-items relative cursor-pointer "><NavLink to="/">Home</NavLink></li>
             <li className="nav-items relative cursor-pointer "><NavLink to="/products">Products</NavLink></li>
             <li className="nav-items relative cursor-pointer "><NavLink to="/">Services</NavLink></li>
-            <li className="nav-items relative cursor-pointer "><NavLink to="/">About</NavLink></li>
+            <li className="nav-items relative cursor-pointer "><NavLink to="/about">About</NavLink></li>
             <li className="nav-items relative cursor-pointer "><NavLink to="/">Contact</NavLink> us</li>
           </ul>
         </div>
