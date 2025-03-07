@@ -46,7 +46,7 @@ const services = [
 
 export default function ServicesPage() {
   return (
-    <div className="max-w-5xl mx-auto py-12 px-6 md:px-12 bg-gray-50">
+    <div className="max-w-5xl rounded-sm mx-auto py-12 px-6 md:px-12 bg-gray-100">
       <h1 className="text-3xl font-extrabold text-center mb-8 text-green-700 tracking-wide uppercase">Our Services</h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
         {services.map((service) => (
