@@ -2,6 +2,7 @@ import "./home.css"
 import farmImage from "../../assets/farming.jpg";
 import { FaSearch } from "react-icons/fa";
 import Products from "./FeauredProducts/Products";
+import ServicesPage from "./Services/Services";
 
 function Home() {
 
@@ -46,6 +47,7 @@ function Home() {
         </div>
       </div>
       <Products/>
+      <ServicesPage/>
     </>
   );
 }
