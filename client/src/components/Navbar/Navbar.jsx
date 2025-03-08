@@ -7,7 +7,7 @@ import { RxCross2 } from "react-icons/rx";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-function Navbar() {
+function Navbar( {serviceRef} ) {
   const [menuClose, setMenuClose] = useState(true);
   const [scrollDown, setScrollDown] = useState(0);
 
@@ -19,10 +19,15 @@ function Navbar() {
     setScrollDown(window.scrollY)
   })
 
+  const handleScrollToService = () => {
+    if (serviceRef.current) {
+        serviceRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+};
 
   return (
     <>
-      <nav className={ `nav-animate w-full transition-all ease-linear duration-300 ${location.pathname == "/" ? "fixed" : "sticky" } bg-${scrollDown < 50 && location.pathname == "/"  ? "transpparent" : "themegreen" } flex justify-between items-center top-0 p-2 md:py-4 px-5 md:px-10 lg:px-20 z-10`} id="navbar">
+      <nav className={ `nav-animate w-full transition-all ease-linear duration-300 ${location.pathname == "/" ? "fixed" : "sticky" } bg-${scrollDown < 50 && location.pathname == "/"  ? "transpparent" : "themegreen" } flex justify-between items-center top-0 p-2 md:py-4 px-5 md:px-10 lg:px-20 z-10`} id="navbar" >
         <div
           className="burger flex justify-center items-center "
           onClick={() => setMenuClose(false)}
@@ -43,11 +48,13 @@ function Navbar() {
             tabIndex={0}
           />
           <ul className="flex w-full justify-between items-center h-full font-medium text-white">
-            <li className="nav-items relative cursor-pointer " onClick={()=>setMenuClose(true)}><NavLink to="/">Home</NavLink></li>
+            <li className="nav-items relative cursor-pointer " onClick={()=>{
+              setMenuClose(true)
+              window.scrollTo(0,0)
+            }}><NavLink to="/">Home</NavLink></li>
             <li className="nav-items relative cursor-pointer " onClick={()=>setMenuClose(true)}><NavLink to="/products">Products</NavLink></li>
-            <li className="nav-items relative cursor-pointer " onClick={()=>setMenuClose(true)}><NavLink to="/">Services</NavLink></li>
-            <li className="nav-items relative cursor-pointer " onClick={()=>setMenuClose(true)}><NavLink to="/about">About</NavLink></li>
-            <li className="nav-items relative cursor-pointer " onClick={()=>setMenuClose(true)}><NavLink to="/">Contact</NavLink> us</li>
+            <li className="nav-items relative cursor-pointer " onClick={()=>setMenuClose(true) }><NavLink to="/about">About</NavLink></li>
+            <li className="nav-items relative cursor-pointer " onClick={()=>setMenuClose(true)}><NavLink to="/contact">Contact</NavLink> us</li>
           </ul>
         </div>
         <div className=" rounded-2xl">

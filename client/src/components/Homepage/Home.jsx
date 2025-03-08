@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import Products from "./FeauredProducts/Products";
 import ServicesPage from "./Services/Services";
 
-function Home() {
+function Home( {serviceRef} ) {
 
   
 
@@ -47,7 +47,9 @@ function Home() {
         </div>
       </div>
       <Products/>
+      <div ref={serviceRef}>
       <ServicesPage/>
+      </div>
     </>
   );
 }

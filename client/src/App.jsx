@@ -1,24 +1,29 @@
 import {BrowserRouter as Routers, Routes, Route} from "react-router-dom";
-
 import "./index.css"
 import Navbar from "./components/Navbar/Navbar"
 import Home from "./components/Homepage/Home"
 import ProductPage from "./components/Product page/ProductPage";
 import AboutPage from "./components/About/About";
-
+import { useRef } from "react";
+import Footer from "./components/Footer/Footer";
+import Contact from "./components/Contact/Contact";
+import "./App.css"
 
 
 function App() {
+  const serviceRef = useRef(null)
 
   return (
-    <div className="">
+    <div className="all-content">
     <Routers>
-      <Navbar/>
+      <Navbar serviceRef = {serviceRef} />
       <Routes>
-        <Route exact path="/" element={<Home/>} />
+        <Route exact path="/" element={<Home serviceRef = {serviceRef} />} />
         <Route exact path="/products" element = {<ProductPage/>} />
         <Route exact path="/about" element = {<AboutPage/>}/>
+        <Route exact path="/contact" element = {<Contact/>}/>
       </Routes>
+      <Footer/> 
     </Routers>
     </div>
   )
