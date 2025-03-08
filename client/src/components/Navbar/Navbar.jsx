@@ -22,14 +22,14 @@ function Navbar() {
 
   return (
     <>
-      <nav className={ `nav-animate w-full transition-all ease-linear duration-300 ${location.pathname == "/" ? "fixed" : "sticky" } bg-${scrollDown < 120 && location.pathname == "/"  ? "transpparent" : "themegreen" } flex justify-between items-center top-0 p-2 md:py-4 px-5 md:px-10 lg:px-20 z-10`} id="navbar">
+      <nav className={ `nav-animate w-full transition-all ease-linear duration-300 ${location.pathname == "/" ? "fixed" : "sticky" } bg-${scrollDown < 50 && location.pathname == "/"  ? "transpparent" : "themegreen" } flex justify-between items-center top-0 p-2 md:py-4 px-5 md:px-10 lg:px-20 z-10`} id="navbar">
         <div
           className="burger flex justify-center items-center "
           onClick={() => setMenuClose(false)}
         >
           <GiHamburgerMenu className={` text-3xl mt-1.5`} tabIndex={0} />
         </div>
-        <div className={`logo dm-serif-text-regular  mt-1 text-center font-medium grid place-items-center text-3xl md:text-4xl text-${scrollDown < 120 && location.pathname == "/" ? "themegreen" : "white" } `}>
+        <div className={`logo dm-serif-text-regular  mt-1 text-center font-medium grid place-items-center text-3xl md:text-4xl text-${scrollDown < 50 && location.pathname == "/" ? "themegreen" : "white" } `}>
           <NavLink to="/" tabIndex={0}>flowhny.</NavLink>
         </div>
         <div
@@ -51,10 +51,10 @@ function Navbar() {
           </ul>
         </div>
         <div className=" rounded-2xl">
-          <button className={`cursor-pointer mt-1 rounded-xl p-2   transition bg-transparent ${scrollDown < 120 && location.pathname == "/" ? "text-themegreen hover:bg-themegreen hover:text-white" : "text-white hover:bg-white hover:text-themegreen" } text-2xl mx-2.5`}>
+          <button className={`cursor-pointer mt-1 rounded-xl p-2   transition bg-transparent ${scrollDown < 50 && location.pathname == "/" ? "text-themegreen hover:bg-themegreen hover:text-white" : "text-white hover:bg-white hover:text-themegreen" } text-2xl mx-2.5`}>
             <BsFillMoonStarsFill />
           </button>
-          <button className={`cursor-pointer rounded-xl ${scrollDown < 120 && location.pathname == "/" ? "text-[#fff] bg-themegreen hover:bg-transparent hover:text-themegreen " : "text-themegreen bg-white hover:bg-transparent hover:text-white " } transition  p-2 text-2xl  `}>
+          <button className={`cursor-pointer rounded-xl ${scrollDown < 50 && location.pathname == "/" ? "text-[#fff] bg-themegreen hover:bg-transparent hover:text-themegreen " : "text-themegreen bg-white hover:bg-transparent hover:text-white " } transition  p-2 text-2xl  `}>
             <IoPerson />
           </button>
         </div>
