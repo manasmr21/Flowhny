@@ -30,7 +30,7 @@ export default function Footer() {
             <h2 className="text-xl font-bold text-themegreen">Contact Us</h2>
             <p className="text-sm mt-2 leading-relaxed">Email: contact@flowhny.com</p>
             <p className="text-sm">Phone: +123 456 7890</p>
-            <p className="text-sm">Location: Somewhere in Anugul</p>
+            <p className="text-sm">Location: Somewhere in Anugul  </p>
             
             {/* Social Icons */}
             <div className="flex justify-center md:justify-start mt-4 space-x-4">
