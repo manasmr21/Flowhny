@@ -55,7 +55,7 @@ export default function ServicesPage() {
             className="p-4 bg-white shadow-md rounded-lg border flex flex-col items-center text-center"
           >
             <div className="mb-2">{service.icon}</div>
-            <h2 className="text-xl font-bold text-gray-800 mb-2">{service.category}</h2>
+            <h2 className="text-xl md:text-2xl font-bold underline text-gray-800 mb-6">{service.category}</h2>
             <ul className="text-gray-700 space-y-1 text-sm leading-relaxed w-full">
               {service.details.map((detail, index) => (
                 <CollapsibleItem key={index} title={detail.title} description={detail.description} />
@@ -74,12 +74,12 @@ function CollapsibleItem({ title, description }) {
     <li className="border-b py-1 text-center">
       <button 
         onClick={() => setIsOpen(!isOpen)} 
-        className="flex justify-between items-center w-full text-gray-800 font-semibold text-sm"
+        className="flex justify-between items-center w-full text-gray-800 font-semibold text-md md:text-lg"
       >
         {title} <FiChevronDown className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
-        <p className="text-gray-600 text-xs mt-1">{description}</p>
+        <p className="text-themegreen text-left font-medium text-sm mt-1">{description}</p>
       </div>
     </li>
   );
