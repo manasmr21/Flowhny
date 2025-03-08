@@ -39,8 +39,6 @@ function ProductPage() {
     fetchProducts();
   }, []);
 
-  console.log(products.length);
-
   useEffect(() => {
     const handleScroll = () => {
       setScrollDistance(window.scrollY);
