@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./products.css";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
+import { FaCartPlus } from "react-icons/fa";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -8,7 +9,11 @@ function Products() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const data = await fetch(`https://dummyjson.com/products?limit=${window.innerWidth < 850 ? "6" : "10" }`);
+        const data = await fetch(
+          `https://dummyjson.com/products?limit=${
+            window.innerWidth < 850 ? "6" : "10"
+          }`
+        );
         const response = await data.json();
 
         localStorage.setItem("products", JSON.stringify(response.products));
@@ -20,6 +25,7 @@ function Products() {
 
     fetchProduct();
   }, []);
+
 
   return (
     <>
@@ -43,15 +49,27 @@ function Products() {
                 <p className="text-left my-1 font-semibold break-words max-w-full">
                   {product.title}
                 </p>
-                <button className="hover:bg-white transition cursor-pointer border border-themegreen hover:text-themegreen mt-auto w-full rounded py-2 bg-themegreen text-white font-semibold">
-                  Buy Now
-                </button>
+                <div className="flex  justify-center items-center mt-auto">
+                  <div className="p-3 rounded bg-themegreen transition text-white mr-2 border border-themegreen hover:bg-white hover:text-themegreen cursor-pointer ">
+                    <FaCartPlus />
+                  </div>
+                  <button className="hover:bg-white transition cursor-pointer border border-themegreen hover:text-themegreen mt-auto w-full rounded py-2 bg-themegreen text-white font-semibold">
+                    Buy Now
+                  </button>
+                </div>
               </section>
             </div>
           ))}
-
         </section>
-          <p tabIndex={0} className="text-center pb-10 text-themegreen font-semibold "> <Link to="/products" className="hover:underline">View all products&rarr; </Link></p>
+        <p
+          tabIndex={0}
+          className="text-center pb-10 text-themegreen font-semibold "
+        >
+          {" "}
+          <Link to="/products" className="hover:underline">
+            View all products&rarr;{" "}
+          </Link>
+        </p>
       </div>
     </>
   );

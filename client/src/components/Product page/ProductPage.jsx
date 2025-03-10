@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import "./product-page.css";
+import useStore from "../Store/Store";
 
 function ProductPage() {
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -19,26 +20,22 @@ function ProductPage() {
     { label: "Above $1000", min: 1000, max: Infinity },
   ];
 
+  //Zustand state manager
+  const { getProducts, allProducts } = useStore();
+
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch("https://dummyjson.com/products");
-        const data = await res.json();
-        setProducts(data.products);
-        setFilteredProducts(data.products);
-        const uniqueCategories = [
-          "all",
-          ...new Set(data.products.map((p) => p.category)),
-        ];
-        setCategories(uniqueCategories);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
+    getProducts(); 
   }, []);
-
+  
+  useEffect(() => {
+    if (allProducts.length > 0) {
+      setFilteredProducts(allProducts);
+  
+      const uniqueCategories = ["all", ...new Set(allProducts.map((p) => p.category))];
+      setCategories(uniqueCategories);
+    }
+  }, [allProducts]);
+  
   useEffect(() => {
     const handleScroll = () => {
       setScrollDistance(window.scrollY);
@@ -46,12 +43,13 @@ function ProductPage() {
 
     window.addEventListener("scroll", handleScroll);
 
-    // Cleanup function to remove event listener
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+
+  //Filtering the product based on user preference
   const filterProducts = () => {
-    let updatedProducts = products;
+    let updatedProducts = allProducts;
     if (selectedCategory !== "all") {
       updatedProducts = updatedProducts.filter(
         (p) => p.category === selectedCategory
@@ -71,6 +69,8 @@ function ProductPage() {
     filterProducts();
   }, [selectedCategory, selectedPriceRanges]);
 
+
+  //Price filter
   const handlePriceChange = (range) => {
     setSelectedPriceRanges((prev) => {
       if (prev.some((r) => r.min === range.min && r.max === range.max)) {
