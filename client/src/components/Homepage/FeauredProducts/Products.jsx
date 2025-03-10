@@ -2,29 +2,20 @@ import { useEffect, useState } from "react";
 import "./products.css";
 import { Link } from "react-router-dom";
 import { FaCartPlus } from "react-icons/fa";
+import useStore from "../../Store/Store";
 
 function Products() {
   const [products, setProducts] = useState([]);
 
+  const {getProducts, allProducts} = useStore();
+
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const data = await fetch(
-          `https://dummyjson.com/products?limit=${
-            window.innerWidth < 850 ? "6" : "10"
-          }`
-        );
-        const response = await data.json();
-
-        localStorage.setItem("products", JSON.stringify(response.products));
-        setProducts(response.products);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-      }
-    };
-
-    fetchProduct();
+    getProducts(window.innerWidth < 850 ? "6" : "10")
   }, []);
+
+  useEffect(()=>{
+    setProducts(allProducts)
+  },[allProducts])
 
 
   return (
@@ -53,7 +44,7 @@ function Products() {
                   <div className="p-3 rounded bg-themegreen transition text-white mr-2 border border-themegreen hover:bg-white hover:text-themegreen cursor-pointer ">
                     <FaCartPlus />
                   </div>
-                  <button className="hover:bg-white transition cursor-pointer border border-themegreen hover:text-themegreen mt-auto w-full rounded py-2 bg-themegreen text-white font-semibold">
+                  <button className="hover:bg-white active:scale-[95%] transition cursor-pointer border border-themegreen hover:text-themegreen mt-auto w-full rounded py-2 bg-themegreen text-white font-semibold">
                     Buy Now
                   </button>
                 </div>

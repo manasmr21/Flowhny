@@ -24,7 +24,7 @@ function ProductPage() {
   const { getProducts, allProducts } = useStore();
 
   useEffect(() => {
-    getProducts(); 
+    getProducts(0); 
   }, []);
   
   useEffect(() => {
@@ -86,7 +86,7 @@ function ProductPage() {
       {/* Filter Toggle Button - Only visible on mobile and tablet */}
       <button
         onClick={() => setIsFilterVisible(!isFilterVisible)}
-        className="lg:hidden w-full mb-4 p-3 bg-themegreen text-white rounded-lg flex items-center justify-center gap-2"
+        className="lg:hidden w-full mb-4 p-3 active:scale-[95%] bg-themegreen text-white rounded-lg flex items-center justify-center gap-2"
       >
         <svg
           className="w-6 h-6"
@@ -107,7 +107,7 @@ function ProductPage() {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Filter Section */}
         <aside
-          className={`filter-section w-full lg:w-3/5 xl:w-1/4 p-4 lg:p-6 border rounded-lg bg-white shadow-lg lg:sticky lg:top-[100px] h-fit flex flex-col gap-6 transition-all duration-300 ${
+          className={`filter-section w-full lg:w-3/5 xl:w-2/5 p-4 lg:p-6 border rounded-lg bg-white shadow-lg lg:sticky lg:top-[100px] h-fit flex flex-col gap-6 transition-all duration-300 ${
             isFilterVisible ? "block" : "hidden lg:block"
           }`}
         >
@@ -213,7 +213,7 @@ function ProductPage() {
                 <p className="text-xs md:text-sm text-gray-600 line-clamp-2">
                   {product.description}
                 </p>
-                <button className="cursor-pointer hover:bg-white hover:text-themegreen border border-themegreen mt-2 w-full sm:w-32 md:w-40 rounded py-1 md:py-2 bg-themegreen text-white font-semibold transition text-sm md:text-base">
+                <button className="cursor-pointer active:scale-[95%] hover:bg-white hover:text-themegreen border border-themegreen mt-2 w-full sm:w-32 md:w-40 rounded py-1 md:py-2 bg-themegreen text-white font-semibold transition text-sm md:text-base">
                   Buy Now
                 </button>
               </section>
