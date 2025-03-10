@@ -4,14 +4,20 @@ import Navbar from "./components/Navbar/Navbar"
 import Home from "./components/Homepage/Home"
 import ProductPage from "./components/Product page/ProductPage";
 import AboutPage from "./components/About/About";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Footer from "./components/Footer/Footer";
 import Contact from "./components/Contact/Contact";
 import "./App.css"
+import useStore from "./components/Store/Store";
 
 
 function App() {
   const serviceRef = useRef(null)
+  const {getProducts} = useStore()
+
+  useEffect(()=>{
+    getProducts()
+  },)
 
   return (
     <div className="all-content">

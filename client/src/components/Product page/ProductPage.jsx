@@ -22,10 +22,6 @@ function ProductPage() {
 
   //Zustand state manager
   const { getProducts, allProducts } = useStore();
-
-  useEffect(() => {
-    getProducts(0); 
-  }, []);
   
   useEffect(() => {
     if (allProducts.length > 0) {

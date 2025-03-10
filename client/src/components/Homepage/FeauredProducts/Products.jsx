@@ -9,12 +9,9 @@ function Products() {
 
   const {getProducts, allProducts} = useStore();
 
-  useEffect(() => {
-    getProducts(window.innerWidth < 850 ? "6" : "10")
-  }, []);
 
   useEffect(()=>{
-    setProducts(allProducts)
+    setProducts(allProducts.slice(0, window.innerWidth < 850 ? "6" : "10"));
   },[allProducts])
 
 
