@@ -16,14 +16,16 @@ function SingleProduct() {
     const foundProduct = allProducts.find(item => item.id == productID);
     if (foundProduct) {
       setProduct(foundProduct);
-      setMainImage(foundProduct.thumbnail);
     }
   }, [productID, allProducts]);
 
+  useEffect(()=>{
+    window.scrollTo(0,0)
+  },[])
 
-  //Image slider function
-  const selectImage = (imageUrl) => {
-    console.log("Selecting image:", imageUrl);
+  // Fixed image selection function
+  const handleImageClick = (imageUrl) => {
+    // Set the main image directly without any additional logic
     setMainImage(imageUrl);
   };
 
@@ -48,7 +50,6 @@ function SingleProduct() {
     });
   };
 
-
   //Loading screen
   if (!product) {
     return (
@@ -60,28 +61,23 @@ function SingleProduct() {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
-
-
       <div className="flex flex-col lg:flex-row gap-8">
-
         <div className="lg:w-2/5">
         {/* image section */}
           <div className="bg-white p-4 rounded-lg shadow-md mb-4">
             <img 
-              src={mainImage} 
+              src={mainImage || product.thumbnail} 
               alt={product.title} 
               className="w-full h-[300px] sm:h-[400px] object-contain rounded-md"
             />
           </div>
           
           <div className="grid grid-cols-5 gap-2">
-
+            {/* Thumbnail */}
             <div 
               className={`cursor-pointer p-2 border rounded-md ${mainImage === product.thumbnail ? 'border-themegreen' : 'border-gray-200'}`}
-              onClick={() => selectImage(product.thumbnail)}
+              onClick={() => handleImageClick(product.thumbnail)}
             >
-
-            {/* change the image */}
               <img 
                 src={product.thumbnail} 
                 alt="thumbnail" 
@@ -89,11 +85,12 @@ function SingleProduct() {
               />
             </div>
           
+            {/* Additional images */}
             {product.images && product.images.map((img, index) => (
               <div 
                 key={index} 
                 className={`cursor-pointer p-2 border rounded-md ${mainImage === img ? 'border-themegreen' : 'border-gray-200'}`}
-                onClick={() => selectImage(img)}
+                onClick={() => handleImageClick(img)}
               >
                 <img 
                   src={img} 
@@ -105,16 +102,14 @@ function SingleProduct() {
           </div>
         </div>
 
-          {/* Some product details  */}
-        <div className="lg:w-3/5">
+        {/* Some product details  */}
+        <div className="lg:w-3/5 scroll-auto">
           <div className="bg-white p-6 rounded-lg shadow-md">
-
             <h1 className="text-2xl md:text-3xl font-bold text-themegreen mb-2">{product.title}</h1>
             <p className="text-gray-500 text-sm mb-4">
               Product by: <span className="text-themegreen font-medium">{product.brand}</span>
               <span className="ml-3 text-gray-600">SKU: {product.sku}</span>
             </p>
-            
             
             <div className="flex items-center mb-4">
               <div className="bg-themegreen text-white px-2 py-1 rounded-md text-sm font-medium mr-3">
@@ -124,7 +119,6 @@ function SingleProduct() {
                 {product.reviews ? product.reviews.length : 0} user reviews
               </span>
             </div>
-
 
             <p className="text-gray-700 mb-6">{product.description}</p>
 
@@ -152,7 +146,7 @@ function SingleProduct() {
                 {product.tags.map((tag, index) => (
                   <span key={index} className="bg-gray-100 text-gray-700 text-sm px-2 py-1 rounded-md">
                     {tag}
-                  </span>
+            </span>
                 ))}
               </div>
             )}
@@ -162,11 +156,11 @@ function SingleProduct() {
                 Availability: 
                 <span className={`font-medium ${product.availabilityStatus === 'In Stock' ? 'text-green-600' : 'text-red-600'}`}>
                   {" "}{product.availabilityStatus}
-                </span>
+              </span>
                 {product.stock && (
                   <span className="text-gray-600 ml-2">({product.stock} in stock)</span>
-                )}
-              </p>
+            )}
+          </p>
               <p className="text-gray-700 mb-1">{product.shippingInformation}</p>
               <p className="text-gray-700">{product.warrantyInformation}</p>
             </div>
@@ -198,11 +192,6 @@ function SingleProduct() {
                 >
                   +
                 </button>
-                {product.minimumOrderQuantity && (
-                  <span className="ml-3 text-sm text-gray-600">
-                    Min. Order: {product.minimumOrderQuantity}
-                  </span>
-                )}
               </div>
             </div>
 
@@ -217,15 +206,15 @@ function SingleProduct() {
                 type="button"
                 className="w-full sm:w-1/2 p-3 border border-themegreen rounded-md bg-white text-themegreen hover:bg-themegreen hover:text-white transition duration-300 active:scale-[98%] font-medium"
               >
-                Add to Cart
-              </button>
+              Add to Cart
+            </button>
               <button 
                 type="button"
                 className="w-full sm:w-1/2 p-3 border border-themegreen rounded-md bg-themegreen text-white hover:bg-white hover:text-themegreen transition duration-300 active:scale-[98%] font-medium"
               >
-                Buy Now
-              </button>
-            </div>
+              Buy Now
+            </button>
+          </div>
           </div>
         </div>
       </div>
@@ -347,7 +336,7 @@ function SingleProduct() {
           )}
         </div>
       </div>
-    </div>
+      </div>
   );
 }
 

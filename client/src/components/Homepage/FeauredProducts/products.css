@@ -4,3 +4,41 @@
     gap: 1.5rem;
     padding: 3rem;
 }
+
+.simple-discount-sticker {
+  background-color: #ff3b30;
+  color: white;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transform: rotate(0deg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 0 0 0 8px;
+  padding: 5px;
+  text-align: center;
+}
+
+.discount-value {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.discount-off {
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.discount-text {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.discount-label {
+  font-size: 12px;
+  line-height: 1;
+}
