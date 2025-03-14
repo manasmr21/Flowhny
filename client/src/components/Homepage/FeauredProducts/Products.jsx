@@ -7,11 +7,12 @@ import useStore from "../../Store/Store";
 function Products() {
   const [products, setProducts] = useState([]);
 
-  const { allProducts } = useStore();
+  const {addToCart, allProducts } = useStore();
 
   useEffect(() => {
     setProducts(allProducts.slice(0, window.innerWidth < 850 ? "6" : "10"));
   }, [allProducts]);
+
 
   return (
     <>
@@ -59,9 +60,11 @@ function Products() {
                   {product?.title}
                 </p>
                 <div className="flex  justify-center items-center mt-auto">
-                  <div className="p-3 rounded bg-themegreen transition text-white mr-2 border border-themegreen hover:bg-white hover:text-themegreen cursor-pointer ">
+                  <button className="p-3 rounded bg-themegreen transition text-white mr-2 border border-themegreen hover:bg-white hover:text-themegreen cursor-pointer "
+                    onClick={()=>{addToCart(product.id)}}
+                  >
                     <FaCartPlus />
-                  </div>
+                  </button>
                   <button className="hover:bg-white active:scale-[95%] transition cursor-pointer border border-themegreen hover:text-themegreen mt-auto w-full rounded py-2 bg-themegreen text-white font-semibold">
                     Buy Now
                   </button>

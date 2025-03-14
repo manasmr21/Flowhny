@@ -6,24 +6,21 @@ import { BsFillMoonStarsFill } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { FaShoppingCart } from "react-icons/fa";
+import useStore from "../Store/Store";
 
-function Navbar( {serviceRef} ) {
+function Navbar( ) {
   const [menuClose, setMenuClose] = useState(true);
   const [scrollDown, setScrollDown] = useState(0);
 
   const location = useLocation()
-
+  const {cart} = useStore()
   
 
   window.addEventListener("scroll", ()=>{
     setScrollDown(window.scrollY)
   })
 
-  const handleScrollToService = () => {
-    if (serviceRef.current) {
-        serviceRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-};
 
   return (
     <>
@@ -66,6 +63,10 @@ function Navbar( {serviceRef} ) {
           </button>
         </div>
       </nav>
+      <div className ={`cart border hover:scale-[105%] transition cursor-pointer border-themegreen w-max fixed z-20 right-4 bottom-4 bg-themegreen text-white rounded-4xl p-4 ${cart.length<1 ? "hidden" : "block" } `}>
+          <FaShoppingCart />
+          <span className="absolute border border-[red]  rounded-3xl px-2 top-[-10px] left-[-10px] bg-red-600 text-sm">{cart.length}</span>
+        </div>
     </>
   );
 }

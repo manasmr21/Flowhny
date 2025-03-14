@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./product-page.css";
 import useStore from "../Store/Store";
+import { Link } from "react-router-dom";
 
 function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -23,9 +24,10 @@ function ProductPage() {
   //Zustand state manager
   const { allProducts } = useStore();
 
+
   useEffect(() => {
     setProducts(allProducts);
-  }, []);
+  }, [allProducts]);
 
   useEffect(() => {
     if (products.length > 0) {
@@ -81,6 +83,12 @@ function ProductPage() {
       }
     });
   };
+
+  if(products.length == 0){
+    return (<>
+      <div className="loading text-bg text-themegreen font-bold m-auto"> Loading... </div>
+    </>)
+  }
 
   return (
     <div className="product-page container mx-auto p-4 md:p-6">
@@ -238,7 +246,7 @@ function ProductPage() {
                   {product?.description}
                 </p>
                 <button className="cursor-pointer active:scale-[95%] hover:bg-white hover:text-themegreen border border-themegreen mt-2 w-full sm:w-32 md:w-40 rounded py-1 md:py-2 bg-themegreen text-white font-semibold transition text-sm md:text-base">
-                  Buy Now
+                 <Link className="w-full block h-full" to = {`${product.id}`}>Buy Now</Link>
                 </button>
               </section>
             </div>

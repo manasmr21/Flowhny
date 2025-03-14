@@ -61,11 +61,6 @@ function SingleProduct() {
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
 
-      <div className="text-sm mb-6 text-gray-600">
-        <span className="hover:text-themegreen cursor-pointer">Home</span> {" > "} 
-        <span className="hover:text-themegreen cursor-pointer">{product.category}</span> {" > "} 
-        <span className="text-themegreen">{product.title}</span>
-      </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
 

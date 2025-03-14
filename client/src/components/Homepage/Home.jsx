@@ -6,15 +6,15 @@ import ServicesPage from "./Services/Services";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 
-function Home({ serviceRef }) {
+function Home() {
   const naviate = useNavigate();
   const productRef = useRef(null);
 
   const handleScrollToService = () => {
     if (productRef.current) {
-        productRef.current.scrollIntoView({ behavior: "smooth" });
+      productRef.current.scrollIntoView({ behavior: "smooth" });
     }
-};
+  };
 
   return (
     <>
@@ -51,7 +51,8 @@ function Home({ serviceRef }) {
               </button>
             </div>
             <div className="btn-nav flex justify-center  items-center mt-10">
-              <button className=" cursor-pointer ml-5 rounded-md py-2 px-3 hover:bg-transparent transition border border-themegreen hover:border-themegreen font-medium  hover:text-themegreen text-white bg-themegreen "
+              <button
+                className=" cursor-pointer ml-5 rounded-md py-2 px-3 hover:bg-transparent transition border border-themegreen hover:border-themegreen font-medium  hover:text-themegreen text-white bg-themegreen "
                 onClick={handleScrollToService}
               >
                 Explore
@@ -66,10 +67,11 @@ function Home({ serviceRef }) {
           </div>
         </div>
       </div>
+
       <div ref={productRef}>
-      <Products />
+        <Products />
       </div>
-      <div ref={serviceRef}>
+      <div>
         <ServicesPage />
       </div>
     </>
