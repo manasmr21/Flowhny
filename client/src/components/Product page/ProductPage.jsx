@@ -3,7 +3,7 @@ import "./product-page.css";
 import useStore from "../Store/Store";
 
 function ProductPage() {
-  // const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -21,17 +21,24 @@ function ProductPage() {
   ];
 
   //Zustand state manager
-  const { getProducts, allProducts } = useStore();
-  
+  const { allProducts } = useStore();
+
   useEffect(() => {
-    if (allProducts.length > 0) {
-      setFilteredProducts(allProducts);
-  
-      const uniqueCategories = ["all", ...new Set(allProducts.map((p) => p.category))];
+    setProducts(allProducts);
+  }, []);
+
+  useEffect(() => {
+    if (products.length > 0) {
+      setFilteredProducts(products);
+
+      const uniqueCategories = [
+        "all",
+        ...new Set(products.map((p) => p.category)),
+      ];
       setCategories(uniqueCategories);
     }
-  }, [allProducts]);
-  
+  }, [products]);
+
   useEffect(() => {
     const handleScroll = () => {
       setScrollDistance(window.scrollY);
@@ -42,10 +49,9 @@ function ProductPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-
   //Filtering the product based on user preference
   const filterProducts = () => {
-    let updatedProducts = allProducts;
+    let updatedProducts = products;
     if (selectedCategory !== "all") {
       updatedProducts = updatedProducts.filter(
         (p) => p.category === selectedCategory
@@ -65,7 +71,6 @@ function ProductPage() {
     filterProducts();
   }, [selectedCategory, selectedPriceRanges]);
 
-
   //Price filter
   const handlePriceChange = (range) => {
     setSelectedPriceRanges((prev) => {
@@ -79,6 +84,9 @@ function ProductPage() {
 
   return (
     <div className="product-page container mx-auto p-4 md:p-6">
+      <p className="text-right text-themegreen italic font-medium">
+        Showing {filteredProducts.length} items
+      </p>
       {/* Filter Toggle Button - Only visible on mobile and tablet */}
       <button
         onClick={() => setIsFilterVisible(!isFilterVisible)}
@@ -189,25 +197,45 @@ function ProductPage() {
         <section className="flex flex-col gap-6 flex-grow lg:ml-6">
           {filteredProducts.map((product) => (
             <div
-              key={product.id}
+              key={product?.id}
               className="product-after relative hover:bg-[#a1a1a17a] bg-white flex flex-row items-start p-4"
             >
               <div className="w-[100px] min-w-[100px] sm:w-[120px] sm:min-w-[120px] md:w-[140px] md:min-w-[140px]">
                 <img
-                  src={product.thumbnail}
-                  alt={product.title}
+                  src={product?.thumbnail}
+                  alt={product?.title}
                   className="w-full h-[100px] sm:h-[120px] md:h-[140px] object-cover rounded-md"
                 />
               </div>
               <section className="product-details text-themegreen px-2 sm:px-4 flex flex-col flex-grow">
                 <p className="text-sm sm:text-base md:text-lg font-bold hover:underline cursor-pointer">
-                  {product.title}
+                  {product?.title}
                 </p>
                 <p className="text-xs sm:text-sm md:text-md font-semibold break-words">
-                  ${product.price}
+                  <span
+                    className={`${
+                      product.discountPercentage
+                        ? "text-gray-400 line-through"
+                        : ""
+                    }`}
+                  >
+                    ${product?.price}
+                  </span>
+                  {product.discountPercentage ? (
+                    <span className="block">
+                      $
+                      {(
+                        parseFloat(product?.price) -
+                        parseFloat(product?.price) *
+                          (parseFloat(product?.discountPercentage) / 100)
+                      ).toFixed(2)}
+                    </span>
+                  ) : (
+                    ""
+                  )}
                 </p>
                 <p className="text-xs md:text-sm text-gray-600 line-clamp-2">
-                  {product.description}
+                  {product?.description}
                 </p>
                 <button className="cursor-pointer active:scale-[95%] hover:bg-white hover:text-themegreen border border-themegreen mt-2 w-full sm:w-32 md:w-40 rounded py-1 md:py-2 bg-themegreen text-white font-semibold transition text-sm md:text-base">
                   Buy Now

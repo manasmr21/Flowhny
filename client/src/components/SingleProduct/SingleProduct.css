@@ -1,0 +1,43 @@
+.main-image-container {
+  transition: transform 0.3s ease;
+}
+
+.main-image-container:hover {
+  transform: scale(1.02);
+}
+
+/* Custom scrollbar for image gallery */
+.image-gallery::-webkit-scrollbar {
+  height: 6px;
+}
+
+.image-gallery::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.image-gallery::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.image-gallery::-webkit-scrollbar-thumb:hover {
+  background: #009900;
+}
+
+/* For Firefox */
+.image-gallery {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* Disable number input arrows */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+} 

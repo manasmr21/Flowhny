@@ -1,5 +1,4 @@
-import React from "react";
-import { FaFacebook, FaInstagram, FaTwitter, FaEnvelope } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaXTwitter , FaEnvelope } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
@@ -36,7 +35,7 @@ export default function Footer() {
             <div className="flex justify-center md:justify-start mt-4 space-x-4">
               <Link to="/" className="text-white text-xl hover:text-gray-300"><FaFacebook /></Link>
               <Link to="/" className="text-white text-xl hover:text-gray-300"><FaInstagram /></Link>
-              <Link to="/" className="text-white text-xl hover:text-gray-300"><FaTwitter /></Link>
+              <Link to="/" className="text-white text-xl hover:text-gray-300"><FaXTwitter /></Link>
               <a href="mailto:contact@flowhny.com" className="text-white text-xl hover:text-gray-300"><FaEnvelope /></a>
             </div>
           </div>

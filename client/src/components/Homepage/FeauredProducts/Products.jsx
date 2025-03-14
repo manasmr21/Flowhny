@@ -7,13 +7,11 @@ import useStore from "../../Store/Store";
 function Products() {
   const [products, setProducts] = useState([]);
 
-  const {getProducts, allProducts} = useStore();
+  const { allProducts } = useStore();
 
-
-  useEffect(()=>{
+  useEffect(() => {
     setProducts(allProducts.slice(0, window.innerWidth < 850 ? "6" : "10"));
-  },[allProducts])
-
+  }, [allProducts]);
 
   return (
     <>
@@ -24,18 +22,41 @@ function Products() {
         <section className="all-products">
           {products?.map((product, index) => (
             <div
-              key={product.id || index}
+              key={product?.id || index}
               className=" border-2 border-themegreen overflow-hidden rounded-xl transition duration-300 shadow-xl bg-white flex flex-col"
             >
               <img
-                src={product.thumbnail}
-                alt={product.title}
+                src={product?.thumbnail}
+                alt={product?.title}
                 className="w-full h-48 object-fit"
               />
               <section className="product-details text-themegreen px-2 py-3 flex flex-col flex-grow">
-                <p className="text-left font-bold text-xl">${product.price}</p>
+                <p className="text-left font-bold text-xl">
+                  {" "}
+                  <span
+                    className={`${
+                      product.discountPercentage
+                        ? "text-gray-400 line-through mx-2"
+                        : ""
+                    }`}
+                  >
+                    ${product?.price}
+                  </span>
+                  {product.discountPercentage ? (
+                    <span>
+                      $
+                      {(
+                        parseFloat(product?.price) -
+                        parseFloat(product?.price) *
+                          (parseFloat(product?.discountPercentage) / 100)
+                      ).toFixed(2)}
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </p>
                 <p className="text-left my-1 font-semibold break-words max-w-full">
-                  {product.title}
+                  {product?.title}
                 </p>
                 <div className="flex  justify-center items-center mt-auto">
                   <div className="p-3 rounded bg-themegreen transition text-white mr-2 border border-themegreen hover:bg-white hover:text-themegreen cursor-pointer ">
