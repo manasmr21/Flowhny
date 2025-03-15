@@ -1,0 +1,32 @@
+/* Cart page specific styles */
+
+
+/* Animation for price changes */
+@keyframes highlight {
+  0% { background-color: rgba(0, 153, 0, 0.1); }
+  100% { background-color: transparent; }
+}
+
+.price-change {
+  animation: highlight 1s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .grid-cols-12 {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  
+  .col-span-6, .col-span-2 {
+    grid-column: span 1;
+  }
+  
+  .grid-cols-12 > div {
+    margin-bottom: 0.5rem;
+    text-align: left !important;
+  }
+  
+  .grid-cols-12 > div:last-child {
+    margin-bottom: 0;
+  }
+} 

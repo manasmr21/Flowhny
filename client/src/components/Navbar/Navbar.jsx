@@ -4,7 +4,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { IoPerson } from "react-icons/io5";
 import { BsFillMoonStarsFill } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import useStore from "../Store/Store";
@@ -63,10 +63,12 @@ function Navbar( ) {
           </button>
         </div>
       </nav>
-      <div className ={`cart border hover:scale-[105%] transition cursor-pointer border-themegreen w-max fixed z-20 right-4 bottom-4 bg-themegreen text-white rounded-4xl p-4 ${cart.length<1 ? "hidden" : "block" } `}>
+      <Link to="/cart">
+      <button className ={`cart border hover:scale-[105%] transition cursor-pointer border-themegreen w-max fixed z-20 right-4 bottom-4 bg-themegreen text-white rounded-4xl p-4 ${cart.length<1 ? "hidden" : "block" } `}>
           <FaShoppingCart />
           <span className="absolute border border-[red]  rounded-3xl px-2 top-[-10px] left-[-10px] bg-red-600 text-sm">{cart.length}</span>
-        </div>
+        </button>
+      </Link>
     </>
   );
 }

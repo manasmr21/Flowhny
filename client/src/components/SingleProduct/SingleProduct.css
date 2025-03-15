@@ -6,6 +6,10 @@
   transform: scale(1.02);
 }
 
+.single-product{
+  scroll-behavior: auto!important;
+}
+
 /* Custom scrollbar for image gallery */
 .image-gallery::-webkit-scrollbar {
   height: 6px;

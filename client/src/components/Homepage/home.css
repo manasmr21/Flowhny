@@ -1,4 +1,6 @@
-
+.home-page{
+    scroll-behavior: smooth;
+}
 
 @media only screen and (max-width : 350px) {
     .search-content{

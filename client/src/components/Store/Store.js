@@ -1,26 +1,35 @@
 import { create } from "zustand";
 
 const useStore = create((set, get) => ({
-    allProducts: [],
-    cart: [],
+  allProducts: [],
+  cart: [], // ✅ Should be an empty array
 
-    getProducts: async () => {
-        try {
-            const res = await fetch(`https://dummyjson.com/products?limit=0`);
-            const data = await res.json();
-            set({ allProducts: data.products })
-        } catch (error) {
-            console.log(error);
-        }
-    },
-    addToCart: (productID) => {
-        const currentCart = get().cart;
-        if(currentCart.length < 20){
-            set({ cart: [...currentCart, productID] })
-        }else{
-            alert("You cant add more than 20 items to your cart")
-        }
+  getProducts: async () => {
+    try {
+      const res = await fetch(`https://dummyjson.com/products?limit=0`);
+      const data = await res.json();
+      set({ allProducts: data.products });
+    } catch (error) {
+      console.error("Error fetching products:", error);
     }
-}))
+  },
+
+  addToCart: (product) => {
+    const currentCart = get().cart;
+
+    const isAlreadyInCart = currentCart.some((item) => item.id === product.id);
+    
+    if (isAlreadyInCart) {
+      alert("Item is already in the cart");
+      return;
+    }
+
+    if (currentCart.length < 20) {
+      set({ cart: [...currentCart, product] });
+    } else {
+      alert("You can't add more than 20 items to your cart");
+    }
+  },
+}));
 
 export default useStore;

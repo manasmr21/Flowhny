@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import "./products.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useStore from "../../Store/Store";
 
 function Products() {
   const [products, setProducts] = useState([]);
   const { allProducts } = useStore();
+  const navigate =  useNavigate()
 
   useEffect(() => {
     // Sort products by rating in descending order (highest rating first)
@@ -72,7 +73,7 @@ function Products() {
                         parseFloat(product?.price) -
                         parseFloat(product?.price) *
                           (parseFloat(product?.discountPercentage) / 100)
-                      ).toFixed(2)}
+                      ).toFixed(1)}
                     </span>
                   ) : (
                     ""
@@ -82,12 +83,12 @@ function Products() {
                   {product?.title}
                 </p>
                 <div className="mt-auto">
-                  <Link 
-                    to={`/products/${product.id}`} 
+                  <button 
+                   onClick={()=>navigate(`/products/${product?.id}`)}
                     className="hover:bg-white active:scale-[95%] transition cursor-pointer border border-themegreen hover:text-themegreen w-full rounded py-2 bg-themegreen text-white font-semibold text-center block"
                   >
                     Buy Now
-                  </Link>
+                  </button>
                 </div>
               </section>
             </div>

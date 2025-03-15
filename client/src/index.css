@@ -11,10 +11,6 @@
   --color-themedark : #262525;
 }
 
-html{
-  scroll-behavior: smooth;
-}
-
 .dm-serif-text-regular {
   font-family: "DM Serif Text", serif;
   font-weight: 400;
