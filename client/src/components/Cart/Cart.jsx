@@ -1,18 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaTrash, FaHeart, FaMinus, FaPlus } from "react-icons/fa";
+import { FaTrash, FaMinus, FaPlus } from "react-icons/fa";
 import "./Cart.css";
 import useStore from "../Store/Store";
 
 function Cart() {
-
-  // Initialize cart items with dummy products
   const [cartItems, setCartItems] = useState([]);
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [couponError, setCouponError] = useState("");
   const [shippingMethod, setShippingMethod] = useState("standard");
-  const {cart} = useStore()
+  const { cart, removeFromCart } = useStore();
 
   // Shipping options
   const shippingOptions = {
@@ -21,6 +19,7 @@ function Cart() {
     free: { price: 0, name: "Free Shipping (5-7 business days)" }
   };
 
+  // Update cart items when cart changes
   useEffect(() => {
     const items = cart.map(product => {
       // Calculate discounted price if applicable
@@ -36,7 +35,7 @@ function Cart() {
     });
     
     setCartItems(items);
-  }, []);
+  }, [cart]); // Added cart as dependency to update when it changes
 
   // Handle quantity change
   const handleQuantityChange = (id, newQuantity) => {
@@ -44,30 +43,16 @@ function Cart() {
       setCartItems(prevItems => 
         prevItems.map(item => {
           if (item.id === id) {
-            const updatedQuantity = newQuantity;
             return {
               ...item,
-              buyingQuantity: updatedQuantity,
-              totalPrice: item.discountedPrice * updatedQuantity
+              buyingQuantity: newQuantity,
+              totalPrice: item.discountedPrice * newQuantity
             };
           }
           return item;
         })
       );
     }
-  };
-
-  // Handle remove item
-  const handleRemoveItem = (id) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
-  };
-
-  // Handle save for later
-  const handleSaveForLater = (id) => {
-    // This would move the item to a "saved for later" list
-    console.log("Save for later:", id);
-    // For demo purposes, just show an alert
-    alert(`Item ${id} saved for later!`);
   };
 
   // Apply coupon code
@@ -101,11 +86,6 @@ function Cart() {
     return amount.toFixed(2);
   };
 
-  // Clear cart
-  const clearCart = () => {
-    setCartItems([]);
-  };
-
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-themegreen mb-8 text-center">Your Shopping Cart</h1>
@@ -127,8 +107,6 @@ function Cart() {
           {/* Cart Items */}
           <div className="lg:w-2/3">
             <div className="bg-white rounded-lg shadow-md overflow-hidden mb-4">
-             
-              
               {cartItems.map(item => (
                 <div key={item.id} className="p-4 border-b last:border-b-0 hover:bg-gray-50">
                   <div className="grid grid-cols-12 gap-4 items-center">
@@ -143,19 +121,13 @@ function Cart() {
                         <h3 className="font-medium text-gray-800">{item.title}</h3>
                         <p className="text-sm text-gray-500">{item.brand}</p>
                         
-                        {/* Action buttons */}
+                        {/* Remove button */}
                         <div className="flex gap-3 mt-2">
                           <button 
-                            onClick={() => handleRemoveItem(item.id)}
+                            onClick={() => removeFromCart(item.id)}
                             className="text-xs text-red-500 flex items-center gap-1 hover:underline"
                           >
                             <FaTrash size={12} /> Remove
-                          </button>
-                          <button 
-                            onClick={() => handleSaveForLater(item.id)}
-                            className="text-xs text-blue-500 flex items-center gap-1 hover:underline"
-                          >
-                            <FaHeart size={12} /> Save for later
                           </button>
                         </div>
                       </div>
@@ -186,7 +158,7 @@ function Cart() {
                         <span className="px-3 py-1 text-center w-10">{item.buyingQuantity}</span>
                         <button 
                           onClick={() => handleQuantityChange(item.id, item.buyingQuantity + 1)}
-                          disabled={item.buyingQuantity >= 10}
+                          disabled={item.buyingQuantity >= 10 || item.buyingQuantity >= item.stock}
                           className="px-2 py-1 text-gray-600 hover:bg-gray-100 disabled:opacity-50"
                         >
                           <FaPlus size={12} />
@@ -210,13 +182,6 @@ function Cart() {
               >
                 ← Continue Shopping
               </Link>
-              
-              <button 
-                onClick={clearCart}
-                className="text-red-500 hover:underline"
-              >
-                Clear Cart
-              </button>
             </div>
           </div>
           

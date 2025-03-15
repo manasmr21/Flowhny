@@ -30,6 +30,14 @@ const useStore = create((set, get) => ({
       alert("You can't add more than 20 items to your cart");
     }
   },
+  removeFromCart: (productId)=>{
+    const currentCart = get().cart
+    const newCart = currentCart.filter(item=>{
+        return item.id != productId
+    })
+
+    set({cart : newCart})
+  }
 }));
 
 export default useStore;

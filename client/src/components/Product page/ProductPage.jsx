@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./product-page.css";
 import useStore from "../Store/Store";
 import { Link } from "react-router-dom";
+import { FaCartPlus } from "react-icons/fa";
 
 function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -22,8 +23,7 @@ function ProductPage() {
   ];
 
   //Zustand state manager
-  const { allProducts } = useStore();
-
+  const { allProducts, addToCart } = useStore();
 
   useEffect(() => {
     setProducts(allProducts);
@@ -84,10 +84,15 @@ function ProductPage() {
     });
   };
 
-  if(products.length == 0){
-    return (<>
-      <div className="loading text-bg text-themegreen font-bold m-auto"> Loading... </div>
-    </>)
+  if (products.length == 0) {
+    return (
+      <>
+        <div className="loading text-bg text-themegreen font-bold m-auto">
+          {" "}
+          Loading...{" "}
+        </div>
+      </>
+    );
   }
 
   return (
@@ -219,6 +224,9 @@ function ProductPage() {
                 <p className="text-sm sm:text-base md:text-lg font-bold hover:underline cursor-pointer">
                   {product?.title}
                 </p>
+                <p className="text-xs md:text-sm text-gray-600 line-clamp-2">
+                  {product?.description}
+                </p>
                 <p className="text-xs sm:text-sm md:text-md font-semibold break-words">
                   <span
                     className={`${
@@ -242,19 +250,33 @@ function ProductPage() {
                     ""
                   )}
                 </p>
-                <p className="text-xs md:text-sm text-gray-600 line-clamp-2">
-                  {product?.description}
+
+                <p
+                  className={` w-max text-white font-semibold my-1 py-0.5  text-xs rounded-2xl px-2 ${
+                    product.stock <= 10 ? "bg-[red]" : "bg-themegreen"
+                  } `}
+                >
+                  {product.stock} in stocks{" "}
                 </p>
-                <button className="cursor-pointer active:scale-[95%] hover:bg-white hover:text-themegreen border border-themegreen mt-2 w-full sm:w-32 md:w-40 rounded py-1 md:py-2 bg-themegreen text-white font-semibold transition text-sm md:text-base">
-                 <Link className="w-full block h-full" to = {`${product.id}`}>Buy Now</Link>
-                </button>
+                <div className="flex justify-center items-center w-max mt-2">
+                  <button className="cursor-pointer active:scale-[95%] hover:bg-white hover:text-themegreen border border-themegreen p-3 rounded mr-2 bg-themegreen text-white font-semibold transition text-sm md:text-base"
+                    onClick={()=>{addToCart({...product, buyingQuantity: 1})}}
+                  >
+                    <FaCartPlus />
+                  </button>
+                  <button className="cursor-pointer active:scale-[95%] hover:bg-white hover:text-themegreen border border-themegreen  w-full sm:w-32 md:w-40 rounded py-1 md:py-2 bg-themegreen text-white font-semibold transition text-sm md:text-base">
+                    <Link className="w-full block h-full" to={`${product.id}`}>
+                      Buy Now
+                    </Link>
+                  </button>
+                </div>
               </section>
             </div>
           ))}
         </section>
       </div>
       <button
-        className={`fixed right-5 ${
+        className={`fixed left-5 ${
           scrollDistance < 300 ? "hidden" : "block"
         } hover:scale-[103%] transition cursor-pointer bottom-5 rounded-4xl px-5 py-3 bg-themegreen text-white text-2xl font-bold border border-themegreen active:scale-[95%] `}
         onClick={() => window.scrollTo(0, 0)}
