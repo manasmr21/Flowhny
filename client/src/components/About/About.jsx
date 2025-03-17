@@ -13,7 +13,7 @@ export default function AboutPage() {
         </p>
 
         <div className="mt-10 grid gap-8 md:grid-cols-2">
-          <div className="p-6 bg-white dark:bg-[#030303]  shadow-md rounded-lg border text-left">
+          <div className="p-6 bg-white dark:bg-[#030303]  shadow-md rounded-lg border dark:border-white text-left">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-[gray] mb-2">
               Our Vision
             </h2>
@@ -25,7 +25,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="p-6 bg-white dark:bg-[#030303] shadow-md rounded-lg border text-left">
+          <div className="p-6 bg-white dark:bg-[#030303] shadow-md rounded-lg border dark:border-white text-left">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-[gray] mb-2">
               Our Services
             </h2>
@@ -38,7 +38,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="p-6 bg-white dark:bg-[#030303]  shadow-md rounded-lg border text-left">
+          <div className="p-6 bg-white dark:bg-[#030303]  shadow-md rounded-lg border dark:border-white text-left">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-[gray] mb-2">
               Our Commitment
             </h2>
@@ -50,7 +50,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="p-6 bg-white dark:bg-[#030303]  shadow-md rounded-lg border text-left">
+          <div className="p-6 bg-white dark:bg-[#030303]  shadow-md rounded-lg border dark:border-white text-left">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-[gray] mb-2">
               Get Involved
             </h2>

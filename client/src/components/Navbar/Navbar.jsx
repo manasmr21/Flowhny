@@ -119,7 +119,9 @@ function Navbar() {
                 : "text-themegreen bg-white hover:bg-transparent hover:text-white "
             } transition  p-2 text-2xl  `}
           >
+            <Link to="/login">
             <IoPerson />
+            </Link>
           </button>
         </div>
       </nav>

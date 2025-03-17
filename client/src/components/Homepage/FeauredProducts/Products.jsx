@@ -27,7 +27,7 @@ function Products() {
           {products?.map((product, index) => (
             <div
               key={product?.id || index}
-              className="border-2 dark:bg-themedark border-themegreen overflow-hidden rounded-xl transition duration-300 shadow-xl bg-white flex flex-col relative"
+              className="border-2 dark:bg-themedark border-themegreen overflow-hidden rounded-xl  shadow-xl bg-white flex flex-col relative"
             >
               <div className="relative">
                 <img
@@ -82,7 +82,7 @@ function Products() {
                 <div className="mt-auto">
                   <button 
                    onClick={()=>navigate(`/products/${product?.id}`)}
-                    className="hover:bg-transparent active:scale-[95%] transition cursor-pointer border border-themegreen hover:text-themegreen w-full rounded py-2 bg-themegreen text-white font-semibold text-center block"
+                    className="hover:bg-transparent active:scale-[95%] transition cursor-pointer border duration-300 border-themegreen hover:text-themegreen w-full rounded py-2 bg-themegreen text-white font-semibold text-center block"
                   >
                     Buy Now
                   </button>

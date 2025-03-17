@@ -125,7 +125,7 @@ function ProductPage() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Filter Section */}
           <aside
-            className={`filter-section dark:border-white dark:border dark:bg-lighterthemedark w-full lg:w-3/5 xl:w-2/5 p-4 lg:p-6 border rounded-lg bg-white shadow-lg lg:sticky lg:top-[100px] h-fit flex flex-col gap-6 transition-all duration-300 ${
+            className={`filter-section dark:border-white dark:border dark:bg-lighterthemedark w-full lg:w-3/5 xl:w-2/5 p-4 lg:p-6 border rounded-lg bg-white shadow-lg lg:sticky lg:top-[100px] h-fit flex flex-col gap-6 ${
               isFilterVisible ? "block" : "hidden lg:block"
             }`}
           >

@@ -13,6 +13,8 @@ import useStore from "./components/Store/Store";
 import ScrollToTop from "./ScrollToTop";
 import Cart from "./components/Cart/Cart";
 import Error from "./components/Error/Error";
+import Login from "./components/Authentication/Login";
+import Signup from "./components/Authentication/Signup";
 
 function App() {
   const { getProducts, allProducts, theme } = useStore();
@@ -38,6 +40,8 @@ function App() {
           <Route exact  path="/products/:productID" element={<SingleProduct />} />
           <Route exact path="/cart" element={<Cart/>} />
           <Route exact path="*" element={<Error/>} />
+          <Route exact path="/login" element={<Login/>} />
+          <Route exact path="/register" element={<Signup/>} />
         </Routes>
         <Footer />
       </Routers>
