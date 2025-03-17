@@ -18,7 +18,7 @@ function Home() {
 
   return (
     <>
-      <div className="home-page w-full h-[100dvh] relative">
+      <div className="home-page w-full h-[100dvh] relative dark:bg-themedark">
         <img src={farmImage} alt="" className="w-full h-full absolute" />
         <div className="absolute w-full h-full bg-[#181818b3] grid place-items-center  px-4 md:px-20">
           <div className="search-items w-full">
@@ -71,7 +71,7 @@ function Home() {
       <div ref={productRef}>
         <Products />
       </div>
-      <div>
+      <div className="dark:bg-themedark">
         <ServicesPage />
       </div>
     </>

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#211f1f] text-white py-6 w-full flex-shrink-0">
+    <footer className="bg-[#211f1f] text-white py-6 w-full flex-shrink-0 dark:border-t-2 dark:border-white ">
       <div className="max-w-6xl mx-auto px-6 md:px-12 text-center md:text-left">
         <div className="grid gap-6 md:grid-cols-3">
           {/* About Section */}
@@ -26,7 +26,7 @@ export default function Footer() {
 
           {/* Contact Section */}
           <div>
-            <h2 className="text-xl font-bold text-themegreen">Contact Us</h2>
+            <h2 className="text-xl font-bold text-themegreen">  Contact Us</h2>
             <p className="text-sm mt-2 leading-relaxed">Email: contact@flowhny.com</p>
             <p className="text-sm">Phone: +123 456 7890</p>
             <p className="text-sm">Location: Somewhere in Anugul  </p>

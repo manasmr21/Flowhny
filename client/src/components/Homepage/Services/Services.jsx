@@ -46,17 +46,17 @@ const services = [
 
 export default function ServicesPage() {
   return (
-    <div className="max-w-5xl rounded-sm mx-auto py-12 px-6 md:px-12 bg-gray-100 mb-10">
+    <div className="max-w-5xl rounded-sm mx-auto py-12 px-6 md:px-12 bg-gray-100 mb-10 dark:bg-lighterthemedark ">
       <h1 className="text-3xl font-extrabold text-center mb-8 text-green-700 tracking-wide uppercase">Our Services</h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2 ">
         {services.map((service) => (
           <div 
             key={service.category} 
-            className="p-4 bg-white shadow-md rounded-lg border flex flex-col items-center text-center"
+            className="p-4 dark:bg-[#282727] dark:text-white  bg-white shadow-md rounded-lg border flex flex-col items-center text-center"
           >
             <div className="mb-2">{service.icon}</div>
-            <h2 className="text-xl md:text-2xl font-bold underline text-gray-800 mb-6">{service.category}</h2>
-            <ul className="text-gray-700 space-y-1 text-sm leading-relaxed w-full">
+            <h2 className="text-xl md:text-2xl dark:text-themegreen font-bold underline text-gray-800 mb-6">{service.category}</h2>
+            <ul className="text-gray-700 dark:text-white space-y-1 text-sm leading-relaxed w-full">
               {service.details.map((detail, index) => (
                 <CollapsibleItem key={index} title={detail.title} description={detail.description} />
               ))}
@@ -74,7 +74,7 @@ function CollapsibleItem({ title, description }) {
     <li className="border-b py-1 text-center">
       <button 
         onClick={() => setIsOpen(!isOpen)} 
-        className="flex justify-between items-center w-full text-gray-800 font-semibold text-md md:text-lg"
+        className="flex justify-between dark:text-white items-center w-full text-gray-800 font-semibold text-md md:text-lg"
       >
         {title} <FiChevronDown className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>

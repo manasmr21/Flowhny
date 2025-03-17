@@ -12,9 +12,14 @@ import SingleProduct from "./components/SingleProduct/SingleProduct";
 import useStore from "./components/Store/Store";
 import ScrollToTop from "./ScrollToTop";
 import Cart from "./components/Cart/Cart";
+import Error from "./components/Error/Error";
 
 function App() {
-  const { getProducts, allProducts } = useStore();
+  const { getProducts, allProducts, theme } = useStore();
+
+  useEffect(()=>{
+    document.documentElement.classList.add(theme)
+  },[theme])
 
   useEffect(() => {
     getProducts();
@@ -32,6 +37,7 @@ function App() {
           <Route exact path="/contact" element={<Contact />} />
           <Route exact  path="/products/:productID" element={<SingleProduct />} />
           <Route exact path="/cart" element={<Cart/>} />
+          <Route exact path="*" element={<Error/>} />
         </Routes>
         <Footer />
       </Routers>

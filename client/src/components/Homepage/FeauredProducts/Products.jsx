@@ -19,18 +19,15 @@ function Products() {
 
   return (
     <>
-      <div className="product-container pt-4 ">
+      <div className="product-container pt-4 dark:bg-themedark ">
         <h1 className="text-center text-4xl font-bold underline text-themegreen">
           Featured Products
         </h1>
-        <p className="text-center text-gray-600 mt-2 mb-6">
-          Our highest rated products
-        </p>
-        <section className="all-products">
+        <section className="all-products ">
           {products?.map((product, index) => (
             <div
               key={product?.id || index}
-              className="border-2 border-themegreen overflow-hidden rounded-xl transition duration-300 shadow-xl bg-white flex flex-col relative"
+              className="border-2 dark:bg-themedark border-themegreen overflow-hidden rounded-xl transition duration-300 shadow-xl bg-white flex flex-col relative"
             >
               <div className="relative">
                 <img
@@ -85,7 +82,7 @@ function Products() {
                 <div className="mt-auto">
                   <button 
                    onClick={()=>navigate(`/products/${product?.id}`)}
-                    className="hover:bg-white active:scale-[95%] transition cursor-pointer border border-themegreen hover:text-themegreen w-full rounded py-2 bg-themegreen text-white font-semibold text-center block"
+                    className="hover:bg-transparent active:scale-[95%] transition cursor-pointer border border-themegreen hover:text-themegreen w-full rounded py-2 bg-themegreen text-white font-semibold text-center block"
                   >
                     Buy Now
                   </button>

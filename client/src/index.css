@@ -6,9 +6,13 @@
 @import "tailwindcss";
 
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme{
   --color-themegreen : #009900;
   --color-themedark : #262525;
+  --color-lighterthemedark : #323232;
+  --color-darkshadow: #161616;
 }
 
 .dm-serif-text-regular {
