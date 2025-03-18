@@ -2,20 +2,21 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from "react-icons/fc";
+import apiStore from '../Store/apiStores';
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
+    username: '',
+    useremail: '',
     password: '',
-    confirmPassword: ''
+    cpassword: ''
   });
   const [errors, setErrors] = useState({});
+  const {registerUser} = apiStore()
 
-  const handleChange = (e) => {
+  const getUserData = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -30,19 +31,20 @@ function Signup() {
     }
   };
 
+
   const validateForm = () => {
     const newErrors = {};
     
     // Full Name validation
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Full name is required';
+    if (!formData.username.trim()) {
+      newErrors.username = 'Full name is required';
     }
 
     // Email validation
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Invalid email format';
+    if (!formData.useremail) {
+      newErrors.useremail = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.useremail)) {
+      newErrors.useremail = 'Invalid email format';
     }
 
     // Password validation
@@ -53,10 +55,10 @@ function Signup() {
     }
 
     // Confirm Password validation
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+    if (!formData.cpassword) {
+      newErrors.cpassword = 'Please confirm your password';
+    } else if (formData.password !== formData.cpassword) {
+      newErrors.cpassword = 'Passwords do not match';
     }
 
     setErrors(newErrors);
@@ -66,8 +68,8 @@ function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // Handle signup logic here
-      console.log('Form submitted:', formData);
+
+      registerUser(formData)
     }
   };
 
@@ -91,7 +93,7 @@ function Signup() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {/* Full Name Field */}
           <div>
-            <label htmlFor="fullName" className="block text-sm dark:text-white font-medium text-gray-700">
+            <label htmlFor="username" className="block text-sm dark:text-white font-medium text-gray-700">
               Full Name
             </label>
             <div className="mt-1 relative">
@@ -99,25 +101,25 @@ function Signup() {
                 <FaUser className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                id="fullName"
-                name="fullName"
+                id="username"
+                name="username"
                 type="text"
-                value={formData.fullName}
-                onChange={handleChange}
+                value={formData.username}
+                onChange={getUserData}
                 className={`appearance-none block w-full pl-10 pr-3 dark:text-white py-2 border ${
-                  errors.fullName ? 'border-red-500' : 'border-gray-300'
+                  errors.username ? 'border-red-500' : 'border-gray-300'
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-themegreen focus:border-transparent`}
                 placeholder="Enter your full name"
               />
             </div>
-            {errors.fullName && (
-              <p className="mt-1 text-sm text-red-500">{errors.fullName}</p>
+            {errors.username && (
+              <p className="mt-1 text-sm text-red-500">{errors.username}</p>
             )}
           </div>
 
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm dark:text-white font-medium text-gray-700">
+            <label htmlFor="useremail" className="block text-sm dark:text-white font-medium text-gray-700">
               Email address
             </label>
             <div className="mt-1 relative">
@@ -125,19 +127,19 @@ function Signup() {
                 <FaEnvelope className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                id="email"
-                name="email"
+                id="useremail"
+                name="useremail"
                 type="email"
-                value={formData.email}
-                onChange={handleChange}
+                value={formData.useremail}
+                onChange={getUserData}
                 className={`appearance-none block w-full pl-10 pr-3 dark:text-white py-2 border ${
-                  errors.email ? 'border-red-500' : 'border-gray-300'
+                  errors.useremail ? 'border-red-500' : 'border-gray-300'
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-themegreen focus:border-transparent`}
                 placeholder="Enter your email"
               />
             </div>
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+            {errors.useremail && (
+              <p className="mt-1 text-sm text-red-500">{errors.useremail}</p>
             )}
           </div>
 
@@ -155,7 +157,7 @@ function Signup() {
                 name="password"
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
-                onChange={handleChange}
+                onChange={getUserData}
                 className={`appearance-none block w-full pl-10 pr-10 py-2 dark:text-white border ${
                   errors.password ? 'border-red-500' : 'border-gray-300'
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-themegreen focus:border-transparent`}
@@ -180,7 +182,7 @@ function Signup() {
 
           {/* Confirm Password Field */}
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm dark:text-white font-medium text-gray-700">
+            <label htmlFor="cpassword" className="block text-sm dark:text-white font-medium text-gray-700">
               Confirm Password
             </label>
             <div className="mt-1 relative">
@@ -188,13 +190,13 @@ function Signup() {
                 <FaLock className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                id="confirmPassword"
-                name="confirmPassword"
+                id="cpassword"
+                name="cpassword"
                 type={showConfirmPassword ? "text" : "password"}
-                value={formData.confirmPassword}
-                onChange={handleChange}
+                value={formData.cpassword}
+                onChange={getUserData}
                 className={`appearance-none block w-full pl-10 dark:text-white pr-10 py-2 border ${
-                  errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                  errors.cpassword ? 'border-red-500' : 'border-gray-300'
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-themegreen focus:border-transparent`}
                 placeholder="Confirm your password"
               />
@@ -210,8 +212,8 @@ function Signup() {
                 )}
               </button>
             </div>
-            {errors.confirmPassword && (
-              <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
+            {errors.cpassword && (
+              <p className="mt-1 text-sm text-red-500">{errors.cpassword}</p>
             )}
           </div>
 
@@ -235,7 +237,8 @@ function Signup() {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-themegreen hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-themegreen transition-colors duration-200"
+              className=" cursor-pointer active:scale-[95%] group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-themegreen hover:bg-green-700 focus:outline-none  transition duration-200"
+              
             >
               Create Account
             </button>

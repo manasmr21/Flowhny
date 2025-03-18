@@ -1,0 +1,30 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "server for flowhny",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manasmr21/Flowhny.git"
+  },
+  "author": "manasmr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manasmr21/Flowhny/issues"
+  },
+  "homepage": "https://github.com/manasmr21/Flowhny#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongodb": "^6.14.2",
+    "mongoose": "^8.12.1",
+    "nodemon": "^3.1.9",
+    "validator": "^13.12.0"
+  }
+}
