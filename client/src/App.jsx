@@ -17,7 +17,7 @@ import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/Signup";
 
 function App() {
-  const { getProducts, allProducts, theme } = useStore();
+  const { getProducts, theme } = useStore();
 
   useEffect(()=>{
     document.documentElement.classList.add(theme)
@@ -25,7 +25,7 @@ function App() {
 
   useEffect(() => {
     getProducts();
-  }, [allProducts]);
+  }, [getProducts]);
 
   return (
     <div className="all-content">

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from "react-icons/fc";
 import apiStore from '../Store/apiStores';
+import CryptoJS from "crypto-js"
+
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,7 +13,8 @@ function Signup() {
     username: '',
     useremail: '',
     password: '',
-    cpassword: ''
+    cpassword: '',
+    terms: false
   });
   const [errors, setErrors] = useState({});
   const {registerUser} = apiStore()
@@ -31,47 +34,70 @@ function Signup() {
     }
   };
 
-
+  //Validating the form
   const validateForm = () => {
     const newErrors = {};
-    
-    // Full Name validation
     if (!formData.username.trim()) {
-      newErrors.username = 'Full name is required';
+      newErrors.username = 'Username is required';
     }
-
-    // Email validation
-    if (!formData.useremail) {
+    if (!formData.useremail.trim()) {
       newErrors.useremail = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.useremail)) {
       newErrors.useremail = 'Invalid email format';
     }
-
-    // Password validation
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    } else if (formData.password.length < 5) {
+      newErrors.password = 'Password must be at least 5 characters';
     }
-
-    // Confirm Password validation
-    if (!formData.cpassword) {
-      newErrors.cpassword = 'Please confirm your password';
-    } else if (formData.password !== formData.cpassword) {
+    if (formData.password !== formData.cpassword || !formData.cpassword) {
       newErrors.cpassword = 'Passwords do not match';
+    }
+    if (!formData.terms) {
+      newErrors.terms = 'You must accept the Terms and Privacy Policy';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const SECRET_KEY = "NowYouJustSomeboduyThatIusedToKnow"
+
+  //Encrypting the data sending from frontend
+  const encryptData = (data) => {
+    return CryptoJS.AES.encrypt(
+      JSON.stringify(data),
+     SECRET_KEY
+    ).toString();
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-
-      registerUser(formData)
+      try {
+        const encryptedData = encryptData(formData);
+        registerUser(encryptedData);
+        alert("Registration successful")
+        setFormData({
+          username : "",
+          useremail: "",
+          password : "",
+          cpassword: "",
+          terms: false
+        })
+      } catch (err) {
+        console.error(err.message || 'Registration failed. Please try again.');
+      }
     }
   };
+
+  const getBoxValue = (e) => {
+    const { name, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: checked
+    }));
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 dark:bg-themedark">
@@ -132,7 +158,7 @@ function Signup() {
                 type="email"
                 value={formData.useremail}
                 onChange={getUserData}
-                className={`appearance-none block w-full pl-10 pr-3 dark:text-white py-2 border ${
+                className={`appearance-none block w-full pl-10 dark:text-white pr-3 py-2 border ${
                   errors.useremail ? 'border-red-500' : 'border-gray-300'
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-themegreen focus:border-transparent`}
                 placeholder="Enter your email"
@@ -223,22 +249,28 @@ function Signup() {
               id="terms"
               name="terms"
               type="checkbox"
+              checked={formData.terms}
               className="h-4 w-4 text-themegreen focus:ring-themegreen border-gray-300 rounded"
+              onChange={(e)=>getBoxValue(e)}
             />
             <label htmlFor="terms" className="ml-2 dark:text-white block text-sm text-gray-900">
               I agree to the{' '}
-              <Link to="/terms" className="font-medium text-themegreen hover:text-green-700">
-                Terms and Conditions
-              </Link>
+              <a href="#" className="text-themegreen hover:text-green-700">
+                Terms
+              </a>{' '}
+              and{' '}
+              <a href="#" className="text-themegreen hover:text-green-700">
+                Privacy Policy
+              </a>
             </label>
           </div>
+          {errors.terms && <p className="mt-1 text-sm text-red-600">{errors.terms}</p>}
 
           {/* Submit Button */}
           <div>
             <button
               type="submit"
               className=" cursor-pointer active:scale-[95%] group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-themegreen hover:bg-green-700 focus:outline-none  transition duration-200"
-              
             >
               Create Account
             </button>
