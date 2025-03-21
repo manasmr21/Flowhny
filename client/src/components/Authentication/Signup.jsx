@@ -34,6 +34,7 @@ function Signup() {
     }
   };
 
+
   //Validating the form
   const validateForm = () => {
     const newErrors = {};
@@ -61,13 +62,13 @@ function Signup() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const SECRET_KEY = "NowYouJustSomeboduyThatIusedToKnow"
+
 
   //Encrypting the data sending from frontend
   const encryptData = (data) => {
     return CryptoJS.AES.encrypt(
       JSON.stringify(data),
-     SECRET_KEY
+      import.meta.env.VITE_SECRET_KEY
     ).toString();
   };
 
@@ -77,7 +78,6 @@ function Signup() {
       try {
         const encryptedData = encryptData(formData);
         registerUser(encryptedData);
-        alert("Registration successful")
         setFormData({
           username : "",
           useremail: "",

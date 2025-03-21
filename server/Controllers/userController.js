@@ -2,24 +2,43 @@ const userDb = require("../Schema/userSchema")
 const throwError = require("../utils/errorHandler")
 const createUserIDGenerator = require("../userID");
 const CryptoJS = require("crypto-js")
+const {sendVerificationCode} = require("../sendMail/sendMail")
+
+//Environmental Variable
 const dotenv = require("dotenv")
 dotenv.config()
 
+// Store pending registrations temporarily
+const pendingRegistrations = new Map();
 
-exports.register = async (req, res)=>{
-
-    try {
-        const {data} = req.body;
-
-        const SECRET_KEY = process.env.SECRET_KEY
-
-        const bytes =  CryptoJS.AES.decrypt(data, SECRET_KEY);
-
-        const decryptedData =  JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-
-        const {username,useremail, password, cpassword} = decryptedData;
+//Send mail for user verification
+const sendMailsForVerification = async (email) => {
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes expiration
     
-        
+    await sendVerificationCode(email, verificationCode);
+    return { verificationCode, expiresAt };
+}
+
+//Fetch a user
+exports.fetchUser = async(req,res)=>{
+    try {
+        const users =await userDb.find()
+        res.status(200).json({success : true, users})
+    } catch (error) {
+        return res.status(error.status || 400).json({message: error.message})
+    }
+}
+
+//User Registration API
+exports.register = async (req, res)=>{
+    try {
+        // const {data} = req.body;
+        // const SECRET_KEY = process.env.SECRET_KEY
+        // const bytes =  CryptoJS.AES.decrypt(data, SECRET_KEY);
+        // const decryptedData =  JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+        const {username, useremail, password, cpassword} = req.body;
+    
         if(!username || !useremail || !password || !cpassword){
            throwError("Please fill all the required fields", 400);
         }
@@ -43,25 +62,84 @@ exports.register = async (req, res)=>{
           userID = createUserIDGenerator();
         } while (await userDb.findOne({ userID }));
 
-        const newUser = await userDb({
+        // Generate and send verification code
+        const { verificationCode, expiresAt } = await sendMailsForVerification(useremail);
+        
+        // Store pending registration
+        pendingRegistrations.set(useremail, {
             username,
             useremail,
             password,
-            userID 
+            userID,
+            verificationCode,
+            expiresAt,
         });
 
-        await newUser.save()
-
-        res.status(200).json({success:true, newUser: {
-            ...newUser._doc,
-            password: undefined
-        }})
-
+        res.status(200).json({
+            success: true,
+            message: "Verification code sent to your email",
+            email: useremail,
+            verificationCode
+        });
+       
     } catch (error) {
-        
         return res.status(error.status || 400).json({message: error.message})
     }
+}
 
+// Verify Email API
+exports.verifyEmail = async (req, res) => {
+    try {
+        const { useremail, code } = req.body;
+        
+        const pendingUser = pendingRegistrations.get(useremail);
+        
+
+        if (!pendingUser) {
+            throwError("No pending registration found for this email", 400);
+        }
+
+        if (Date.now() > pendingUser.expiresAt) {
+            pendingRegistrations.delete(useremail);
+            throwError("Verification code has expired. Please register again.", 400);
+        }
+
+        if (code !== pendingUser.verificationCode) {
+            throwError("Invalid verification code", 400);
+        }
+
+        // Create verified user in database
+        const newUser = await new userDb({
+            username: pendingUser.username,
+            useremail: pendingUser.useremail,
+            password: pendingUser.password,
+            userID: pendingUser.userID,
+            verified: true
+        });
+
+        await newUser.save();
+        
+        // Clear pending registration
+        pendingRegistrations.delete(useremail);
+
+        const user = await userDb.findOne({useremail})
+
+        await user.generateAuthToken()
+
+        await user.save()
+
+        res.status(201).json({
+            success: true,
+            message: "Email verified successfully. Account created",
+            user: {
+                ...user._doc,
+                password: undefined
+            },
+        });
+
+    } catch (error) {
+        return res.status(error.status || 400).json({message: error.message})
+    }
 }
 
 exports.deleteUser = async (req, res) => {
