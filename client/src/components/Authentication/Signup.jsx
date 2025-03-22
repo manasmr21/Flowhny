@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from "react-icons/fc";
 import apiStore from '../Store/apiStores';
@@ -7,6 +7,10 @@ import CryptoJS from "crypto-js"
 
 
 function Signup() {
+
+  //Navigation varible
+  const navigate = useNavigate()
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -41,19 +45,25 @@ function Signup() {
     if (!formData.username.trim()) {
       newErrors.username = 'Username is required';
     }
+    
+    //Missing username
     if (!formData.useremail.trim()) {
       newErrors.useremail = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.useremail)) {
       newErrors.useremail = 'Invalid email format';
     }
+
+    //Missing password and confirm password field
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 5) {
       newErrors.password = 'Password must be at least 5 characters';
     }
+
     if (formData.password !== formData.cpassword || !formData.cpassword) {
       newErrors.cpassword = 'Passwords do not match';
     }
+
     if (!formData.terms) {
       newErrors.terms = 'You must accept the Terms and Privacy Policy';
     }
@@ -77,16 +87,21 @@ function Signup() {
     if (validateForm()) {
       try {
         const encryptedData = encryptData(formData);
-        registerUser(encryptedData);
-        setFormData({
-          username : "",
-          useremail: "",
-          password : "",
-          cpassword: "",
-          terms: false
-        })
+        const response = await registerUser(encryptedData);
+
+        if(response.success){
+          setFormData({
+            username : "",
+            useremail: "",
+            password : "",
+            cpassword: "",
+            terms: false
+          })
+          navigate("/otp"); 
+        }
+
       } catch (err) {
-        console.error(err.message || 'Registration failed. Please try again.');
+        alert(err.message || 'Registration failed. Please try again.');
       }
     }
   };
@@ -271,6 +286,7 @@ function Signup() {
             <button
               type="submit"
               className=" cursor-pointer active:scale-[95%] group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-themegreen hover:bg-green-700 focus:outline-none  transition duration-200"
+
             >
               Create Account
             </button>

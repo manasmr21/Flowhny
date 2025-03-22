@@ -15,6 +15,7 @@ import Cart from "./components/Cart/Cart";
 import Error from "./components/Error/Error";
 import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/Signup";
+import Verification from "./components/Verifications/Verification";
 
 function App() {
   const { getProducts, theme } = useStore();
@@ -42,6 +43,7 @@ function App() {
           <Route exact path="*" element={<Error/>} />
           <Route exact path="/login" element={<Login/>} />
           <Route exact path="/register" element={<Signup/>} />
+          <Route exact path="/otp" element = {<Verification/>} />
         </Routes>
         <Footer />
       </Routers>

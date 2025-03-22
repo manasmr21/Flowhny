@@ -4,7 +4,58 @@ const jwt = require("jsonwebtoken");
 const { Schema } = mongoose
 const validator = require("validator");
 
+//Address Schema
 
+const addressSchema = new mongoose.Schema({
+  fullName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  phone: {
+    type: String,
+    required: true,
+    match: /^[0-9]{10,15}$/
+  },
+  streetAddress: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  apartment: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  city: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  state: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  postalCode: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  country: {
+    type: String,
+    required: true,
+    trim: true,
+    default: 'India'
+  },
+  isDefault: {
+    type: Boolean,
+    default: false
+  }
+});
+
+
+//User schema
 const userSchema = new mongoose.Schema({
     userID: {
         type: String,
@@ -32,6 +83,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 5,
     },
+    addresses: [addressSchema],
     verified: {
         type: Boolean,
         default: false,
@@ -40,6 +92,8 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    verificationCode: String,
+    verificationCodeExpiresAt : Date,
     tokens: [
         {
           token: {
@@ -50,6 +104,8 @@ const userSchema = new mongoose.Schema({
       ],
 
 }, { timestamps: true })
+
+
 
 const autheSecreteKey = process.env.auth_token_key
 
