@@ -1,9 +1,54 @@
 const mongoose = require("mongoose");
 
+const addressSchema = new mongoose.Schema({
+  fullName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+    match: /^[0-9]{10,15}$/,
+  },
+  addressLine1: {
+    type: String,
+    required: true,
+  },
+  addressLine2: {
+    type: String,
+  },
+  city: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  state: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  postalCode: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  country: {
+    type: String,
+    required: true,
+    trim: true,
+    default: "India",
+  },
+  isDefault: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const ordersSchema = new mongoose.Schema(
   {
     orderID: {
-      type: "String",
+      type: String,
       required: true,
       unique: true,
     },
@@ -18,27 +63,29 @@ const ordersSchema = new mongoose.Schema(
     },
     items: [
       {
-        productID: {
+        product: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "products",
           required: true,
         },
-        name: String,
+        productID:{
+          type: String,
+          required: true
+        },
         quantity: {
           type: Number,
           required: true,
           min: 1,
-        },
-        price: Number,
+        }
       },
     ],
-    totalAmount: {
+    totalPrice: {
       type: Number,
       required: true,
     },
     paymentStatus: {
       type: String,
-      enum: ["pending", "paid", "failed"],
+      enum: ["pending", "paid", "failed", "Cash On Delivery", "refunded"],
       default: "pending",
     },
     orderStatus: {
@@ -47,21 +94,20 @@ const ordersSchema = new mongoose.Schema(
       default: "processing",
     },
     shippingAddress: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "addresses",
-      required: true,
+      type: addressSchema,
+      required: true
     },
     shippingDate: {
+      type: String,
+      required: true,
+    },
+    orderDate: {
       type: Date,
       required: true,
     },
-    orderDate:{
-        type: Date,
-        required: true
-    },
-    estimatedDeliveryTime:{
-        type: Date,
-        required: true
+    estimatedDeliveryDate: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }

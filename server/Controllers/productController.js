@@ -1,7 +1,8 @@
 const userDb = require("../Schema/userSchema");
 const orderDb = require("../Schema/ordersSchema");
 const productDb = require("../Schema/productSchema");
-const throwError = require("../utils/errorHandler")
+const throwError = require("../utils/errorHandler");
+const productValidationSchema = require("../validators/productValidator")
 
 
 //Product ID generator
@@ -67,6 +68,18 @@ exports.addProduct = async(req, res)=>{
 
         const productID = generateProductID();
 
+        const { error } = productValidationSchema.validate(productData,{
+          abortEarly: false
+        });
+
+        if(error){
+          return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            details: error.details.map((e) => e.message),
+          });
+        }
+
         const newProduct = new productDb({
             ...productData,
             productID
@@ -111,7 +124,16 @@ exports.updateProduct = async(req, res)=>{
 //Delete a product
 exports.deleteProduct = async(req, res)=>{
   try {
-    
+    const {productID} = req.body;
+
+    const findTheProduct = await productDb.findOne({productID});
+
+    if(!findTheProduct){
+      throwError("Product Not Found", 404);
+    }
+
+    await findTheProduct.deleteOne({productID});
+
   } catch (error) {
     return res.status(error.status || 400).json({success: false, message: error.message || "Error deleting product"});
   }

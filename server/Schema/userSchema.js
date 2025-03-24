@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { Schema } = mongoose
 const validator = require("validator");
+const { required } = require("joi");
 
 //Address Schema
 
@@ -17,15 +17,12 @@ const addressSchema = new mongoose.Schema({
     required: true,
     match: /^[0-9]{10,15}$/
   },
-  streetAddress: {
-    type: String,
-    required: true,
-    trim: true
+  addressLine1:{
+    type: String, 
+    required: true
   },
-  apartment: {
-    type: String,
-    trim: true,
-    default: ''
+  addressLine2:{
+    type: String
   },
   city: {
     type: String,
@@ -84,6 +81,12 @@ const userSchema = new mongoose.Schema({
         minlength: 5,
     },
     addresses: [addressSchema],
+    orders:[
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "orders"
+      }
+    ],
     verified: {
         type: Boolean,
         default: false,

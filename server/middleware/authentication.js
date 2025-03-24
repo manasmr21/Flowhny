@@ -22,3 +22,5 @@ const authenticate = async(req,res,next)=>{
         return res.status(401).json({success : false, message:  "User not logged in", error : error.message })    
     }
 }
+
+module.exports = authenticate

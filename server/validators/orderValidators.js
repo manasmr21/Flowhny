@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
+const {addressSchema} = require("./userValidator");
 
 // Helper to validate ObjectId format
 const objectId = Joi.string().custom((value, helpers) => {
@@ -18,27 +19,29 @@ const orderValidationSchema = Joi.object({
   items: Joi.array()
     .items(
       Joi.object({
-        productID: objectId.required(),
-        name: Joi.string().required(),
-        quantity: Joi.number().min(1).required(),
-        price: Joi.number().required(),
+        product: objectId.required(),
+        productID: Joi.string().required(),
+        quantity: Joi.number().min(1).required()
       })
     )
     .min(1)
     .required(),
 
-  totalAmount: Joi.number().required(),
+  totalPrice: Joi.number().required(),
 
   paymentStatus: Joi.string()
-    .valid("pending", "paid", "failed")
+    .valid("pending", "paid", "failed","Cash On Delivery", "refunded")
     .default("pending"),
 
   orderStatus: Joi.string()
     .valid("processing", "shipped", "delivered", "cancelled")
     .default("processing"),
 
-  shippingAddress: objectId.required(),
+  shippingAddress: addressSchema.required(),
   shippingDate: Joi.date().required(),
   orderDate: Joi.date().required(),
-  estimatedDeliveryTime: Joi.date().required(),
+  estimatedDeliveryDate: Joi.string().required(),
 });
+
+
+module.exports = orderValidationSchema;

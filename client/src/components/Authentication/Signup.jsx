@@ -60,7 +60,7 @@ function Signup() {
       newErrors.password = 'Password must be at least 5 characters';
     }
 
-    if (formData.password !== formData.cpassword || !formData.cpassword) {
+    if ( !formData.cpassword) {
       newErrors.cpassword = 'Passwords do not match';
     }
 

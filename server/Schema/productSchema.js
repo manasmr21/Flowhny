@@ -58,7 +58,7 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    minimumOrderQuantity: 20,
+    minimumOrderQuantity: Number,
     images:[{
         type: String
     }],

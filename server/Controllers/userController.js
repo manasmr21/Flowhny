@@ -1,10 +1,13 @@
 const userDb = require("../Schema/userSchema");
 const throwError = require("../utils/errorHandler");
-const createUserIDGenerator = require("../utils/");
+const createUserIDGenerator = require("../utils/userID");
 const CryptoJS = require("crypto-js");
 const { sendVerificationCode } = require("../sendMail/sendMail");
 const bcrypt = require("bcryptjs");
-const userValidationSchema = require("../validators/userValidator")
+const {
+  userValidationSchema,
+  addressSchema,
+} = require("../validators/userValidator");
 
 //Environmental Variable
 const dotenv = require("dotenv");
@@ -15,7 +18,7 @@ const sendMailsForVerification = (email) => {
   const verificationCode = Math.floor(
     100000 + Math.random() * 900000
   ).toString();
-  const expiresAt = Date.now() + ( 60 * 1000);
+  const expiresAt = Date.now() + 60 * 1000;
 
   sendVerificationCode(email, verificationCode);
   return { verificationCode, expiresAt };
@@ -27,9 +30,10 @@ exports.fetchUser = async (req, res) => {
     const users = await userDb.find();
     res.status(200).json({ success: true, users });
   } catch (error) {
-    return res
-      .status(error.status || 400)
-      .json({success:false,  message: error.message || "Error fetching user" });
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Error fetching user",
+    });
   }
 };
 
@@ -44,19 +48,15 @@ exports.register = async (req, res) => {
     const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
     const { username, useremail, password, cpassword } = decryptedData;
 
-    //validation using joi
-    
+    const { error } = userValidationSchema.validate(decryptedData, {
+      abortEarly: false,
+    });
 
-    if (!username || !useremail || !password || !cpassword) {
-      throwError("Please fill all the required fields", 400);
-     }
-
-    if (password != cpassword) {
-      throwError("Confirm your password, please...");
-    }
-
-    if (password.length < 5) {
-      throwError("Please enter a valid password", 400);
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.details.map((e) => e.message),
+      });
     }
 
     //Creating a user
@@ -83,7 +83,6 @@ exports.register = async (req, res) => {
       verificationCodeExpiresAt: expiresAt,
     });
 
-
     await newUser.save();
 
     res.status(200).json({
@@ -92,9 +91,10 @@ exports.register = async (req, res) => {
       newUser,
     });
   } catch (error) {
-    return res
-      .status(error.status || 400)
-      .json({success: false, message: error.message || "Failed to create account" });
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Failed to create account",
+    });
   }
 };
 
@@ -117,13 +117,13 @@ exports.verifyEmail = async (req, res) => {
       throwError("Invalid verification code", 400);
     }
 
-    await user.generateAuthToken()
+    await user.generateAuthToken();
 
     user.verified = true;
     user.verificationCode = null;
     user.verificationCodeExpiresAt = null;
     user.isLoggedin = true;
-    
+
     await user.save();
 
     return res.status(200).json({
@@ -131,9 +131,10 @@ exports.verifyEmail = async (req, res) => {
       message: "Email verified successfully",
     });
   } catch (error) {
-    return res
-      .status(error.status || 400)
-      .json({success: false, message: error.message || "Verification failed" });
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Verification failed",
+    });
   }
 };
 
@@ -143,9 +144,10 @@ exports.resendVerificationCode = async (req, res) => {
     const { useremail } = req.body;
 
     const user = await userDb.findOne({ useremail });
-    
-    if(user && !user.verified){
-      const { verificationCode, expiresAt } = sendMailsForVerification(useremail); 
+
+    if (user && !user.verified) {
+      const { verificationCode, expiresAt } =
+        sendMailsForVerification(useremail);
       user.verificationCode = verificationCode;
       user.verificationCodeExpiresAt = expiresAt;
       await user.save();
@@ -153,17 +155,57 @@ exports.resendVerificationCode = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "New verification code sent to your email"
+      message: "New verification code sent to your email",
     });
   } catch (error) {
-    return res
-      .status(error.status || 400)
-      .json({success: false, message: error.message || "Failed to resend verification code" });
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Failed to resend verification code",
+    });
+  }
+};
+
+//Add user details
+exports.userDetails = async (req, res) => {
+  try {
+    const userID = req._id
+    const { address } = req.body;
+
+    const findUser = await userDb.findOne({ _id: userID });
+
+    const { error } = addressSchema.validate(address, {
+      abortEarly: false,
+    });
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.details.map(e=>e.message),
+      });
+    }
+
+    if (!findUser) {
+      throwError("Error finding the user.", 404);
+    }else if(!findUser.verified){
+      throwError("Please verify your email before proceeding", 400)
+    }
+
+    findUser.addresses.push(address)
+
+    await findUser.save();
+
+    res.status(201).json({success: true, message: "Address added successfully"});
+
+  } catch (error) {
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Error adding more details",
+    });
   }
 };
 
 //TODO: Modify it for user . this code is for admin only
-//Delete the user 
+//Delete the user
 exports.deleteUser = async (req, res) => {
   try {
     const { userID } = req.params;
@@ -185,10 +227,11 @@ exports.deleteUser = async (req, res) => {
       message: "User deleted successfully",
     });
   } catch (error) {
-    return res
-      .status(error.status || 400)
-      .json({success: false, message: error.message || "Failed deleting the user" });
-  } 
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Failed deleting the user",
+    });
+  }
 };
 
 exports.login = async (req, res) => {
@@ -212,7 +255,7 @@ exports.login = async (req, res) => {
       throwError("");
     }
 
-    user.isLoggedin = true
+    user.isLoggedin = true;
 
     res.status(200).json({
       success: true,
@@ -224,6 +267,6 @@ exports.login = async (req, res) => {
   } catch (error) {
     return res
       .status(error.status || 400)
-      .json({success: false, message: error.message || "Failed to log in" });
+      .json({ success: false, message: error.message || "Failed to log in" });
   }
 };

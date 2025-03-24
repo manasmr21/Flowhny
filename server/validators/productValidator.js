@@ -1,7 +1,6 @@
 const Joi = require("joi");
 
 const productValidationSchema = Joi.object({
-  productID: Joi.string().required(),
   title: Joi.string().required(),
   description: Joi.string().required(),
   price: Joi.number().required(),
@@ -33,7 +32,7 @@ const productValidationSchema = Joi.object({
   returnPolicy: Joi.string().required(),
   minimumOrderQuantity: Joi.number().default(24),
   images: Joi.array().items(Joi.string().uri()).optional(),
-  thumbnail: Joi.string().uri().required(),
+  thumbnail: Joi.string().required(),
 });
 
 module.exports = productValidationSchema;
