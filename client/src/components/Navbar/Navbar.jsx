@@ -5,10 +5,10 @@ import { IoPerson } from "react-icons/io5";
 import { BsFillMoonStarsFill } from "react-icons/bs";
 import { MdSunny } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
-import { Link, NavLink } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link, NavLink,useLocation } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import useStore from "../Store/Store";
+import apiStore from "../Store/apiStores";
 
 function Navbar() {
   const [menuClose, setMenuClose] = useState(true);
@@ -16,6 +16,7 @@ function Navbar() {
 
   const location = useLocation();
   const { cart, theme, themeToggler } = useStore();
+  const { userData, logoutUser } = apiStore();
 
   window.addEventListener("scroll", () => {
     setScrollDown(window.scrollY);
@@ -37,7 +38,7 @@ function Navbar() {
           className="burger flex justify-center items-center "
           onClick={() => setMenuClose(false)}
         >
-          <GiHamburgerMenu className={` text-3xl mt-1.5`} tabIndex={0} />
+          <GiHamburgerMenu className={` text-xl mt-1.5`} tabIndex={0} />
         </div>
         <div
           className={`logo dm-serif-text-regular  mt-1 text-center font-medium grid place-items-center text-3xl md:text-4xl text-${
@@ -49,7 +50,7 @@ function Navbar() {
           </NavLink>
         </div>
         <div
-          className={`navigations ${
+          className={`navigations z-10 ${
             menuClose ? "top-[-1500px]" : "top-0"
           } transition-all duration-500 ease-in-out md:w-[50%] xl:w-[40%] flex`}
         >
@@ -88,57 +89,57 @@ function Navbar() {
             </li>
           </ul>
         </div>
-        <div className=" rounded-2xl">
-          {theme == "dark" ? (
+        <div className=" flex justify-center items-centers rounded-2xl">
+          { <button
+            className={`cursor-pointer relative z-0 rounded-lg md:rounded-xl ${
+              scrollDown < 50 && location.pathname == "/"
+                ? "text-themegreen"
+                : "text-white"
+            } transition px-1.5  md:px-2.5 md:text-xl  `}
+          >
+            <Link to="/cart"><FaShoppingCart /></Link>
+            <span className={`absolute ${cart.length > 1 ? "block" : "hidden" } border border-[red] text-white rounded-3xl px-1 top-[-4px] left-[-2px] bg-red-600 text-xs`}>
+              {cart.length}
+            </span>
+          </button>}
+
+          <button
+            className={`cursor-pointer rounded-lg md:rounded-xl md:p-2   transition bg-transparent ${
+              scrollDown < 50 && location.pathname == "/"
+                ? "text-themegreen hover:bg-themegreen hover:text-white"
+                : "text-white hover:bg-white hover:text-themegreen"
+            } p-1.5 md:text-2xl mx-2.5`}
+            onClick={themeToggler}
+          >
+            {theme == "dark" ? <MdSunny /> : <BsFillMoonStarsFill />}
+          </button>
+
+          {!userData ? (
             <button
-              className={`cursor-pointer mt-1 rounded-xl p-2   transition bg-transparent ${
+              className={`cursor-pointer rounded-lg md:rounded-xl ${
                 scrollDown < 50 && location.pathname == "/"
-                  ? "text-themegreen hover:bg-themegreen hover:text-white"
-                  : "text-white hover:bg-white hover:text-themegreen"
-              } text-2xl mx-2.5`}
-              onClick={themeToggler}
+                  ? "text-[#fff] bg-themegreen hover:bg-transparent hover:text-themegreen "
+                  : "text-themegreen bg-white hover:bg-transparent hover:text-white "
+              } transition px-1.5  md:px-2.5 md:text-xl  `}
             >
-              <MdSunny />
+              <Link to="/login">
+                <IoPerson />
+              </Link>
             </button>
           ) : (
-            <button
-              className={`cursor-pointer mt-1 rounded-xl p-2   transition bg-transparent ${
-                scrollDown < 50 && location.pathname == "/"
-                  ? "text-themegreen hover:bg-themegreen hover:text-white"
-                  : "text-white hover:bg-white hover:text-themegreen"
-              } text-2xl mx-2.5`}
-              onClick={themeToggler}
+            <Link to="/profile"
+              className={`border-2 cursor-pointer grid place-items-center rounded-4xl font-semibold px-2.5 ${
+                scrollDown < 50 && location.pathname == "/" ? "text-themegreen" : "text-white"
+              } `}
             >
-              <BsFillMoonStarsFill />
-            </button>
-          )}
-          <button
-            className={`cursor-pointer rounded-xl ${
-              scrollDown < 50 && location.pathname == "/"
-                ? "text-[#fff] bg-themegreen hover:bg-transparent hover:text-themegreen "
-                : "text-themegreen bg-white hover:bg-transparent hover:text-white "
-            } transition  p-2 text-2xl  `}
-          >
-            <Link to="/login">
-            <IoPerson />
+              {userData?.username
+                .split(" ")
+                .slice(0, 2)
+                .map((e) => e[0])}
             </Link>
-          </button>
+          )}
         </div>
       </nav>
-      <Link to="/cart">
-        <button
-          className={` ${
-            location.pathname == "/cart" ? "hidden" : "block"
-          } cart border hover:scale-[105%] transition cursor-pointer border-themegreen w-max fixed z-20 right-4 bottom-4 bg-themegreen text-white rounded-4xl p-4 ${
-            cart.length < 1 ? "hidden" : "block"
-          } `}
-        >
-          <FaShoppingCart />
-          <span className="absolute border border-[red]  rounded-3xl px-2 top-[-10px] left-[-10px] bg-red-600 text-sm">
-            {cart.length}
-          </span>
-        </button>
-      </Link>
     </>
   );
 }

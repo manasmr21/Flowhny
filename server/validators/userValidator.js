@@ -26,7 +26,6 @@ const userValidationSchema = Joi.object({
   terms: Joi.boolean().valid(true).required(),
   addresses: Joi.array().items(addressSchema).optional(),
   verified: Joi.boolean().default(false),
-  isLoggedin: Joi.boolean().default(false),
   verificationCode: Joi.string().optional(),
   verificationCodeExpiresAt: Joi.date().optional(),
   tokens: Joi.array()

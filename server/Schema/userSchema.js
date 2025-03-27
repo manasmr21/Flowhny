@@ -91,10 +91,6 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    isLoggedin: {
-        type: Boolean,
-        default: false,
-    },
     verificationCode: String,
     verificationCodeExpiresAt : Date,
     tokens: [

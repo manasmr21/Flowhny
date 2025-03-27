@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from "react-icons/fc";
+import CryptoJS from "crypto-js"
 import apiStore from '../Store/apiStores';
 
 function Login() {
@@ -11,8 +12,8 @@ function Login() {
         password: ''
     });
     const [errors, setErrors] = useState({});
-    // const { loginUser } = apiStore();
     const navigate = useNavigate();
+    const {loginUser} = apiStore()
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -48,12 +49,29 @@ function Login() {
         return Object.keys(newErrors).length === 0;
     };
 
+
+      //Encrypting the data sending from frontend
+      const encryptData = (data) => {
+        return CryptoJS.AES.encrypt(
+          JSON.stringify(data),
+          import.meta.env.VITE_SECRET_KEY
+        ).toString();
+      };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
             try {
-                await loginUser(formData);
-                navigate('/'); // Redirect to home page after successful login
+                const encryptedData = encryptData(formData);
+                const response = await loginUser(encryptedData);
+                setFormData({
+                    useremail : "",
+                    password : ""
+                })
+
+                alert(response.success)
+
+                navigate('/');
             } catch (err) {
                 console.error(err.message || 'Login failed. Please check your credentials.');
             }
@@ -143,17 +161,6 @@ function Login() {
 
                     {/* Remember Me and Forgot Password */}
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                            <input
-                                id="remember-me"
-                                name="remember-me"
-                                type="checkbox"
-                                className="h-4 w-4 text-themegreen focus:ring-themegreen border-gray-300 rounded"
-                            />
-                            <label htmlFor="remember-me" className="dark:text-white ml-2 block text-sm text-gray-900">
-                                Remember me
-                            </label>
-                        </div>
 
                         <div className="text-sm">
                             <Link to="/forgot-password" className="font-medium text-themegreen hover:text-green-700">

@@ -19,6 +19,7 @@
   "homepage": "https://github.com/manasmr21/Flowhny#readme",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",

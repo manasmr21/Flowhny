@@ -12,6 +12,7 @@ const {
 //Environmental Variable
 const dotenv = require("dotenv");
 dotenv.config();
+const SECRET_KEY = process.env.SECRET_KEY;
 
 //Send mail for user verification
 const sendMailsForVerification = (email) => {
@@ -41,7 +42,6 @@ exports.fetchUser = async (req, res) => {
 exports.register = async (req, res) => {
   try {
     const { data } = req.body;
-    const SECRET_KEY = process.env.SECRET_KEY;
 
     //Decrypting the code sent from the frontend
     const bytes = CryptoJS.AES.decrypt(data, SECRET_KEY);
@@ -168,7 +168,7 @@ exports.resendVerificationCode = async (req, res) => {
 //Add user details
 exports.userDetails = async (req, res) => {
   try {
-    const userID = req._id
+    const userID = req._id;
     const { address } = req.body;
 
     const findUser = await userDb.findOne({ _id: userID });
@@ -180,22 +180,23 @@ exports.userDetails = async (req, res) => {
     if (error) {
       return res.status(400).json({
         success: false,
-        message: error.details.map(e=>e.message),
+        message: error.details.map((e) => e.message),
       });
     }
 
     if (!findUser) {
       throwError("Error finding the user.", 404);
-    }else if(!findUser.verified){
-      throwError("Please verify your email before proceeding", 400)
+    } else if (!findUser.verified) {
+      throwError("Please verify your email before proceeding", 400);
     }
 
-    findUser.addresses.push(address)
+    findUser.addresses.push(address);
 
     await findUser.save();
 
-    res.status(201).json({success: true, message: "Address added successfully"});
-
+    res
+      .status(201)
+      .json({ success: true, message: "Address added successfully" });
   } catch (error) {
     return res.status(error.status || 400).json({
       success: false,
@@ -234,10 +235,16 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
+//Log in the user
 exports.login = async (req, res) => {
   try {
-    // const { data } = req.body;
-    const { useremail, password } = req.body;
+    const { data } = req.body;
+
+    //Decrypting the code sent from the frontend
+    const bytes = CryptoJS.AES.decrypt(data, SECRET_KEY);
+    const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
+    const { useremail, password } = decryptedData;
 
     if (!useremail || !password) {
       throwError("Please provide both email and password", 400);
@@ -255,7 +262,17 @@ exports.login = async (req, res) => {
       throwError("");
     }
 
-    user.isLoggedin = true;
+    const token = await user.generateAuthToken();
+
+    await user.save();
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
 
     res.status(200).json({
       success: true,
@@ -264,9 +281,39 @@ exports.login = async (req, res) => {
         password: undefined,
       },
     });
+   
   } catch (error) {
     return res
       .status(error.status || 400)
       .json({ success: false, message: error.message || "Failed to log in" });
+  }
+};
+
+//Log out the user
+exports.logout = async (req, res) => {
+  try {
+    const userID = req._id;
+    const authToken = req.token;
+    const findUser = await userDb.findOne({ _id: userID });
+
+    if (!findUser) {
+      throwError("Unauthorized user, please log in", 401);
+    }
+
+    findUser.tokens = findUser.tokens.filter((item) => {
+      return item.token !== authToken;
+    });
+
+    await findUser.save();
+
+    res.status(200).json({
+      success: true,
+      message: "User logged out successfully",
+    });
+  } catch (error) {
+    return res.status(error.status || 400).json({
+      success: true,
+      message: error.message || "Error logging out the user",
+    });
   }
 };

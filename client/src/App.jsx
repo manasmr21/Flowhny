@@ -16,6 +16,7 @@ import Error from "./components/Error/Error";
 import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/Signup";
 import Verification from "./components/Verifications/Verification";
+import Profile from "./components/Profile/Profile";
 
 function App() {
   const { getProducts, theme } = useStore();
@@ -29,7 +30,7 @@ function App() {
   }, [getProducts]);
 
   return (
-    <div className="all-content">
+    <div className="all-content dark:bg-themedark">
       <Routers>
         <Navbar />
         <ScrollToTop />
@@ -44,6 +45,7 @@ function App() {
           <Route exact path="/login" element={<Login/>} />
           <Route exact path="/register" element={<Signup/>} />
           <Route exact path="/otp" element = {<Verification/>} />
+          <Route exact path="/profile" element={<Profile/>} />
         </Routes>
         <Footer />
       </Routers>

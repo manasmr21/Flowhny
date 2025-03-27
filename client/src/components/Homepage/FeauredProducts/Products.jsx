@@ -27,7 +27,7 @@ function Products() {
           {products?.map((product, index) => (
             <div
               key={product?.id || index}
-              className="border-2 dark:bg-themedark border-themegreen overflow-hidden rounded-xl  shadow-xl bg-white flex flex-col relative"
+              className="border-2 dark:bg-themedark dark:border-white border-themegreen overflow-hidden rounded-xl  shadow-xl bg-white flex flex-col relative"
             >
               <div className="relative">
                 <img
