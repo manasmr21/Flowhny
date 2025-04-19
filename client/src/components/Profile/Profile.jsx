@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Otp from "./otp";
 import DelelteUser from "./delelteUser";
+import AddressField from "./AddressField";
 
 function Profile() {
   const { userData, logoutUser, updateUsername } = apiStore();
@@ -26,6 +27,7 @@ function Profile() {
   const [showOTPField, setShowOTPField] = useState(false);
   const [chageMailCode, setChangeMailCode] = useState(false);
   const [deleteOpt, setDeleteOpt] = useState(false);
+  const [showAddressField, setShowAddressField] = useState(false)
 
   const [newData, setNewData] = useState({
     newMail: "",
@@ -267,14 +269,14 @@ function Profile() {
                 <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {userData.addresses.map((address, index) => (
                     <div
-                      key={address._id || index}
+                      key={address?._id || index}
                       className="bg-white dark:bg-[#2a2a2a] rounded-xl shadow p-6 space-y-2 text-sm border border-gray-200 dark:border-gray-600"
                     >
                       <div className="flex justify-between items-center">
                         <h3 className="text-lg font-semibold text-themegreen">
-                          {address.fullName}
+                          {address?.fullName}
                         </h3>
-                        {address.isDefault && (
+                        {address?.isDefault && (
                           <span className="text-xs bg-themegreen text-white px-2 py-1 rounded-full">
                             Default
                           </span>
@@ -282,20 +284,20 @@ function Profile() {
                       </div>
 
                       <p className="font-semibold text-themegreen ">
-                        {address.phone}
+                        {address?.phone}
                       </p>
                       <p className="text-gray-700 dark:text-gray-300">
-                        {address.addressLine1}
+                        {address?.addressLine1}
                       </p>
                       <p className="text-gray-700 dark:text-gray-300">
-                        {address.addressLine2}
+                        {address?.addressLine2}
                       </p>
                       <p className="text-gray-700 dark:text-gray-300">
-                        {address.city}, {address.state}
+                        {address?.city}, {address?.state}
                       </p>
-                      <p>{address.postalCode}</p>
+                      <p>{address?.postalCode}</p>
                       <p className="text-gray-700 dark:text-gray-300">
-                        {address.country}
+                        {address?.country}
                       </p>
                       <p className="flex float-right">
                         <span className="mx-2">
@@ -314,7 +316,9 @@ function Profile() {
                 </p>
               )}
 
-              <button className="border border-themegreen absolute right-0 grid place-items-center rounded-4xl bg-themegreen text-white text-2xl cursor-pointer w-[40px] h-[40px] hover:scale-[110%] transition active:scale-[95%] bottom-0">
+              <button className="border border-themegreen absolute right-0 grid place-items-center rounded-4xl bg-themegreen text-white text-2xl cursor-pointer w-[40px] h-[40px] hover:scale-[110%] transition active:scale-[95%] bottom-0"
+              onClick={()=> setShowAddressField(true)}
+              >
                 <FaPlus />
               </button>
             </div>
@@ -402,6 +406,11 @@ function Profile() {
           <DelelteUser userID={userData?.userID} setDeleteOpt={setDeleteOpt} />
         </div>
       )}
+
+     {showAddressField && <div>
+        <AddressField setShowAddressField = {setShowAddressField} name={userData?.username} />
+      </div>}
+
     </div>
   );
 }

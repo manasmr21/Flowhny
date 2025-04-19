@@ -3,7 +3,7 @@ const Joi = require("joi");
 // Address validation schema
 const addressSchema = Joi.object({
   fullName: Joi.string().trim().required(),
-  phone: Joi.string()
+  phoneNumber: Joi.string()
     .pattern(/^[0-9]{10,15}$/)
     .required(),
   addressLine1: Joi.string().trim().required(),

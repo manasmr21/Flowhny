@@ -15,7 +15,6 @@ const apiStore = create(
       set({ userData: data });
     },
 
-
     //API for Registering new user
     registerUser: async (formData) => {
       return await axios({
@@ -38,7 +37,6 @@ const apiStore = create(
         });
     },
 
-
     //Verify user email
     verifyUser: async (useremail, code) => {
       try {
@@ -56,7 +54,6 @@ const apiStore = create(
         return error.response.data.message;
       }
     },
-
 
     //To resend verification code while signing in
     resendVerificationCode: async (useremail) => {
@@ -77,7 +74,6 @@ const apiStore = create(
         return error.response.data.message;
       }
     },
-
 
     //API for user log in
     loginUser: async (formData) => {
@@ -100,8 +96,8 @@ const apiStore = create(
           throw new Error(response.data.message || "Login failed");
         }
       } catch (error) {
-        console.log(error.response.data.message)
-        return error.response.data.message
+        console.log(error.response.data.message);
+        return error.response.data.message;
       }
     },
 
@@ -110,7 +106,7 @@ const apiStore = create(
       try {
         const response = await axios.post(`${AUTHAPI}/logout`, null, {
           withCredentials: true,
-        }); 
+        });
 
         if (response.data.success) {
           set({ userData: null });
@@ -120,8 +116,8 @@ const apiStore = create(
           throw new Error(response.data.message || "Logout failed");
         }
       } catch (error) {
-        console.log(error.response.data.message)
-        return error.response.data.message
+        console.log(error.response.data.message);
+        return error.response.data.message;
       }
     },
 
@@ -142,8 +138,8 @@ const apiStore = create(
 
         return response.data;
       } catch (error) {
-        console.log(error.response.data.message)
-        return error.response.data.message
+        console.log(error.response.data.message);
+        return error.response.data.message;
       }
     },
 
@@ -165,29 +161,44 @@ const apiStore = create(
 
         return response.data;
       } catch (error) {
-        console.log(error.response.data.message)
-        return error.response.data.message
+        console.log(error.response.data.message);
+        return error.response.data.message;
       }
     },
 
     deleteUser: async (password, userID) => {
       try {
-
         const response = await axios.delete(`${AUTHAPI}/deleteUser/${userID}`, {
-         data: {password} ,
-         withCredentials: true
-        })
+          data: { password },
+          withCredentials: true,
+        });
 
-        if(response.data.success){
+        if (response.data.success) {
           set({ userData: null });
         }
 
+        return response.data;
+      } catch (error) {
+        console.log(error.response.data.message);
+        return error.response.data.message;
+      }
+    },
+
+    addAddress: async (address) => {
+      try {
+        const response = await axios.post(`${AUTHAPI}/add-address`, address, {
+          withCredentials: true,
+        });
+
+        if(response.data.success){
+          set({userData : response.data.userData})
+        }
 
         return response.data
 
       } catch (error) {
-        console.log(error.response.data.message)
-        return error.response.data.message
+        console.log(error.response.data.message);
+        return error.response.data.message;
       }
     },
   }))

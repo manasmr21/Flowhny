@@ -14,7 +14,7 @@ router.post("/api/authentication/verify-email", controller.verifyEmail);
 router.post("/api/authentication/resend-verification-code", controller.resendVerificationCode);
 router.post("/api/authentication/login", controller.login);
 router.post("/api/authentication/logout",authenticate, controller.logout);
-router.post("/api/authentication/add-details",authenticate, controller.userAddress);
+router.post("/api/authentication/add-address",authenticate, controller.userAddress);
 router.post("/api/authentication/verify",authenticate, controller.verifyAuth);
 router.post("/api/authentication/update-username", authenticate, controller.updateUser);
 router.patch("/api/authentication/update-email",authenticate, controller.updateEmail);

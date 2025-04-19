@@ -174,7 +174,7 @@ exports.resendVerificationCode = async (req, res) => {
 exports.userAddress = async (req, res) => {
   try {
     const userID = req._id;
-    const { address } = req.body;
+    const  address  = req.body;
 
     const findUser = await userDb.findOne({ _id: userID });
 
@@ -195,13 +195,19 @@ exports.userAddress = async (req, res) => {
       throwError("Please verify your email before proceeding", 400);
     }
 
-    findUser.addresses.push(address);
+    if(address){
+      findUser.addresses.push(address);
+    }
 
     await findUser.save();
 
     res
       .status(201)
-      .json({ success: true, message: "Address added successfully" });
+      .json({ success: true, message: "Address added successfully", userData: {
+        ...findUser._doc,
+        password: undefined,
+        tokens: undefined
+      } });
   } catch (error) {
     return res.status(error.status || 400).json({
       success: false,

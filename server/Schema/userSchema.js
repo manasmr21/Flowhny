@@ -12,8 +12,8 @@ const addressSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  phone: {
-    type: String,
+  phoneNumber: {
+    type: Number,
     required: true,
     match: /^[0-9]{10,15}$/,
   },
@@ -35,7 +35,7 @@ const addressSchema = new mongoose.Schema({
     trim: true
   },
   postalCode: {
-    type: String,
+    type: Number,
     required: true,
     trim: true
   },
