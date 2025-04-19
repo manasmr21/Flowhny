@@ -1,6 +1,6 @@
-const express = require("express")
-const router = new express.Router()
-const authenticate = require("../middleware/authentication")
+const express = require("express");
+const router = new express.Router();
+const authenticate = require("../middleware/authentication");
 
 //controllers
 const controller = require("../Controllers/userController")
@@ -14,8 +14,11 @@ router.post("/api/authentication/verify-email", controller.verifyEmail);
 router.post("/api/authentication/resend-verification-code", controller.resendVerificationCode);
 router.post("/api/authentication/login", controller.login);
 router.post("/api/authentication/logout",authenticate, controller.logout);
-router.post("/api/authentication/add-details",authenticate, controller.userDetails);
-router.delete("/api/authentication/deleteUser/:userID", controller.deleteUser);
+router.post("/api/authentication/add-details",authenticate, controller.userAddress);
+router.post("/api/authentication/verify",authenticate, controller.verifyAuth);
+router.post("/api/authentication/update-username", authenticate, controller.updateUser);
+router.patch("/api/authentication/update-email",authenticate, controller.updateEmail);
+router.delete("/api/authentication/deleteUser/:userID", authenticate, controller.deleteUser);
 
 //Product Routers
 router.get("/api/product/fetch-product", productController.fetchAllProduct);

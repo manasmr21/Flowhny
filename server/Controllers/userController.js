@@ -11,6 +11,7 @@ const {
 
 //Environmental Variable
 const dotenv = require("dotenv");
+const { message } = require("../validators/productValidator");
 dotenv.config();
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -88,7 +89,11 @@ exports.register = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Verification code sent to your email",
-      newUser,
+      newUser: {
+        ...newUser._doc,
+        password: undefined,
+        tokens: undefined,
+      },
     });
   } catch (error) {
     return res.status(error.status || 400).json({
@@ -165,8 +170,8 @@ exports.resendVerificationCode = async (req, res) => {
   }
 };
 
-//Add user details
-exports.userDetails = async (req, res) => {
+//Add user address
+exports.userAddress = async (req, res) => {
   try {
     const userID = req._id;
     const { address } = req.body;
@@ -205,11 +210,16 @@ exports.userDetails = async (req, res) => {
   }
 };
 
-//TODO: Modify it for user . this code is for admin only
 //Delete the user
 exports.deleteUser = async (req, res) => {
   try {
     const { userID } = req.params;
+    const {password} = req.body
+    const _id = req._id;
+    
+
+    console.log(userID,   password);
+
 
     if (!userID) {
       throwError("User ID is required", 400);
@@ -217,11 +227,29 @@ exports.deleteUser = async (req, res) => {
 
     const user = await userDb.findOne({ userID });
 
+    console.log(_id, user._id)
+
+    if (_id.toString() !== user._id.toString()) {
+      throwError("Unauthorized to delete user", 401);
+    }
+
     if (!user) {
       throwError("User not found", 404);
     }
 
+    const matchPassword = await bcrypt.compare(password, user.password);
+
+    if(!matchPassword){
+      throwError("Unauthorized! Password does not match", 401);
+    }
+
     await userDb.deleteOne({ userID });
+
+    res.clearCookie("token", {
+      path: "/", 
+      httpOnly: true, 
+      secure: false
+    });
 
     res.status(200).json({
       success: true,
@@ -269,19 +297,17 @@ exports.login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      sameSite: "Lax",
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 30* 24 * 60 * 60 * 1000
     });
-
 
     res.status(200).json({
       success: true,
       user: {
         ...user._doc,
         password: undefined,
+        tokens: undefined,
       },
     });
-   
   } catch (error) {
     return res
       .status(error.status || 400)
@@ -312,8 +338,146 @@ exports.logout = async (req, res) => {
     });
   } catch (error) {
     return res.status(error.status || 400).json({
-      success: true,
+      success: false,
       message: error.message || "Error logging out the user",
+    });
+  }
+};
+
+//Verify if user is logged in or not
+exports.verifyAuth = async (req, res) => {
+  try {
+    const userID = req._id;
+
+    const user = await userDb.findOne({ _id: userID });
+
+    res.status(201).json({
+      success: true,
+      message: "User OK",
+      user: {
+        ...user._doc,
+        password: undefined,
+        tokens: undefined,
+      },
+    });
+  } catch (error) {
+    return res
+      .status(error.status || 400)
+      .json({ success: false, message: error.message });
+  }
+};
+
+//Update username
+exports.updateUser = async (req, res) => {
+  try {
+    const userID = req._id;
+    const updatedUser = req.body;
+    const oldUser = await userDb.findOne({ _id: userID });
+
+    if (!oldUser) {
+      throwError("Error Updating the user. No such user found", 404);
+    }
+
+    console.log(updatedUser);
+
+    oldUser.username = await updatedUser.username;
+
+    await oldUser.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Details updated successfully",
+      userData: {
+        ...oldUser._doc,
+        password: undefined,
+        tokens: undefined,
+      },
+    });
+  } catch (error) {
+    return res
+      .status(error.status || 400)
+      .json({ success: false, message: error.message });
+  }
+};
+
+//Update email address
+exports.updateEmail = async (req, res) => {
+  try {
+    const userID = req._id;
+
+    const user = await userDb.findOne({ _id: userID });
+
+    const data = req.body;
+
+    if (data.oldMail && !data.newMail && !data.code && user.useremail == data.oldMail) {
+      const { verificationCode, expiresAt } = sendMailsForVerification(
+        data.oldMail
+      );
+
+      user.verificationCode = verificationCode;
+      user.verificationCodeExpiresAt = expiresAt;
+
+      await user.save();
+
+      res
+        .status(200)
+        .json({ success: true, message: `Code sent to ${data.oldMail}` });
+    }
+
+    if (data.oldMail && data.code) {
+      if (data.code !== user.verificationCode) {
+        throwError("Invalid code", 400);
+      }
+
+      if (Date.now() > user.verificationCodeExpiresAt) {
+        throwError("Code Expired", 400);
+      }
+
+      const { verificationCode, expiresAt } = sendMailsForVerification(
+        data.newMail
+      );
+
+      user.verificationCode = verificationCode;
+      user.verificationCodeExpiresAt = expiresAt;
+
+      await user.save();
+
+      res
+        .status(200)
+        .json({ success: true, message: `Code sent to ${data.newMail}` });
+    } else if (data.newMail && data.code) {
+      if (data.code !== user.verificationCode) {
+        throwError("Invalid code", 400);
+      }
+
+      if (Date.now() > user.verificationCodeExpiresAt) {
+        throwError("Code Expired", 400);
+      }
+
+      const updatedUser = await userDb.findByIdAndUpdate(
+        { _id: userID },
+        {
+          useremail: data.newMail,
+          verificationCode: null,
+          verificationCodeExpiresAt: null,
+        },
+        { new: true }
+      );
+
+      await updatedUser.save();
+
+      res
+        .status(200)
+        .json({ success: true, message: "Email updated successfully", userData: {
+        ...updatedUser._doc,
+        password: undefined,
+        tokens: undefined,
+      } });
+    }
+  } catch (error) {
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Error updating the user",
     });
   }
 };

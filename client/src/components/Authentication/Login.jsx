@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { FcGoogle } from "react-icons/fc";
 import CryptoJS from "crypto-js"
 import apiStore from '../Store/apiStores';
 
@@ -179,33 +178,6 @@ function Login() {
                         </button>
                     </div>
                 </form>
-
-                {/* Social Login Options */}
-                <div className="mt-6">
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-300"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-2 dark:bg-lighterthemedark bg-white text-gray-500 dark:text-gray-400">
-                                Or continue with
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="mt-6 grid place-items-center">
-                        <button
-                            type="button"
-                            className="w-full inline-flex justify-center items-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 cursor-pointer"
-                        >
-                            <FcGoogle/>
-                            <span className='px-2'>
-                                Google
-                            </span>
-                        </button>
-
-                    </div>
-                </div>
             </div>
         </div>
     );

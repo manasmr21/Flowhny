@@ -1,9 +1,10 @@
-const express = require("express")
-const cors = require("cors")
-const dotenv = require("dotenv")
-const connecToDB = require("./database")
-const router = require("./Routers/routers")
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const connecToDB = require("./database");
+const router = require("./Routers/routers");
 const cookieParser = require('cookie-parser');
+// const cleanExpiredTokens = require("./tokenCleaner/expiredTokenCleaner");
 
 dotenv.config()
 
@@ -20,11 +21,15 @@ app.use(cors({
 app.use(cookieParser());
 app.use(router)
 
+
 app.get("/:message", (req, res) => {
     res.send(req.params.message)
 })
 
 connecToDB().then(() => {
+
+    // cleanExpiredTokens(); 
+
     app.listen(PORT, () => {
         console.log(`Application is running on http://localhost:${PORT}`)
     })

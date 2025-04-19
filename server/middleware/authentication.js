@@ -23,23 +23,24 @@ const authenticate = async (req, res, next) => {
     req.rootUser = rootUser;
     req._id = rootUser._id;
 
-    
-
     next();
   } catch (error) {
     // If JWT is expired or invalid
+
     if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {
       try {
         const token = req.cookies.token;
 
         // Remove token from DB if it's invalid or expired
-        await userDb.updateOne(
+        const result = await userDb.updateOne(
           { "tokens.token": token },
           { $pull: { tokens: { token } } }
         );
+        console.log(result);
       } catch (cleanupError) {
         console.error("Error cleaning up token:", cleanupError.message);
       }
+
 
       return res.status(401).json({
         success: false,

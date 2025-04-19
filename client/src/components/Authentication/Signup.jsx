@@ -1,78 +1,72 @@
-import { useState } from 'react';
-import { Link,useNavigate } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { FcGoogle } from "react-icons/fc";
-import apiStore from '../Store/apiStores';
-import CryptoJS from "crypto-js"
-
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import apiStore from "../Store/apiStores";
+import CryptoJS from "crypto-js";
 
 function Signup() {
-
   //Navigation varible
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
-    username: '',
-    useremail: '',
-    password: '',
-    cpassword: '',
-    terms: false
+    username: "",
+    useremail: "",
+    password: "",
+    cpassword: "",
+    terms: false,
   });
   const [errors, setErrors] = useState({});
-  const {registerUser} = apiStore()
+  const { registerUser } = apiStore();
 
   const getUserData = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
-
 
   //Validating the form
   const validateForm = () => {
     const newErrors = {};
     if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
+      newErrors.username = "Username is required";
     }
-    
+
     //Missing username
     if (!formData.useremail.trim()) {
-      newErrors.useremail = 'Email is required';
+      newErrors.useremail = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.useremail)) {
-      newErrors.useremail = 'Invalid email format';
+      newErrors.useremail = "Invalid email format";
     }
 
     //Missing password and confirm password field
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 5) {
-      newErrors.password = 'Password must be at least 5 characters';
+      newErrors.password = "Password must be at least 5 characters";
     }
 
-    if ( !formData.cpassword) {
-      newErrors.cpassword = 'Passwords do not match';
+    if (!formData.cpassword) {
+      newErrors.cpassword = "Passwords do not match";
     }
 
     if (!formData.terms) {
-      newErrors.terms = 'You must accept the Terms and Privacy Policy';
+      newErrors.terms = "You must accept the Terms and Privacy Policy";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
-
 
   //Encrypting the data sending from frontend
   const encryptData = (data) => {
@@ -89,30 +83,29 @@ function Signup() {
         const encryptedData = encryptData(formData);
         const response = await registerUser(encryptedData);
 
-        if(response.success){
+        if (response.success) {
           setFormData({
-            username : "",
+            username: "",
             useremail: "",
-            password : "",
+            password: "",
             cpassword: "",
-            terms: false
-          })
-          navigate("/otp"); 
+            terms: false,
+          });
+          navigate("/otp");
         }
-
       } catch (err) {
-        alert(err.message || 'Registration failed. Please try again.');
+        alert(err.message || "Registration failed. Please try again.");
       }
     }
   };
 
   const getBoxValue = (e) => {
     const { name, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: checked
+      [name]: checked,
     }));
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 dark:bg-themedark">
@@ -123,8 +116,11 @@ function Signup() {
             Create an account
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-white">
-            Already have an account?{' '}
-            <Link to="/login" className="font-medium text-themegreen hover:text-green-700">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="font-medium text-themegreen hover:text-green-700"
+            >
               Sign in
             </Link>
           </p>
@@ -134,7 +130,10 @@ function Signup() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {/* Full Name Field */}
           <div>
-            <label htmlFor="username" className="block text-sm dark:text-white font-medium text-gray-700">
+            <label
+              htmlFor="username"
+              className="block text-sm dark:text-white font-medium text-gray-700"
+            >
               Full Name
             </label>
             <div className="mt-1 relative">
@@ -148,7 +147,7 @@ function Signup() {
                 value={formData.username}
                 onChange={getUserData}
                 className={`appearance-none block w-full pl-10 pr-3 dark:text-white py-2 border ${
-                  errors.username ? 'border-red-500' : 'border-gray-300'
+                  errors.username ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-themegreen focus:border-transparent`}
                 placeholder="Enter your full name"
               />
@@ -160,7 +159,10 @@ function Signup() {
 
           {/* Email Field */}
           <div>
-            <label htmlFor="useremail" className="block text-sm dark:text-white font-medium text-gray-700">
+            <label
+              htmlFor="useremail"
+              className="block text-sm dark:text-white font-medium text-gray-700"
+            >
               Email address
             </label>
             <div className="mt-1 relative">
@@ -174,7 +176,7 @@ function Signup() {
                 value={formData.useremail}
                 onChange={getUserData}
                 className={`appearance-none block w-full pl-10 dark:text-white pr-3 py-2 border ${
-                  errors.useremail ? 'border-red-500' : 'border-gray-300'
+                  errors.useremail ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-themegreen focus:border-transparent`}
                 placeholder="Enter your email"
               />
@@ -186,7 +188,10 @@ function Signup() {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm dark:text-white font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm dark:text-white font-medium text-gray-700"
+            >
               Password
             </label>
             <div className="mt-1 relative">
@@ -200,7 +205,7 @@ function Signup() {
                 value={formData.password}
                 onChange={getUserData}
                 className={`appearance-none block w-full pl-10 pr-10 py-2 dark:text-white border ${
-                  errors.password ? 'border-red-500' : 'border-gray-300'
+                  errors.password ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-themegreen focus:border-transparent`}
                 placeholder="Create a password"
               />
@@ -223,7 +228,10 @@ function Signup() {
 
           {/* Confirm Password Field */}
           <div>
-            <label htmlFor="cpassword" className="block text-sm dark:text-white font-medium text-gray-700">
+            <label
+              htmlFor="cpassword"
+              className="block text-sm dark:text-white font-medium text-gray-700"
+            >
               Confirm Password
             </label>
             <div className="mt-1 relative">
@@ -237,7 +245,7 @@ function Signup() {
                 value={formData.cpassword}
                 onChange={getUserData}
                 className={`appearance-none block w-full pl-10 dark:text-white pr-10 py-2 border ${
-                  errors.cpassword ? 'border-red-500' : 'border-gray-300'
+                  errors.cpassword ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-themegreen focus:border-transparent`}
                 placeholder="Confirm your password"
               />
@@ -266,57 +274,32 @@ function Signup() {
               type="checkbox"
               checked={formData.terms}
               className="h-4 w-4 text-themegreen focus:ring-themegreen border-gray-300 rounded"
-              onChange={(e)=>getBoxValue(e)}
+              onChange={(e) => getBoxValue(e)}
             />
-            <label htmlFor="terms" className="ml-2 dark:text-white block text-sm text-gray-900">
-              I agree to the{' '}
-              <a href="#" className="text-themegreen hover:text-green-700">
-                Terms
-              </a>{' '}
-              and{' '}
-              <a href="#" className="text-themegreen hover:text-green-700">
-                Privacy Policy
-              </a>
+            <label
+              htmlFor="terms"
+              className="ml-2 dark:text-white block text-sm text-gray-900"
+            >
+              I agree to the{" "}
+              <Link to="/" className="text-themegreen hover:text-green-700">
+                Terms and Privacy Policy
+              </Link>
             </label>
           </div>
-          {errors.terms && <p className="mt-1 text-sm text-red-600">{errors.terms}</p>}
+          {errors.terms && (
+            <p className="mt-1 text-sm text-red-600">{errors.terms}</p>
+          )}
 
           {/* Submit Button */}
           <div>
             <button
               type="submit"
               className=" cursor-pointer active:scale-[95%] group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-themegreen hover:bg-green-700 focus:outline-none  transition duration-200"
-
             >
               Create Account
             </button>
           </div>
         </form>
-
-        {/* Social Signup Options */}
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white dark:bg-lighterthemedark dark:text-gray-300 text-gray-500">
-                Or sign up with
-              </span>
-            </div>
-          </div>
-
-          <div className="mt-6 grid items-center">
-            <button
-              type="button"
-              className="w-full items-center justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 flex "
-            >
-                <FcGoogle/>
-              <span className='px-2'>Google</span>
-
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

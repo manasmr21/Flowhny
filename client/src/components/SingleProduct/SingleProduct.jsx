@@ -72,7 +72,7 @@ function SingleProduct() {
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="lg:w-2/5">
           {/* image section */}
-          <div className="bg-white p-4 rounded-lg shadow-md mb-4">
+          <div className="bg-white p-4 rounded-lg shadow-md mb-4 dark:bg-lighterthemedark">
             <img
               src={mainImage || product.thumbnail}
               alt={product.title}
@@ -118,29 +118,29 @@ function SingleProduct() {
         </div>
 
         {/* Some product details  */}
-        <div className="lg:w-3/5 scroll-auto">
-          <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="lg:w-3/5 scroll-auto ">
+          <div className="bg-white p-6 rounded-lg shadow-md dark:bg-lighterthemedark">
             <h1 className="text-2xl md:text-3xl font-bold text-themegreen mb-2">
               {product.title}
             </h1>
-            <p className="text-gray-500 text-sm mb-4">
+            <p className="text-gray-500 dark:text-gray-300 text-sm mb-4">
               Product by:{" "}
               <span className="text-themegreen font-medium">
                 {product.brand}
               </span>
-              <span className="ml-3 text-gray-600">SKU: {product.sku}</span>
+              <span className="ml-3 text-gray-600 dark:text-gray-300">SKU: {product.sku}</span>
             </p>
 
             <div className="flex items-center mb-4">
               <div className="bg-themegreen text-white px-2 py-1 rounded-md text-sm font-medium mr-3">
                 {product.rating} <span className="text-[gold]">★</span>
               </div>
-              <span className="text-gray-600 text-sm">
+              <span className="text-gray-600 text-sm dark:text-gray-300">
                 {product.reviews ? product.reviews.length : 0} user reviews
               </span>
             </div>
 
-            <p className="text-gray-700 mb-6">{product.description}</p>
+            <p className="text-gray-700 mb-6 dark:text-gray-300">{product.description}</p>
 
             <div className="mb-6">
               <p className="text-2xl font-bold flex items-center">
@@ -186,7 +186,7 @@ function SingleProduct() {
             )}
 
             <div className="mb-6">
-              <p className="text-gray-700 mb-1">
+              <p className="text-gray-700 mb-1 dark:text-gray-300">
                 Availability:
                 <span
                   className={`font-medium ${
@@ -199,25 +199,25 @@ function SingleProduct() {
                   {product.availabilityStatus}
                 </span>
                 {product.stock && (
-                  <span className="text-gray-600 ml-2">
+                  <span className="text-gray-600 ml-2 dark:text-gray-300">
                     ({product.stock} in stock)
                   </span>
                 )}
               </p>
-              <p className="text-gray-700 mb-1">
+              <p className="text-gray-700 mb-1 dark:text-gray-300">
                 {product.shippingInformation}
               </p>
-              <p className="text-gray-700">{product.warrantyInformation}</p>
+              <p className="text-gray-700 dark:text-gray-300">{product.warrantyInformation}</p>
             </div>
 
             <div className="mb-6">
-              <p className="text-gray-700 mb-2">Quantity:</p>
+              <p className="text-gray-700 mb-2 dark:text-gray-300">Quantity:</p>
               <div className="flex items-center">
                 <button
                   type="button"
                   disabled={quantity == 1}
                   onClick={() => handleQuantityChange("decrease")}
-                  className="cursor-pointer px-3 py-1 border border-gray-300 rounded-l-md bg-gray-100 hover:bg-gray-200"
+                  className="cursor-pointer px-3   py-1 border border-gray-300 rounded-l-md bg-gray-100 hover:bg-gray-200"
                 >
                   -
                 </button>
@@ -228,7 +228,7 @@ function SingleProduct() {
                   onChange={(e) =>
                     setQuantity(Math.max(1, parseInt(e.target.value) || 1))
                   }
-                  className="w-16 text-center border-t border-b border-gray-300 py-1"
+                  className="w-16 dark:text-gray-300 text-center border-t border-b border-gray-300 py-1"
                   min="1"
                 />
                 <button
@@ -243,7 +243,7 @@ function SingleProduct() {
             </div>
 
             <div className="mb-6">
-              <span className="bg-gray-200 text-gray-700 rounded-sm px-3 py-1 text-sm">
+              <span className="bg-gray-200 text-gray-700 rounded-sm px-3 py-1 text-sm ">
                 {product.returnPolicy}
               </span>
             </div>
@@ -251,14 +251,14 @@ function SingleProduct() {
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 type="button"
-                className="w-full sm:w-1/2 p-3 border border-themegreen rounded-md bg-white text-themegreen hover:bg-themegreen hover:text-white transition duration-300 active:scale-[98%] font-medium"
+                className="w-full sm:w-1/2 p-3 border border-themegreen rounded-md bg-transparent text-themegreen hover:bg-themegreen cursor-pointer hover:text-white transition duration-300 active:scale-[98%] font-medium"
                 onClick={() => addToCartBtn(product)}
               >
                 Add to Cart
               </button>
               <button
                 type="button"
-                className="w-full sm:w-1/2 p-3 border border-themegreen rounded-md bg-themegreen text-white hover:bg-white hover:text-themegreen transition duration-300 active:scale-[98%] font-medium"
+                className="w-full sm:w-1/2 p-3 border border-themegreen rounded-md bg-themegreen text-white hover:bg-transparent cursor-pointer hover:text-themegreen transition duration-300 active:scale-[98%] font-medium"
               >
                 Buy Now
               </button>
@@ -267,16 +267,16 @@ function SingleProduct() {
         </div>
       </div>
 
-      <div className="mt-10 bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="mt-10 bg-white rounded-lg shadow-md overflow-hidden dark:bg-lighterthemedark">
         <div className="border-b border-gray-200">
-          <nav className="flex flex-wrap">
+          <nav className="flex flex-wrap ">
             <button
               type="button"
               onClick={() => setActiveTab("details")}
               className={`px-4 py-4 text-sm font-medium ${
                 activeTab === "details"
                   ? "text-white bg-themegreen"
-                  : "text-gray-700 hover:text-themegreen hover:bg-gray-50"
+                  : "text-gray-700 hover:text-themegreen dark:text-gray-300 hover:bg-gray-50"
               }`}
             >
               Product Details
@@ -287,7 +287,7 @@ function SingleProduct() {
               className={`px-4 py-4 text-sm font-medium ${
                 activeTab === "reviews"
                   ? "text-white bg-themegreen"
-                  : "text-gray-700 hover:text-themegreen hover:bg-gray-50"
+                  : "text-gray-700 hover:text-themegreen dark:text-gray-300 hover:bg-gray-50"
               }`}
             >
               Reviews ({product.reviews ? product.reviews.length : 0})
@@ -298,7 +298,7 @@ function SingleProduct() {
               className={`px-4 py-4 text-sm font-medium ${
                 activeTab === "shipping"
                   ? "text-white bg-themegreen"
-                  : "text-gray-700 hover:text-themegreen hover:bg-gray-50"
+                  : "text-gray-700 hover:text-themegreen dark:text-gray-300 hover:bg-gray-50"
               }`}
             >
               Shipping Info
@@ -306,37 +306,37 @@ function SingleProduct() {
           </nav>
         </div>
 
-        <div className="p-6">
+        <div className="p-6 ">
           {activeTab === "details" && (
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white  mb-4">
                 Specifications
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="border-b border-gray-200 pb-2">
-                  <p className="text-gray-500 text-sm">Category</p>
-                  <p className="text-gray-900">{product.category}</p>
+                  <p className="text-gray-500 dark:text-gray-300 text-sm">Category</p>
+                  <p className="text-gray-900 dark:text-white ">{product.category}</p>
                 </div>
                 <div className="border-b border-gray-200 pb-2">
-                  <p className="text-gray-500 text-sm">Brand</p>
-                  <p className="text-gray-900">{product.brand}</p>
+                  <p className="text-gray-500 dark:text-gray-300 text-sm">Brand</p>
+                  <p className="text-gray-900 dark:text-white ">{product.brand}</p>
                 </div>
                 <div className="border-b border-gray-200 pb-2">
-                  <p className="text-gray-500 text-sm">Stock</p>
-                  <p className="text-gray-900">{product.stock} units</p>
+                  <p className="text-gray-500 dark:text-gray-300 text-sm">Stock</p>
+                  <p className="text-gray-900 dark:text-white ">{product.stock} units</p>
                 </div>
                 <div className="border-b border-gray-200 pb-2">
-                  <p className="text-gray-500 text-sm">SKU</p>
-                  <p className="text-gray-900">{product.sku}</p>
+                  <p className="text-gray-500 dark:text-gray-300 text-sm">SKU</p>
+                  <p className="text-gray-900 dark:text-white ">{product.sku}</p>
                 </div>
                 <div className="border-b border-gray-200 pb-2">
-                  <p className="text-gray-500 text-sm">Weight</p>
-                  <p className="text-gray-900">{product.weight} oz</p>
+                  <p className="text-gray-500 dark:text-gray-300 text-sm">Weight</p>
+                  <p className="text-gray-900 dark:text-white ">{product.weight} oz</p>
                 </div>
                 {product.dimensions && (
                   <div className="border-b border-gray-200 pb-2">
-                    <p className="text-gray-500 text-sm">Dimensions</p>
-                    <p className="text-gray-900">
+                    <p className="text-gray-500 dark:text-gray-300 text-sm">Dimensions</p>
+                    <p className="text-gray-900 dark:text-white ">
                       {product.dimensions.width}W × {product.dimensions.height}H
                       × {product.dimensions.depth}D cm
                     </p>
@@ -344,16 +344,16 @@ function SingleProduct() {
                 )}
               </div>
 
-              <h3 className="text-lg font-medium text-gray-900 mt-6 mb-4">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-300  mt-6 mb-4">
                 Product Description
               </h3>
-              <p className="text-gray-700">{product.description}</p>
+              <p className="text-gray-700 dark:text-white">{product.description}</p>
             </div>
           )}
 
           {activeTab === "reviews" && (
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white  mb-4">
                 Customer Reviews
               </h3>
 
@@ -379,7 +379,7 @@ function SingleProduct() {
                         <p className="text-gray-700 font-medium">
                           {review.reviewerName}
                         </p>
-                        <p className="text-gray-500 text-sm ml-auto">
+                        <p className="text-gray-500 dark:text-gray-300 text-sm ml-auto">
                           {formatDate(review.date)}
                         </p>
                       </div>
@@ -388,7 +388,7 @@ function SingleProduct() {
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-500">
+                <p className="text-gray-500 dark:text-gray-300">
                   No reviews yet. Be the first to review this product!
                 </p>
               )}
@@ -397,7 +397,7 @@ function SingleProduct() {
 
           {activeTab === "shipping" && (
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white  mb-4">
                 Shipping Information
               </h3>
               <div className="space-y-4">

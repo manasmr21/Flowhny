@@ -15,7 +15,7 @@ const addressSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    match: /^[0-9]{10,15}$/
+    match: /^[0-9]{10,15}$/,
   },
   addressLine1:{
     type: String, 
@@ -105,15 +105,12 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-
 const autheSecreteKey = process.env.auth_token_key
 
 //Generating authentication token
 userSchema.methods.generateAuthToken = async function() {
     try {
-        const token = jwt.sign({_id: this._id}, autheSecreteKey, {
-            expiresIn : "1d"
-        })
+        const token = jwt.sign({_id: this._id}, autheSecreteKey)
 
         this.tokens = this.tokens.concat({token})
 

@@ -7,6 +7,16 @@ const apiStore = create(
   persist((set) => ({
     userData: null,
 
+    makeUserNull: () => {
+      set({ userData: null });
+    },
+
+    changeUserData: (data) => {
+      set({ userData: data });
+    },
+
+
+    //API for Registering new user
     registerUser: async (formData) => {
       return await axios({
         method: "post",
@@ -23,14 +33,13 @@ const apiStore = create(
           }
         })
         .catch((error) => {
-          const errorMessage =
-            error.response?.data?.message ||
-            error.message ||
-            "Registration failed";
-          throw new Error(errorMessage);
+          console.log(error.response.data.message);
+          return error.response.data.message;
         });
     },
 
+
+    //Verify user email
     verifyUser: async (useremail, code) => {
       try {
         const response = await axios.post(`${AUTHAPI}/verify-email`, {
@@ -43,14 +52,13 @@ const apiStore = create(
           return response.data;
         }
       } catch (error) {
-        const errorMessage =
-          error.response?.data?.message ||
-          error.message ||
-          "Verification failed";
-        throw new Error(errorMessage);
+        console.log(error.response.data.message);
+        return error.response.data.message;
       }
     },
 
+
+    //To resend verification code while signing in
     resendVerificationCode: async (useremail) => {
       try {
         const response = await axios.post(
@@ -65,21 +73,24 @@ const apiStore = create(
           return response.data;
         }
       } catch (error) {
-        const errorMessage =
-          error.response?.data?.message ||
-          error.message ||
-          "Failed to resend code";
-        throw new Error(errorMessage);
+        console.log(error.response.data.message);
+        return error.response.data.message;
       }
     },
 
+
+    //API for user log in
     loginUser: async (formData) => {
       try {
-        const response = await axios.post(`${AUTHAPI}/login`, {
-          data: formData,
-        }, {
-          withCredentials: true
-        });
+        const response = await axios.post(
+          `${AUTHAPI}/login`,
+          {
+            data: formData,
+          },
+          {
+            withCredentials: true,
+          }
+        );
 
         if (response.data.success) {
           set({ userData: response.data.user });
@@ -89,39 +100,96 @@ const apiStore = create(
           throw new Error(response.data.message || "Login failed");
         }
       } catch (error) {
-        const errorMessage =
-          error.response?.data?.message || error.message || "Login failed";
-        throw new Error(errorMessage);
+        console.log(error.response.data.message)
+        return error.response.data.message
       }
     },
+
+    //Log out the user
     logoutUser: async () => {
       try {
         const response = await axios.post(`${AUTHAPI}/logout`, null, {
-          withCredentials: true
-        });
-        
-
-        set({ userData: {} });
+          withCredentials: true,
+        }); 
 
         if (response.data.success) {
           set({ userData: null });
-          alert(response.data.message)
+          alert(response.data.message);
           return response.data;
         } else {
           throw new Error(response.data.message || "Logout failed");
         }
-
       } catch (error) {
-        const errorMessage =
-          error.response?.data?.message || error.message || "Login failed";
-        throw new Error(errorMessage);
+        console.log(error.response.data.message)
+        return error.response.data.message
       }
     },
 
-    //Verify if the user token is valid or expired
-    //TODO: write the code
+    //Change Username
+    updateUsername: async (updatedUser) => {
+      try {
+        const response = await axios.post(
+          `${AUTHAPI}/update-username`,
+          updatedUser,
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (response.data.success) {
+          set({ userData: response.data.userData });
+        }
+
+        return response.data;
+      } catch (error) {
+        console.log(error.response.data.message)
+        return error.response.data.message
+      }
+    },
+
+    //Change email
+    handleVerification: async (newMail, code) => {
+      try {
+        const response = await axios.patch(
+          `${AUTHAPI}/update-email`,
+          {
+            newMail,
+            code,
+          },
+          { withCredentials: true }
+        );
+
+        if (response.data.success) {
+          set({ userData: response.data.userData });
+        }
+
+        return response.data;
+      } catch (error) {
+        console.log(error.response.data.message)
+        return error.response.data.message
+      }
+    },
+
+    deleteUser: async (password, userID) => {
+      try {
+
+        const response = await axios.delete(`${AUTHAPI}/deleteUser/${userID}`, {
+         data: {password} ,
+         withCredentials: true
+        })
+
+        if(response.data.success){
+          set({ userData: null });
+        }
 
 
+        return response.data
+
+      } catch (error) {
+        console.log(error.response.data.message)
+        return error.response.data.message
+      }
+    },
   }))
 );
 

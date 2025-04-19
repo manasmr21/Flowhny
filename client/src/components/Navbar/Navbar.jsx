@@ -16,7 +16,7 @@ function Navbar() {
 
   const location = useLocation();
   const { cart, theme, themeToggler } = useStore();
-  const { userData, logoutUser } = apiStore();
+  const { userData } = apiStore();
 
   window.addEventListener("scroll", () => {
     setScrollDown(window.scrollY);
@@ -98,7 +98,7 @@ function Navbar() {
             } transition px-1.5  md:px-2.5 md:text-xl  `}
           >
             <Link to="/cart"><FaShoppingCart /></Link>
-            <span className={`absolute ${cart.length > 1 ? "block" : "hidden" } border border-[red] text-white rounded-3xl px-1 top-[-4px] left-[-2px] bg-red-600 text-xs`}>
+            <span className={`absolute ${cart.length > 0 ? "block" : "hidden" } border border-[red] text-white rounded-3xl px-1 top-[-4px] left-[-2px] bg-red-600 text-xs`}>
               {cart.length}
             </span>
           </button>}
@@ -128,14 +128,11 @@ function Navbar() {
             </button>
           ) : (
             <Link to="/profile"
-              className={`border-2 cursor-pointer grid place-items-center rounded-4xl font-semibold px-2.5 ${
+              className={`border-2 cursor-pointer grid place-items-center w-[40px] h-[40px] rounded-4xl font-semibold px-2.5 ${
                 scrollDown < 50 && location.pathname == "/" ? "text-themegreen" : "text-white"
               } `}
             >
-              {userData?.username
-                .split(" ")
-                .slice(0, 2)
-                .map((e) => e[0])}
+              {userData?.username[0]}
             </Link>
           )}
         </div>
