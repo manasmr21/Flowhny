@@ -19,6 +19,8 @@ router.post("/api/authentication/verify",authenticate, controller.verifyAuth);
 router.post("/api/authentication/update-username", authenticate, controller.updateUser);
 router.patch("/api/authentication/update-email",authenticate, controller.updateEmail);
 router.delete("/api/authentication/deleteUser/:userID", authenticate, controller.deleteUser);
+router.delete("/api/authentication/deleteAddress/:addressID", authenticate, controller.deleteAddress);
+router.post("/api/authentication/updateAddress", authenticate, controller.updateAddress);
 
 //Product Routers
 router.get("/api/product/fetch-product", productController.fetchAllProduct);

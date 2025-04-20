@@ -1,20 +1,28 @@
 import { useState } from "react";
 import apiStore from "../Store/apiStores";
+import PropTypes from "prop-types";
 
-function AddressField( {setShowAddressField, name} ) {
+function AddressField({
+  setShowAddressField,
+  name,
+  editAddress,
+  setEditAddress,
+  userAddress,
+}) {
+  const { addAddress, updateAddress } = apiStore();
+
   const [address, setAddress] = useState({
     fullName: name,
-    phoneNumber: "",
-    addressLine1: "",
-    addressLine2: "",
-    city: "",
-    state: "",
-    country: "",
-    postalCode: "",
-    isDefault: false,
+    phoneNumber: editAddress ? userAddress.phoneNumber : "",
+    addressLine1: editAddress ? userAddress.addressLine1 : "",
+    addressLine2: editAddress ? userAddress.addressLine2 : "",
+    city: editAddress ? userAddress.city : "",
+    state: editAddress ? userAddress.state : "",
+    country: editAddress ? userAddress.country : "",
+    postalCode: editAddress ? userAddress.postalCode : "",
+    isDefault: editAddress ? userAddress.isDefault : false,
   });
 
-  const { addAddress } = apiStore();
   const handleFormChange = (e) => {
     const { name, value } = e.target;
 
@@ -24,19 +32,32 @@ function AddressField( {setShowAddressField, name} ) {
     });
   };
 
-    const handleAddingAddress = async()=>{
-     try {
-       const response = await addAddress(address)
-        
-       if(response.success){
-        alert("Address added successfully")
-        setShowAddressField(false)
-       }
-       
-     } catch (error) {
-        console.log(error)
-     }
+  const handleAddingAddress = async () => {
+    try {
+      const response = await addAddress(address);
+
+      if (response.success) {
+        alert(response.message);
+        setShowAddressField(false);
+      }
+    } catch (error) {
+      console.log(error);
     }
+  };
+
+  const handleUpdatingAddress = async()=>{
+    try {
+      const response = await updateAddress(userAddress._id, address)
+
+      if(response.success){
+        alert(response.message);
+        setShowAddressField(false)
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div className="fixed inset-0 grid place-items-center bg-[#00000089] z-50 overflow-y-auto">
@@ -164,13 +185,26 @@ function AddressField( {setShowAddressField, name} ) {
         </form>
 
         <div className="text-center mt-5">
-          <button className=" mx-3 bg-themegreen p-2 rounded w-[30%] hover:scale-[105%] active:scale-[95%] transition cursor-pointer"
-          onClick={handleAddingAddress}
+         {!editAddress ? <button
+            className=" mx-3 bg-themegreen p-2 rounded w-[30%] hover:scale-[105%] active:scale-[95%] transition cursor-pointer"
+            onClick={handleAddingAddress}
           >
             Save
           </button>
-          <button className=" mx-3 bg-[red] p-2 rounded w-[30%] hover:scale-[105%] active:scale-[95%] transition cursor-pointer"
-            onClick={()=>{ setShowAddressField(false)}}
+            :
+            <button
+            className=" mx-3 bg-themegreen p-2 rounded w-[30%] hover:scale-[105%] active:scale-[95%] transition cursor-pointer"
+            onClick={handleUpdatingAddress}
+          >
+            Update
+          </button>
+          }
+          <button
+            className=" mx-3 bg-[red] p-2 rounded w-[30%] hover:scale-[105%] active:scale-[95%] transition cursor-pointer"
+            onClick={() => {
+              setShowAddressField(false);
+              setEditAddress(false);
+            }}
           >
             Cancel
           </button>
@@ -179,5 +213,13 @@ function AddressField( {setShowAddressField, name} ) {
     </div>
   );
 }
+
+AddressField.propTypes = {
+  setShowAddressField: PropTypes.bool.isRequired,
+  name: PropTypes.string.isRequired,
+  editAddress: PropTypes.bool,
+  setEditAddress: PropTypes.func,
+  userAddress : PropTypes.object
+};
 
 export default AddressField;

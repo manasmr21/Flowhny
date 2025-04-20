@@ -17,7 +17,7 @@ import DelelteUser from "./delelteUser";
 import AddressField from "./AddressField";
 
 function Profile() {
-  const { userData, logoutUser, updateUsername } = apiStore();
+  const { userData, logoutUser, updateUsername, deleteAddress } = apiStore();
   const [editUsername, setEditUsername] = useState(false);
   const [editUseremail, setEditUseremail] = useState(false);
   const tabs = ["Details", "Orders", "Address"];
@@ -27,7 +27,9 @@ function Profile() {
   const [showOTPField, setShowOTPField] = useState(false);
   const [chageMailCode, setChangeMailCode] = useState(false);
   const [deleteOpt, setDeleteOpt] = useState(false);
-  const [showAddressField, setShowAddressField] = useState(false)
+  const [showAddressField, setShowAddressField] = useState(false);
+  const [editAddress, setEditAddress] = useState(false);
+  const [addressID, setAddressID] = useState(null)
 
   const [newData, setNewData] = useState({
     newMail: "",
@@ -37,6 +39,7 @@ function Profile() {
   const AUTHAPI = import.meta.env.VITE_AUTHAPI_URL;
 
   useEffect(() => {
+    //WILL CHANGE THIS LATER AND WILL ADD PROTECTED ROUTE FOR CHECKING IF THE USER IS LOGGED IN OR NOT
     if (!userData) {
       navigate("/");
     }
@@ -46,6 +49,7 @@ function Profile() {
     }
   }, [userData]);
 
+  //Update user name Function
   const handleChangeName = async () => {
     try {
       const response = await updateUsername({ username: name });
@@ -58,6 +62,7 @@ function Profile() {
     }
   };
 
+  //Send code for email update
   const sendCodeToOldMail = async () => {
     try {
       const response = await axios.patch(
@@ -78,6 +83,7 @@ function Profile() {
     }
   };
 
+  //Insert username data
   const handleNewData = (e) => {
     const { name, value } = e.target;
 
@@ -87,6 +93,7 @@ function Profile() {
     });
   };
 
+  //Update user email
   const handleEmailChange = async () => {
     try {
       const response = await axios.patch(
@@ -108,6 +115,24 @@ function Profile() {
     } catch (error) {
       console.log(error.response.data.message || error.message);
     }
+  };
+
+  //Delete an existing Address
+  const handleDeletingAddress = async (addressId) => {
+    try {
+      const response = await deleteAddress(addressId);
+
+      console.log(addressID)
+
+      if(response.success){
+        alert(response.message)
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+
+   
   };
 
   return (
@@ -263,6 +288,7 @@ function Profile() {
             </div>
           )}
 
+          {/* Address Section */}
           {activeTab === "Address" && (
             <div className="relative">
               {userData?.addresses?.length > 0 ? (
@@ -270,7 +296,7 @@ function Profile() {
                   {userData.addresses.map((address, index) => (
                     <div
                       key={address?._id || index}
-                      className="bg-white dark:bg-[#2a2a2a] rounded-xl shadow p-6 space-y-2 text-sm border border-gray-200 dark:border-gray-600"
+                      className="bg-white relative dark:bg-[#2a2a2a] rounded-xl shadow p-6 space-y-2 text-sm border border-gray-200 dark:border-gray-600"
                     >
                       <div className="flex justify-between items-center">
                         <h3 className="text-lg font-semibold text-themegreen">
@@ -284,7 +310,7 @@ function Profile() {
                       </div>
 
                       <p className="font-semibold text-themegreen ">
-                        {address?.phone}
+                        {address?.phoneNumber}
                       </p>
                       <p className="text-gray-700 dark:text-gray-300">
                         {address?.addressLine1}
@@ -299,13 +325,26 @@ function Profile() {
                       <p className="text-gray-700 dark:text-gray-300">
                         {address?.country}
                       </p>
-                      <p className="flex float-right">
-                        <span className="mx-2">
+
+                      <p className="flex right-2 bottom-3 absolute">
+                        <button
+                          className="mx-2 cursor-pointer"
+                          onClick={() => {
+                            setShowAddressField(true);
+                            setEditAddress(true);
+                            setAddressID(address?._id)
+                          }}
+                        >
                           <FaEdit />
-                        </span>
-                        <span className="mx-2 text-[red]">
+                        </button>
+                        <button
+                          className="cursor-pointer mx-2 text-[red]"
+                          onClick={() => {
+                            handleDeletingAddress(address?._id);
+                          }}
+                        >
                           <FaTrashAlt />
-                        </span>
+                        </button>
                       </p>
                     </div>
                   ))}
@@ -316,8 +355,9 @@ function Profile() {
                 </p>
               )}
 
-              <button className="border border-themegreen absolute right-0 grid place-items-center rounded-4xl bg-themegreen text-white text-2xl cursor-pointer w-[40px] h-[40px] hover:scale-[110%] transition active:scale-[95%] bottom-0"
-              onClick={()=> setShowAddressField(true)}
+              <button
+                className="border border-themegreen float-right mt-10 grid place-items-center rounded-4xl bg-themegreen text-white text-2xl cursor-pointer w-[40px] h-[40px] hover:scale-[110%] transition active:scale-[95%]"
+                onClick={() => setShowAddressField(true)}
               >
                 <FaPlus />
               </button>
@@ -407,10 +447,17 @@ function Profile() {
         </div>
       )}
 
-     {showAddressField && <div>
-        <AddressField setShowAddressField = {setShowAddressField} name={userData?.username} />
-      </div>}
-
+      {showAddressField && (
+        <div>
+          <AddressField
+            setShowAddressField={setShowAddressField}
+            name={userData?.username}
+            editAddress={editAddress}
+            setEditAddress={setEditAddress}
+            userAddress={userData.addresses.filter(item=> item._id.toString() === addressID.toString())[0]}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -174,7 +174,7 @@ exports.resendVerificationCode = async (req, res) => {
 exports.userAddress = async (req, res) => {
   try {
     const userID = req._id;
-    const  address  = req.body;
+    const address = req.body;
 
     const findUser = await userDb.findOne({ _id: userID });
 
@@ -195,19 +195,21 @@ exports.userAddress = async (req, res) => {
       throwError("Please verify your email before proceeding", 400);
     }
 
-    if(address){
+    if (address) {
       findUser.addresses.push(address);
     }
 
     await findUser.save();
 
-    res
-      .status(201)
-      .json({ success: true, message: "Address added successfully", userData: {
+    res.status(201).json({
+      success: true,
+      message: "Address added successfully",
+      userData: {
         ...findUser._doc,
         password: undefined,
-        tokens: undefined
-      } });
+        tokens: undefined,
+      },
+    });
   } catch (error) {
     return res.status(error.status || 400).json({
       success: false,
@@ -216,16 +218,98 @@ exports.userAddress = async (req, res) => {
   }
 };
 
+//Update Address
+exports.updateAddress = async (req, res) => {
+  try {
+
+    const userID = req._id
+    const {newAddress, addressID} = req.body
+
+    const user = await userDb.findOne({_id: userID})
+
+
+    if(!user){
+      throwError("Error finding the user", 404);
+    }
+
+
+    const addressIndex = user.addresses.map((item, idx) => {
+      if (item._id.toString() === addressID.toString()) {
+        return idx;
+      }
+    }).filter(idx => idx !== undefined);
+
+    if(addressIndex[0] !== undefined){
+      const originalID =  user.addresses[addressIndex]._id;
+
+      user.addresses[addressIndex] = {
+        ...newAddress,
+        _id : originalID
+      }
+
+      await user.save()
+
+      res.status(200).json({success: true, message: "Address Updated successfully", userData: {
+        ...user._doc,
+        password: undefined,
+        tokens: undefined
+      }})
+
+    }else{
+      throwError("Error updating the address, not found in database.", 404)
+    }
+
+  } catch (error) {
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Error adding more details",
+    });
+  }
+};
+
+//Delete Address
+exports.deleteAddress = async (req, res) => {
+  try {
+    const userID = req._id;
+
+    const { addressID } = req.params;
+
+    const user = await userDb.findOne({ _id: userID });
+
+    user.addresses = user.addresses.filter((item) => {
+      return item._id.toString() !== addressID.toString();
+    });
+
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Address Deleted Successfully",
+      userData: {
+        ...user._doc,
+        password: undefined,
+        tokens: undefined,
+      },
+    });
+  } catch (error) {
+    return res
+      .status(error.status || 400)
+      .json({
+        success: false,
+        message: error.message || "Error Deleting Address",
+      });
+  }
+};
+
 //Delete the user
 exports.deleteUser = async (req, res) => {
   try {
     const { userID } = req.params;
-    const {password} = req.body
+    const { password } = req.body;
     const _id = req._id;
-    
 
-    console.log(userID,   password);
-
+    console.log(userID, password);
 
     if (!userID) {
       throwError("User ID is required", 400);
@@ -233,7 +317,7 @@ exports.deleteUser = async (req, res) => {
 
     const user = await userDb.findOne({ userID });
 
-    console.log(_id, user._id)
+    console.log(_id, user._id);
 
     if (_id.toString() !== user._id.toString()) {
       throwError("Unauthorized to delete user", 401);
@@ -245,16 +329,16 @@ exports.deleteUser = async (req, res) => {
 
     const matchPassword = await bcrypt.compare(password, user.password);
 
-    if(!matchPassword){
+    if (!matchPassword) {
       throwError("Unauthorized! Password does not match", 401);
     }
 
     await userDb.deleteOne({ userID });
 
     res.clearCookie("token", {
-      path: "/", 
-      httpOnly: true, 
-      secure: false
+      path: "/",
+      httpOnly: true,
+      secure: false,
     });
 
     res.status(200).json({
@@ -303,7 +387,7 @@ exports.login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      maxAge: 30* 24 * 60 * 60 * 1000
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
     res.status(200).json({
@@ -415,7 +499,12 @@ exports.updateEmail = async (req, res) => {
 
     const data = req.body;
 
-    if (data.oldMail && !data.newMail && !data.code && user.useremail == data.oldMail) {
+    if (
+      data.oldMail &&
+      !data.newMail &&
+      !data.code &&
+      user.useremail == data.oldMail
+    ) {
       const { verificationCode, expiresAt } = sendMailsForVerification(
         data.oldMail
       );
@@ -472,13 +561,15 @@ exports.updateEmail = async (req, res) => {
 
       await updatedUser.save();
 
-      res
-        .status(200)
-        .json({ success: true, message: "Email updated successfully", userData: {
-        ...updatedUser._doc,
-        password: undefined,
-        tokens: undefined,
-      } });
+      res.status(200).json({
+        success: true,
+        message: "Email updated successfully",
+        userData: {
+          ...updatedUser._doc,
+          password: undefined,
+          tokens: undefined,
+        },
+      });
     }
   } catch (error) {
     return res.status(error.status || 400).json({

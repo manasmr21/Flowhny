@@ -166,6 +166,7 @@ const apiStore = create(
       }
     },
 
+    //Delete an existing user
     deleteUser: async (password, userID) => {
       try {
         const response = await axios.delete(`${AUTHAPI}/deleteUser/${userID}`, {
@@ -184,18 +185,64 @@ const apiStore = create(
       }
     },
 
+    //Add address API
     addAddress: async (address) => {
       try {
         const response = await axios.post(`${AUTHAPI}/add-address`, address, {
           withCredentials: true,
         });
 
+        if (response.data.success) {
+          set({ userData: response.data.userData });
+        }
+
+        return response.data;
+      } catch (error) {
+        console.log(error.response.data.message);
+        return error.response.data.message;
+      }
+    },
+
+    //Delete an existing address
+    deleteAddress: async (addressID) => {
+      try {
+        const response = await axios.delete(
+          `${AUTHAPI}/deleteAddress/${addressID}`,
+          {
+            withCredentials: true,
+          }
+        );
+
+        console.log(response)
+
+        if (response.data.success) {
+          set({ userData: response.data.userData });
+        }
+
+        return response.data;
+      } catch (error) {
+        console.log(error.response.data.message);
+        return error.response.data.message;
+      }
+    },
+
+    //Update address
+    updateAddress: async (addressID, newAddress) => {
+      try {
+        const response = await axios.post(
+          `${AUTHAPI}/updateAddress`,
+          {
+            newAddress,
+            addressID,
+          },
+          { withCredentials: true }
+        );
+
         if(response.data.success){
           set({userData : response.data.userData})
         }
 
-        return response.data
-
+        return response.data;
       } catch (error) {
         console.log(error.response.data.message);
         return error.response.data.message;
