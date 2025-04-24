@@ -441,10 +441,14 @@ exports.verifyAuth = async (req, res) => {
 
     const user = await userDb.findOne({ _id: userID });
 
+    if(!user){
+      throwError("User not logged in", 404);
+    }
+
     res.status(201).json({
       success: true,
       message: "User OK",
-      user: {
+      userData: {
         ...user._doc,
         password: undefined,
         tokens: undefined,

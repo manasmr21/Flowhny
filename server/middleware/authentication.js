@@ -4,8 +4,9 @@ const key = process.env.auth_token_key;
 
 const authenticate = async (req, res, next) => {
   try {
+    
     const token = req.cookies.token;
-
+    
     if (!token) {
       return res.status(401).json({ success: false, message: "No token provided" });
     }

@@ -17,16 +17,20 @@ import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/Signup";
 import Verification from "./components/Verifications/Verification";
 import Profile from "./components/Profile/Profile";
+import ProtectedRoute from "./ProtectedRoute";
+import apiStore from "./components/Store/apiStores";
 
 function App() {
   const { getProducts, theme } = useStore();
+  const {verifyLogIn} = apiStore()
 
-  useEffect(()=>{
-    document.documentElement.classList.add(theme)
-  },[theme])
+  useEffect(() => {
+    document.documentElement.classList.add(theme);
+  }, [theme]);
 
   useEffect(() => {
     getProducts();
+    verifyLogIn()
   }, [getProducts]);
 
   return (
@@ -39,13 +43,21 @@ function App() {
           <Route exact path="/products" element={<ProductPage />} />
           <Route exact path="/about" element={<AboutPage />} />
           <Route exact path="/contact" element={<Contact />} />
-          <Route exact  path="/products/:productID" element={<SingleProduct />} />
-          <Route exact path="/cart" element={<Cart/>} />
-          <Route exact path="*" element={<Error/>} />
-          <Route exact path="/login" element={<Login/>} />
-          <Route exact path="/register" element={<Signup/>} />
-          <Route exact path="/otp" element = {<Verification/>} />
-          <Route exact path="/profile" element={<Profile/>} />
+          <Route
+            exact
+            path="/products/:productID"
+            element={<SingleProduct />}
+          />
+
+          <Route exact path="*" element={<Error />} />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/register" element={<Signup />} />
+          <Route exact path="/otp" element={<Verification />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route exact path="/cart" element={<Cart />} />
+            <Route exact path="/profile" element={<Profile />} />
+          </Route>
         </Routes>
         <Footer />
       </Routers>

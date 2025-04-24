@@ -93,6 +93,19 @@ const ordersSchema = new mongoose.Schema(
       enum: ["processing", "shipped", "delivered", "cancelled"],
       default: "processing",
     },
+    shippingMethhod:{
+      type: String,
+      enum: ["standard", "express", "free"],
+      required: true
+    },
+    coupon:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "coupous"
+    },
+    shippingCost:{
+      type: Number,
+      required: true
+    },
     shippingAddress: {
       type: addressSchema,
       required: true

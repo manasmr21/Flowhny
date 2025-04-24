@@ -13,6 +13,7 @@ function generateOrderID() {
   }
   
 
+//Place Order 
 exports.makeOrder = async (req, res) => {
   try {
     const userID = req._id;

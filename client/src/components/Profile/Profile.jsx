@@ -40,9 +40,9 @@ function Profile() {
 
   useEffect(() => {
     //WILL CHANGE THIS LATER AND WILL ADD PROTECTED ROUTE FOR CHECKING IF THE USER IS LOGGED IN OR NOT
-    if (!userData) {
-      navigate("/");
-    }
+    // if (!userData) {
+    //   navigate("/");
+    // }
 
     if (userData) {
       setName(userData?.username);

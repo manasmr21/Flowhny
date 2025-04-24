@@ -102,7 +102,7 @@ function Cart() {
               Your cart is empty
             </h2>
             <p className="text-gray-500 mb-8">
-              Looks like you haven't added anything to your cart yet.
+             {" Looks like you haven't added anything to your cart yet."}
             </p>
             <Link
               to="/products"
