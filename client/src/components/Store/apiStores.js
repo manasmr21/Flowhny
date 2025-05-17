@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 import axios from "axios";
 const AUTHAPI = import.meta.env.VITE_AUTHAPI_URL;
 
@@ -27,7 +27,6 @@ const apiStore = create(
         })
           .then((response) => {
             if (response.statusText == "OK") {
-              console.log(response.data);
               set({ userData: response.data.newUser });
               return response.data;
             }
@@ -46,13 +45,13 @@ const apiStore = create(
             code,
           });
 
-          if (response.data.success) {
-            console.log(response);
+
+            set({userData: response.data.userData})
             return response.data;
-          }
+          
         } catch (error) {
           console.log(error.response.data.message);
-          return error.response.data.message;
+          return error.response.data.message; 
         }
       },
 
@@ -269,6 +268,7 @@ const apiStore = create(
           return response.data;
         } catch (error) {
           console.log(error.response.data.message);
+          set({userData : null})
           return error.response.data.message;
         }
       },

@@ -98,8 +98,8 @@ const ordersSchema = new mongoose.Schema(
       enum: ["standard", "express", "free"],
       required: true
     },
-    coupon:{
-      type: mongoose.Schema.Types.ObjectId,
+    couponCode:{
+      type: String,
       ref: "coupous"
     },
     shippingCost:{

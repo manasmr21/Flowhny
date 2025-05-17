@@ -20,7 +20,6 @@ exports.fetchAllProduct = async (req, res) => {
   try {
     const allProducts = await productDb.find();
     
-
     res
       .status(200)
       .json({

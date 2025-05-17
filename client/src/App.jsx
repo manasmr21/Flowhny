@@ -19,6 +19,8 @@ import Verification from "./components/Verifications/Verification";
 import Profile from "./components/Profile/Profile";
 import ProtectedRoute from "./ProtectedRoute";
 import apiStore from "./components/Store/apiStores";
+import AdminLogin from "./AdminComponents/AdminAuthentication/AdminLogin";
+import AdminRoute from "./AdminComponents/AdminAuthentication/AdminRoute";
 
 function App() {
   const { getProducts, theme } = useStore();
@@ -58,6 +60,10 @@ function App() {
             <Route exact path="/cart" element={<Cart />} />
             <Route exact path="/profile" element={<Profile />} />
           </Route>
+
+          {/* TEMPORARY ROUT WILL MAKE THIS ROUT DYNAMIC */}
+          <Route exact path="/admin" element={<AdminRoute/>} />
+
         </Routes>
         <Footer />
       </Routers>

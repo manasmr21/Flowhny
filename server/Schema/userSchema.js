@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
-const { required } = require("joi");
 
 //Address Schema
 
@@ -91,6 +90,12 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    role:{
+      type: String,
+      required: true,
+      enum: ["user", "admin", "delivery"],
+      default: "user"
+    },
     verificationCode: String,
     verificationCodeExpiresAt : Date,
     tokens: [
@@ -136,6 +141,6 @@ userSchema.pre("save", async function(next){
     }
 })
 
-const userDb = new mongoose.model("users", userSchema)
+const userDb = new mongoose.model("users", userSchema);
 
-module.exports = userDb
+module.exports = userDb;

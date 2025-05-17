@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaTrash, FaMinus, FaPlus } from "react-icons/fa";
 import "./Cart.css";
 import useStore from "../Store/Store";
+import apiStore from "../Store/apiStores";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -11,6 +12,20 @@ function Cart() {
   const [couponError, setCouponError] = useState("");
   const [shippingMethod, setShippingMethod] = useState("standard");
   const { cart, removeFromCart } = useStore();
+  const {userData} = apiStore()
+  const [order, setOrder] = useState({
+    userID: userData?.userID,
+    items: [{
+      productID: "",
+      quantity: ""
+    }],
+    totalPrice :"",
+    paymentStatus: "",
+    shippingMethod: "",
+    couponCode: "",
+    shippingCost: "",
+    shippingAddress: "",
+  })
 
   // Shipping options
   const shippingOptions = {

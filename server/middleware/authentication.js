@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const userDb = require("../Schema/userSchema"); // adjust path as needed
+const userDb = require("../Schema/userSchema"); 
 const key = process.env.auth_token_key;
 
 const authenticate = async (req, res, next) => {

@@ -86,6 +86,12 @@ exports.register = async (req, res) => {
 
     await newUser.save();
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(200).json({
       success: true,
       message: "Verification code sent to your email",
