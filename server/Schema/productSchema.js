@@ -20,13 +20,13 @@ const productSchema = new mongoose.Schema({
     },
     discountPercentage: Number,
     rating: Number,
-    stocks: {
+    stock: {
         type : Number,
         required: true
     },
     tags: [{
         type : String,
-        required: true
+        required: true  
     }],
     sku:{
         type: String,

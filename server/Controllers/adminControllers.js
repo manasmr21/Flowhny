@@ -9,7 +9,7 @@ dotenv.config();
 
 function generateRandomString(length) {
   const characters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?$_.";
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let result = "";
 
   for (let i = 0; i < length; i++) {
@@ -26,13 +26,17 @@ exports.requestAdminRoute = async (req, res) => {
   try {
     const adminMail = process.env.admin;
 
-    const admin = await userDb.findOne({ useremail: adminMail });
+    console.log(adminMail)
 
+    const admin = await adminDb.findOne({  adminMail });
+  
     if (admin.role == "admin") {
       const route = generateRandomString(20);
       sendAdminRouteMail(adminMail, route);
 
       admin.route = route;
+
+      await admin.save()
 
       res.status(200).json({
         success: true,
@@ -53,12 +57,18 @@ exports.requestAdminRoute = async (req, res) => {
 //Login to admin panel
 exports.loginAdmin = async (req, res) => {
   try {
-    const { adminMail, password } = req.body;
+    const { adminMail, password, adminRoute } = req.body;
 
     const admin = await adminDb.findOne({ adminMail });
 
     if (!adminMail || !password) {
       throwError("Please enter valid credentials", 400);
+    }
+
+    console.log(admin.route)
+
+    if(adminRoute !== admin.route){
+      throwError("This page is not authorized.", 401);
     }
 
     const matchAdminPassword = await bcrypt.compare(password, admin.password);
@@ -68,18 +78,25 @@ exports.loginAdmin = async (req, res) => {
     }
 
     const token = await admin.generateAdminToken();
+    admin.route = null;
 
     await admin.save();
 
     res.cookie("anotherToken", token, {
       httpOnly: true,
       secure: false,
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000
     });
 
     res
       .status(200)
-      .json({ success: true, message: "Admin logged in successfully" });
+      .json({ success: true, message: "Admin logged in successfully", admin: {
+        ...admin._doc,
+        password: undefined,
+        route: undefined, 
+        token: undefined
+      } });
   } catch (error) {
     return res.status(error.status || 400).json({
       success: false,
@@ -116,8 +133,33 @@ exports.logoutAdmin = async (req, res) => {
   }
 };
 
+//verify if the admin is logged in
+exports.verifyAdminLogin = async (req, res)=>{
+  try {
+    const _id = req._id
 
-//Make an admin Account 
+    const admin = await adminDb.findOne({_id});
+
+    if(!admin){
+      throwError("Admin not logged in.", 401);
+    }
+
+    res.status(200).json({success: true, message: "Admin logged in", admin: {
+      ...admin._doc,
+      password: undefined,
+      token: undefined,
+      route: undefined
+    }})
+
+  } catch (error) {
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Error providing route",
+    });
+  }
+}
+
+// Make an admin Account 
 // exports.createAdmin = async (req, res) => {
 //   try {
 //     const { adminMail, password } = req.body;

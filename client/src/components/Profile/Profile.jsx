@@ -39,15 +39,25 @@ function Profile() {
   const AUTHAPI = import.meta.env.VITE_AUTHAPI_URL;
 
   useEffect(() => {
-    //WILL CHANGE THIS LATER AND WILL ADD PROTECTED ROUTE FOR CHECKING IF THE USER IS LOGGED IN OR NOT
-    // if (!userData) {
-    //   navigate("/");
-    // }
+
 
     if (userData) {
       setName(userData?.username);
     }
   }, [userData]);
+
+  const handleLogout = async()=>{
+    try {
+      const response = await logoutUser();
+
+      if(response.success){
+        navigate("/");
+      }
+
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   //Update user name Function
   const handleChangeName = async () => {
@@ -65,6 +75,7 @@ function Profile() {
   //Send code for email update
   const sendCodeToOldMail = async () => {
     try {
+
       const response = await axios.patch(
         `${AUTHAPI}/update-email`,
         {
@@ -368,7 +379,7 @@ function Profile() {
       <div className="flex items-center flex-wrap justify-evenly w-[300px] m-auto mt-6">
         <button
           className="border m-4 border-themegreen px-3 cursor-pointer hover:bg-transparent hover:text-themegreen transition py-2 font-medium bg-themegreen rounded-md"
-          onClick={logoutUser}
+          onClick={handleLogout}
         >
           Sign Out
         </button>

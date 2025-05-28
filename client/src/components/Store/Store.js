@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 
 const useStore = create(
   persist(
@@ -18,6 +18,11 @@ const useStore = create(
         } catch (error) {
           console.error("Error fetching products:", error);
         }
+      },
+
+      //update product in frontend
+      updateProductValue : (newValue)=>{
+        set({allProducts : newValue});
       },
 
       //Add to cart functionality

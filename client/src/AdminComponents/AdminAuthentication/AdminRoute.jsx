@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import adminApis from "../../components/Store/adminApi";
+import { useRef } from "react";
 
 function AdminRoute() {
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const {adminRouteRequest} = adminApis()
 
+  const hasRun = useRef(false);
 
   const sendAdminRoute = async()=>{
    try {
@@ -24,7 +26,10 @@ function AdminRoute() {
 
 
   useEffect(() => {
-    sendAdminRoute()
+    if(!hasRun.current){
+      hasRun.current = true
+      sendAdminRoute()
+    }
   }, []);
 
   return (

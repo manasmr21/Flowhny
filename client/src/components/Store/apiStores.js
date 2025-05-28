@@ -27,7 +27,7 @@ const apiStore = create(
         })
           .then((response) => {
             if (response.statusText == "OK") {
-              set({ userData: response.data.newUser });
+              set({ userData: response.data.userData });
               return response.data;
             }
           })
@@ -40,18 +40,20 @@ const apiStore = create(
       //Verify user email
       verifyUser: async (useremail, code) => {
         try {
-          const response = await axios.post(`${AUTHAPI}/verify-email`, {
-            useremail,
-            code,
-          });
+          const response = await axios.post(
+            `${AUTHAPI}/verify-email`,
+            {
+              useremail,
+              code,
+            },
+            { withCredentials: true }
+          );
 
-
-            set({userData: response.data.userData})
-            return response.data;
-          
+          set({ userData: response.data.userData });
+          return response.data;
         } catch (error) {
           console.log(error.response.data.message);
-          return error.response.data.message; 
+          return error.response.data.message;
         }
       },
 
@@ -110,7 +112,6 @@ const apiStore = create(
 
           if (response.data.success) {
             set({ userData: null });
-            alert(response.data.message);
             return response.data;
           } else {
             throw new Error(response.data.message || "Logout failed");
@@ -263,20 +264,18 @@ const apiStore = create(
             set({ userData: response.data.userData });
           }
 
-          console.log(response)
-
           return response.data;
         } catch (error) {
           console.log(error.response.data.message);
-          set({userData : null})
+          set({ userData: null });
           return error.response.data.message;
         }
       },
     }),
 
     {
-      name: 'api-storage', 
-      partialize: (state) => ({ userData: state.userData }), 
+      name: "api-storage",
+      partialize: (state) => ({ userData: state.userData }),
       merge: (persistedState, currentState) => ({
         ...currentState,
         ...persistedState,

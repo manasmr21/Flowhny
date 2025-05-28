@@ -1,30 +1,36 @@
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
-dotenv.config({ path: "../.env" });
+dotenv.config();
 
 const senderMail = process.env.mail;
 const senderPassword = process.env.password;
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  port:465,
+  host:"smtp.gmail.com",
   auth: {
     user: senderMail,
     pass: senderPassword,
   },
 });
 
-const sendMail = (mail) => {
-  transporter.sendMail(mail, (error, info) => {
-    if (error) {
-      return res
-        .status(400)
-        .json({ message: `Message not sent.`, error: error.message });
-    } else {
-      res
-        .status(200)
-        .json({ success: true, message: "Message sent Successfully", info });
+const sendMail = async(mail) => {
+ try {
+  await new Promise((resolve, reject)=>{
+  transporter.sendMail(mail, (error, info)=>{
+    if(error){
+      console.log(error);
+      reject(error);
+        
+    }else{
+      resolve(info);
+      res.status(200).json({success: true, message: "Email sent", info})
     }
-  });
+  })
+ })
+ } catch (error) {
+  return { success: false, message: error.message };
+ }
 };
 
 exports.sendVerificationCode = (email, code) => {
@@ -47,7 +53,7 @@ exports.sendAdminRouteMail = (email, route) => {
     to: email,
     subject: "Route for admin panel",
     html: `
-      <p>Click on the link below to navigate to the admin page:</p> <br/>
+      <p>Click on the link below to navigate to the admin login page:</p> <br/>
       <a href="http://localhost:5173/admin/${route}" target="_blank">
         Click here
       </a>

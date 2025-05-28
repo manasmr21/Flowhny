@@ -1,7 +1,7 @@
 const express = require("express");
 const router = new express.Router();
 const authenticate = require("../middleware/authentication");
-
+const adminMiddleware = require("../middleware/adminAuthentication");
 //controllers
 const controller = require("../Controllers/userController")
 const productController = require("../Controllers/productController");
@@ -23,9 +23,11 @@ router.delete("/api/authentication/deleteAddress/:addressID", authenticate, cont
 router.post("/api/authentication/updateAddress", authenticate, controller.updateAddress);
 
 //Product Routers
-router.get("/api/product/fetch-product", productController.fetchAllProduct);
+router.get("/api/product/fetch-product",  productController.fetchAllProduct);
 router.get("/api/product/fetch-single-product", productController.fetchOneProduct);
-router.post("/api/product/add-product", productController.addProduct);
+router.post("/api/product/add-product", adminMiddleware, productController.addProduct);
+router.patch("/api/product/update-product", adminMiddleware, productController.updateProduct);
+router.delete("api/product/delete-product", adminMiddleware, productController.deleteProduct);
 
 //Order Routers
 router.post("/api/orders/make-order", authenticate, orderController.makeOrder);

@@ -11,7 +11,6 @@ const {
 
 //Environmental Variable
 const dotenv = require("dotenv");
-const { message } = require("../validators/productValidator");
 dotenv.config();
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -86,16 +85,10 @@ exports.register = async (req, res) => {
 
     await newUser.save();
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
-
     res.status(200).json({
       success: true,
       message: "Verification code sent to your email",
-      newUser: {
+      userData: {
         ...newUser._doc,
         password: undefined,
         tokens: undefined,
@@ -128,18 +121,30 @@ exports.verifyEmail = async (req, res) => {
       throwError("Invalid verification code", 400);
     }
 
-    await user.generateAuthToken();
+    const token = await user.generateAuthToken();
 
     user.verified = true;
     user.verificationCode = null;
     user.verificationCodeExpiresAt = null;
-    user.isLoggedin = true;
 
     await user.save();
 
-    return res.status(200).json({
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      path: "/",
+    });
+
+    res.status(200).json({
       success: true,
       message: "Email verified successfully",
+      userData: {
+        ...user._doc,
+        password: undefined,
+        tokens: undefined,
+      },
     });
   } catch (error) {
     return res.status(error.status || 400).json({
@@ -227,44 +232,45 @@ exports.userAddress = async (req, res) => {
 //Update Address
 exports.updateAddress = async (req, res) => {
   try {
+    const userID = req._id;
+    const { newAddress, addressID } = req.body;
 
-    const userID = req._id
-    const {newAddress, addressID} = req.body
+    const user = await userDb.findOne({ _id: userID });
 
-    const user = await userDb.findOne({_id: userID})
-
-
-    if(!user){
+    if (!user) {
       throwError("Error finding the user", 404);
     }
 
+    const addressIndex = user.addresses
+      .map((item, idx) => {
+        if (item._id.toString() === addressID.toString()) {
+          return idx;
+        }
+      })
+      .filter((idx) => idx !== undefined);
 
-    const addressIndex = user.addresses.map((item, idx) => {
-      if (item._id.toString() === addressID.toString()) {
-        return idx;
-      }
-    }).filter(idx => idx !== undefined);
-
-    if(addressIndex[0] !== undefined){
-      const originalID =  user.addresses[addressIndex]._id;
+    if (addressIndex[0] !== undefined) {
+      const originalID = user.addresses[addressIndex]._id;
 
       user.addresses[addressIndex] = {
         ...newAddress,
-        _id : originalID
-      }
+        _id: originalID,
+      };
 
-      await user.save()
+      await user.save();
 
-      res.status(200).json({success: true, message: "Address Updated successfully", userData: {
-        ...user._doc,
-        password: undefined,
-        tokens: undefined
-      }})
-
-    }else{
-      throwError("Error updating the address, not found in database.", 404)
+      res.status(200).json({
+        success: true,
+        message: "Address Updated successfully",
+        userData: {
+          ...user._doc,
+          password: undefined,
+          tokens: undefined,
+        },
+      });
+    } else {
+      throwError("Error updating the address, not found in database.", 404);
     }
-
   } catch (error) {
     return res.status(error.status || 400).json({
       success: false,
@@ -286,7 +292,6 @@ exports.deleteAddress = async (req, res) => {
       return item._id.toString() !== addressID.toString();
     });
 
-
     await user.save();
 
     res.status(200).json({
@@ -299,12 +304,10 @@ exports.deleteAddress = async (req, res) => {
       },
     });
   } catch (error) {
-    return res
-      .status(error.status || 400)
-      .json({
-        success: false,
-        message: error.message || "Error Deleting Address",
-      });
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Error Deleting Address",
+    });
   }
 };
 
@@ -315,15 +318,11 @@ exports.deleteUser = async (req, res) => {
     const { password } = req.body;
     const _id = req._id;
 
-    console.log(userID, password);
-
     if (!userID) {
       throwError("User ID is required", 400);
     }
 
     const user = await userDb.findOne({ userID });
-
-    console.log(_id, user._id);
 
     if (_id.toString() !== user._id.toString()) {
       throwError("Unauthorized to delete user", 401);
@@ -447,7 +446,7 @@ exports.verifyAuth = async (req, res) => {
 
     const user = await userDb.findOne({ _id: userID });
 
-    if(!user){
+    if (!user) {
       throwError("User not logged in", 404);
     }
 
@@ -477,8 +476,6 @@ exports.updateUser = async (req, res) => {
     if (!oldUser) {
       throwError("Error Updating the user. No such user found", 404);
     }
-
-    console.log(updatedUser);
 
     oldUser.username = await updatedUser.username;
 

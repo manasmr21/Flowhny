@@ -18,13 +18,15 @@ import Signup from "./components/Authentication/Signup";
 import Verification from "./components/Verifications/Verification";
 import Profile from "./components/Profile/Profile";
 import ProtectedRoute from "./ProtectedRoute";
-import apiStore from "./components/Store/apiStores";
 import AdminLogin from "./AdminComponents/AdminAuthentication/AdminLogin";
 import AdminRoute from "./AdminComponents/AdminAuthentication/AdminRoute";
+import Dashboard from "./AdminComponents/AdminPanel/Dashboard";
+import AdminProtectedRoute from "./AdminProtectedRoute";
+import Products from "./AdminComponents/AdminPanel/Products";
+import Layout from "./Layouts/layout";
 
 function App() {
   const { getProducts, theme } = useStore();
-  const {verifyLogIn} = apiStore()
 
   useEffect(() => {
     document.documentElement.classList.add(theme);
@@ -32,40 +34,43 @@ function App() {
 
   useEffect(() => {
     getProducts();
-    verifyLogIn()
   }, [getProducts]);
 
   return (
     <div className="all-content dark:bg-themedark">
       <Routers>
-        <Navbar />
         <ScrollToTop />
         <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/products" element={<ProductPage />} />
-          <Route exact path="/about" element={<AboutPage />} />
-          <Route exact path="/contact" element={<Contact />} />
-          <Route
-            exact
-            path="/products/:productID"
-            element={<SingleProduct />}
-          />
+          <Route element={<Layout />}>
+            <Route exact path="/" element={<Home />} />
+            <Route exact path="/products" element={<ProductPage />} />
+            <Route exact path="/about" element={<AboutPage />} />
+            <Route exact path="/contact" element={<Contact />} />
+            <Route
+              exact
+              path="/products/:productID"
+              element={<SingleProduct />}
+            />
 
-          <Route exact path="*" element={<Error />} />
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/register" element={<Signup />} />
-          <Route exact path="/otp" element={<Verification />} />
+            <Route exact path="*" element={<Error />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/register" element={<Signup />} />
+            <Route exact path="/otp" element={<Verification />} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route exact path="/cart" element={<Cart />} />
-            <Route exact path="/profile" element={<Profile />} />
+            <Route element={<ProtectedRoute />}>
+              <Route exact path="/cart" element={<Cart />} />
+              <Route exact path="/profile" element={<Profile />} />
+            </Route>
           </Route>
 
-          {/* TEMPORARY ROUT WILL MAKE THIS ROUT DYNAMIC */}
-          <Route exact path="/admin" element={<AdminRoute/>} />
-
+          {/* Admin Routes */}
+          <Route exact path="/admin" element={<AdminRoute />} />
+          <Route exact path="/admin/:adminRoute" element={<AdminLogin />} />
+          <Route element={<AdminProtectedRoute />}>
+            <Route exact path="/admin/dashboard" element={<Dashboard />} />
+          </Route>
+          <Route exact path="/admin/product" element={<Products />} />
         </Routes>
-        <Footer />
       </Routers>
     </div>
   );
