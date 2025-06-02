@@ -63,24 +63,15 @@ exports.fetchOneProduct = async (req, res) => {
 //Add product
 exports.addProduct = async(req, res)=>{
     try {
-        const {productData} = req.body;
+        const  productData  = req.body;
 
         const productID = generateProductID();
 
-        const { error } = productValidationSchema.validate(productData,{
-          abortEarly: false
-        });
-
-        if(error){
-          return res.status(400).json({
-            success: false,
-            message: "Validation failed",
-            details: error.details.map((e) => e.message),
-          });
-        }
+        
 
         const newProduct = new productDb({
             ...productData,
+            availabilityStatus:  product.stock ? true : false, 
             productID
         })
 

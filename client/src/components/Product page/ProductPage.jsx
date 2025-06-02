@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./product-page.css";
 import useStore from "../Store/Store";
+import apiStore from "../Store/apiStores";
 import { Link } from "react-router-dom";
 import { FaCartPlus } from "react-icons/fa";
 
@@ -14,6 +15,8 @@ function ProductPage() {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [scrollDistance, setScrollDistance] = useState(0);
 
+  const {userData} = apiStore();
+
   const priceRanges = [
     { label: "Under $50", min: 0, max: 50 },
     { label: "$50 - $100", min: 50, max: 100 },
@@ -23,7 +26,7 @@ function ProductPage() {
   ];
 
   //Zustand state manager
-  const { allProducts, addToCart } = useStore();
+  const { allProducts, addToCart, makeCartNull } = useStore();
 
   useEffect(() => {
     setProducts(allProducts);
@@ -50,6 +53,12 @@ function ProductPage() {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(()=>{
+    if(!userData){
+      makeCartNull()
+    }
+  },[])
 
   //Filtering the product based on user preference
   const filterProducts = () => {
@@ -211,7 +220,7 @@ function ProductPage() {
           <section className=" product-list flex flex-col gap-6 flex-grow lg:ml-6 dark:bg-lighterthemedark overflow-hidden ">
             {filteredProducts.map((product) => (
               <div
-                key={product?.id}
+                key={product?._id}
                 className="product-after dark:bg-lighterthemedark relative hover:bg-[#a1a1a17a] bg-white flex flex-row items-start p-4"
               >
                 <div className="w-[100px] min-w-[100px] sm:w-[120px] sm:min-w-[120px] md:w-[140px] md:min-w-[140px]">
@@ -222,9 +231,9 @@ function ProductPage() {
                   />
                 </div>
                 <section className="product-details text-themegreen px-2 sm:px-4 flex flex-col flex-grow">
-                  <p className="text-sm  sm:text-base md:text-lg font-bold hover:underline cursor-pointer">
+                  <Link to={`${product._id}`} className="text-sm  sm:text-base md:text-lg font-bold hover:underline cursor-pointer">
                     {product?.title}
-                  </p>
+                  </Link>
                   <p className="text-xs md:text-sm dark:text-white text-gray-600 line-clamp-2">
                     {product?.description}
                   </p>
@@ -263,7 +272,9 @@ function ProductPage() {
                     <button
                       className="cursor-pointer active:scale-[95%] hover:bg-white hover:text-themegreen border border-themegreen p-3 rounded mr-2 bg-themegreen text-white font-semibold transition text-sm md:text-base"
                       onClick={() => {
-                        addToCart({ ...product, buyingQuantity: 1 });
+                        if(userData){
+                          addToCart({ ...product, buyingQuantity: 1 });
+                        }
                       }}
                     >
                       <FaCartPlus />
@@ -271,7 +282,7 @@ function ProductPage() {
                     <button className="cursor-pointer active:scale-[95%] hover:bg-white hover:text-themegreen border border-themegreen  w-full sm:w-32 md:w-40 rounded py-1 md:py-2 bg-themegreen text-white font-semibold transition text-sm md:text-base">
                       <Link
                         className="w-full block h-full"
-                        to={`${product.id}`}
+                        to={`${product._id}`}
                       >
                         Buy Now
                       </Link>

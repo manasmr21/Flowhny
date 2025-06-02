@@ -31,8 +31,8 @@ router.delete("api/product/delete-product", adminMiddleware, productController.d
 
 //Order Routers
 router.post("/api/orders/make-order", authenticate, orderController.makeOrder);
-router.post("/api/orders/cancel-order", orderController.cancelOrder);
-router.get("/api/orders/fetch-orders", orderController.getOrder);
+router.post("/api/orders/cancel-order", authenticate, orderController.cancelOrder);
+router.get("/api/orders/fetch-orders",authenticate, orderController.getOrder);
 
 
 module.exports = router

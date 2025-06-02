@@ -24,6 +24,8 @@ import Dashboard from "./AdminComponents/AdminPanel/Dashboard";
 import AdminProtectedRoute from "./AdminProtectedRoute";
 import Products from "./AdminComponents/AdminPanel/Products";
 import Layout from "./Layouts/layout";
+import AdminLayout from "./Layouts/AdminLayout";
+import AddProducts from "./AdminComponents/AdminPanel/AddProducts";
 
 function App() {
   const { getProducts, theme } = useStore();
@@ -64,12 +66,15 @@ function App() {
           </Route>
 
           {/* Admin Routes */}
-          <Route exact path="/admin" element={<AdminRoute />} />
-          <Route exact path="/admin/:adminRoute" element={<AdminLogin />} />
-          <Route element={<AdminProtectedRoute />}>
-            <Route exact path="/admin/dashboard" element={<Dashboard />} />
+          <Route element={<AdminLayout />}>
+            <Route exact path="/admin" element={<AdminRoute />} />
+            <Route exact path="/admin/:adminRoute" element={<AdminLogin />} />
+            <Route element={<AdminProtectedRoute />}>
+              <Route exact path="/admin/dashboard" element={<Dashboard />} />
+              <Route exact path="/admin/product" element={<Products />} />
+              <Route exact path="/admin/addProduct" element={<AddProducts />} />
+            </Route>
           </Route>
-          <Route exact path="/admin/product" element={<Products />} />
         </Routes>
       </Routers>
     </div>

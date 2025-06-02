@@ -3,7 +3,6 @@ import { persist } from "zustand/middleware";
 import axios from "axios";
 import useStore from "./Store";
 
-
 const APIURL = import.meta.env.VITE_ADMIN_URL;
 const productUrl = import.meta.env.VITE_PRODUCT_URL;
 
@@ -65,7 +64,7 @@ const adminApis = create(
 
       adminLogout: async () => {
         try {
-          const response = await axios.get(`${APIURL}/logoutAdmin`, {
+          const response = await axios.post(`${APIURL}/logoutAdmin`, null, {
             withCredentials: true,
           });
 
@@ -83,19 +82,21 @@ const adminApis = create(
       //Add a product
       addProduct: async (productData) => {
         try {
+          const response = await axios.post(
+            `${productUrl}/add-product`,
+            productData,
+            {
+              withCredentials: true,
+            }
+          );
 
-          const response = axios.post(`${productUrl}/add-product`, productData, {
-            withCredentials: true
-          })
-
-          if(response.data.success){
+          if (response.data.success) {
             const setProduct = useStore.getState().updateProductValue;
 
             setProduct(response.data.product);
           }
 
-          return response.data
-
+          return response.data;
         } catch (error) {
           console.log(error.response.data.message);
           return error.response.data.message;

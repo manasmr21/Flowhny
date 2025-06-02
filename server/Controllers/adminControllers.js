@@ -122,7 +122,7 @@ exports.logoutAdmin = async (req, res) => {
     await validateAdmin.save();
 
     res
-      .status(404)
+      .status(200)
       .json({ success: true, message: "Admin Logged out successfully" });
 
   } catch (error) {

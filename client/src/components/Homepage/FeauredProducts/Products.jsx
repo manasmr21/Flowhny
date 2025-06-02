@@ -23,10 +23,10 @@ function Products() {
         <h1 className="text-center text-4xl font-bold underline text-themegreen">
           Featured Products
         </h1>
-        <section className="all-products ">
+        <section className="all-products max-w-[350px]">
           {products?.map((product, index) => (
             <div
-              key={product?.id || index}
+              key={product?._id || index}
               className="border-2 dark:bg-themedark dark:border-white border-themegreen overflow-hidden rounded-xl  shadow-xl bg-white flex flex-col relative"
             >
               <div className="relative">
@@ -81,7 +81,7 @@ function Products() {
                 </p>
                 <div className="mt-auto">
                   <button 
-                   onClick={()=>navigate(`/products/${product?.id}`)}
+                   onClick={()=>navigate(`/products/${product?._id}`)}
                     className="hover:bg-transparent active:scale-[95%] transition cursor-pointer border duration-300 border-themegreen hover:text-themegreen w-full rounded py-2 bg-themegreen text-white font-semibold text-center block"
                   >
                     Buy Now

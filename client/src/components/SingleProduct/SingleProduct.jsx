@@ -12,23 +12,25 @@ function SingleProduct() {
   const { productID } = useParams();
 
   useEffect(() => {
-    const foundProduct = allProducts.find((item) => item.id == productID);
+    const foundProduct = allProducts.find((item) => item._id == productID);
     if (foundProduct) {
       setProduct(foundProduct);
     }
   }, [productID, allProducts]);
 
+  console.log(product);
+
   const addToCartBtn = (product) => {
-    const check = cart.some((item) => item.id === product.id); 
+    const check = cart.some((item) => item.id === product.id);
 
-    const newProduct = {...product, buyingQuantity: quantity }
+    const newProduct = { ...product, buyingQuantity: quantity };
 
-    console.log(newProduct)
+    console.log(newProduct);
 
     if (!check) {
-      addToCart(newProduct); 
+      addToCart(newProduct);
     } else {
-      alert("Already in cart")
+      alert("Already in cart");
     }
   };
 
@@ -103,12 +105,14 @@ function SingleProduct() {
                 <div
                   key={index}
                   className={`cursor-pointer p-2 border rounded-md ${
-                    mainImage === img ? "border-themegreen" : "border-gray-200"
+                    mainImage === img.data
+                      ? "border-themegreen"
+                      : "border-gray-200"
                   }`}
-                  onClick={() => handleImageClick(img)}
+                  onClick={() => handleImageClick(img.data)}
                 >
                   <img
-                    src={img}
+                    src={img.data}
                     alt={`product-${index}`}
                     className="h-16 w-full object-cover"
                   />
@@ -128,7 +132,9 @@ function SingleProduct() {
               <span className="text-themegreen font-medium">
                 {product.brand}
               </span>
-              <span className="ml-3 text-gray-600 dark:text-gray-300">SKU: {product.sku}</span>
+              <span className="ml-3 text-gray-600 dark:text-gray-300">
+                SKU: {product.sku}
+              </span>
             </p>
 
             <div className="flex items-center mb-4">
@@ -140,7 +146,9 @@ function SingleProduct() {
               </span>
             </div>
 
-            <p className="text-gray-700 mb-6 dark:text-gray-300">{product.description}</p>
+            <p className="text-gray-700 mb-6 dark:text-gray-300">
+              {product.description}
+            </p>
 
             <div className="mb-6">
               <p className="text-2xl font-bold flex items-center">
@@ -190,13 +198,13 @@ function SingleProduct() {
                 Availability:
                 <span
                   className={`font-medium ${
-                    product.availabilityStatus === "In Stock"
+                    product.availabilityStatus
                       ? "text-green-600"
                       : "text-red-600"
                   }`}
                 >
                   {" "}
-                  {product.availabilityStatus}
+                  {product.availabilityStatus ? "Available" : "Not Available"}
                 </span>
                 {product.stock && (
                   <span className="text-gray-600 ml-2 dark:text-gray-300">
@@ -207,7 +215,9 @@ function SingleProduct() {
               <p className="text-gray-700 mb-1 dark:text-gray-300">
                 {product.shippingInformation}
               </p>
-              <p className="text-gray-700 dark:text-gray-300">{product.warrantyInformation}</p>
+              <p className="text-gray-700 dark:text-gray-300">
+                {product.warrantyInformation}
+              </p>
             </div>
 
             <div className="mb-6">
@@ -314,28 +324,43 @@ function SingleProduct() {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="border-b border-gray-200 pb-2">
-                  <p className="text-gray-500 dark:text-gray-300 text-sm">Category</p>
-                  <p className="text-gray-900 dark:text-white ">{product.category}</p>
+                  <p className="text-gray-500 dark:text-gray-300 text-sm">
+                    Category
+                  </p>
+                  <p className="text-gray-900 dark:text-white ">
+                    {product.category || "Farming"}
+                  </p>
                 </div>
                 <div className="border-b border-gray-200 pb-2">
-                  <p className="text-gray-500 dark:text-gray-300 text-sm">Brand</p>
-                  <p className="text-gray-900 dark:text-white ">{product.brand}</p>
+                  <p className="text-gray-500 dark:text-gray-300 text-sm">
+                    Brand
+                  </p>
+                  <p className="text-gray-900 dark:text-white ">
+                    {product.brand || "N/A"}
+                  </p>
                 </div>
                 <div className="border-b border-gray-200 pb-2">
-                  <p className="text-gray-500 dark:text-gray-300 text-sm">Stock</p>
-                  <p className="text-gray-900 dark:text-white ">{product.stock} units</p>
+                  <p className="text-gray-500 dark:text-gray-300 text-sm">
+                    Stock
+                  </p>
+                  <p className="text-gray-900 dark:text-white ">
+                    {product.stock || "0"} units
+                  </p>
                 </div>
                 <div className="border-b border-gray-200 pb-2">
-                  <p className="text-gray-500 dark:text-gray-300 text-sm">SKU</p>
-                  <p className="text-gray-900 dark:text-white ">{product.sku}</p>
+                  <p className="text-gray-500 dark:text-gray-300 text-sm">
+                    SKU
+                  </p>
+                  <p className="text-gray-900 dark:text-white ">
+                    {product.sku}
+                  </p>
                 </div>
-                <div className="border-b border-gray-200 pb-2">
-                  <p className="text-gray-500 dark:text-gray-300 text-sm">Weight</p>
-                  <p className="text-gray-900 dark:text-white ">{product.weight} oz</p>
-                </div>
+
                 {product.dimensions && (
                   <div className="border-b border-gray-200 pb-2">
-                    <p className="text-gray-500 dark:text-gray-300 text-sm">Dimensions</p>
+                    <p className="text-gray-500 dark:text-gray-300 text-sm">
+                      Dimensions
+                    </p>
                     <p className="text-gray-900 dark:text-white ">
                       {product.dimensions.width}W × {product.dimensions.height}H
                       × {product.dimensions.depth}D cm
@@ -347,7 +372,9 @@ function SingleProduct() {
               <h3 className="text-lg font-medium text-gray-900 dark:text-gray-300  mt-6 mb-4">
                 Product Description
               </h3>
-              <p className="text-gray-700 dark:text-white">{product.description}</p>
+              <p className="text-gray-700 dark:text-white">
+                {product.description}
+              </p>
             </div>
           )}
 
@@ -397,33 +424,34 @@ function SingleProduct() {
 
           {activeTab === "shipping" && (
             <div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white  mb-4">
+              <h3 className="text-lg font-medium  text-gray-900 dark:text-white  mb-4">
                 Shipping Information
               </h3>
-              <div className="space-y-4">
-                <div className="border-b border-gray-200 pb-3">
-                  <h4 className="font-medium text-gray-800 mb-2">Delivery</h4>
-                  <p className="text-gray-700">{product.shippingInformation}</p>
+              <div className="space-y-4 ">
+                <div className="border-b border-gray-200 pb-3 ">
+                  <h4 className="font-medium dark:text-gray-100 text-gray-800 mb-2">
+                    Delivery
+                  </h4>
+                  <p className="text-gray-700 dark:text-gray-100">
+                    {product.shippingInformation}
+                  </p>
                 </div>
 
                 <div className="border-b border-gray-200 pb-3">
-                  <h4 className="font-medium text-gray-800 mb-2">
+                  <h4 className="font-medium dark:text-gray-100 text-gray-800 mb-2">
                     Return Policy
                   </h4>
-                  <p className="text-gray-700">{product.returnPolicy}</p>
+                  <p className=" dark:text-gray-100 text-gray-700">
+                    {product.returnPolicy} return policy
+                  </p>
                 </div>
 
-                <div className="border-b border-gray-200 pb-3">
-                  <h4 className="font-medium text-gray-800 mb-2">Warranty</h4>
-                  <p className="text-gray-700">{product.warrantyInformation}</p>
-                </div>
+                
               </div>
             </div>
           )}
         </div>
       </div>
-
-    
     </div>
   );
 }

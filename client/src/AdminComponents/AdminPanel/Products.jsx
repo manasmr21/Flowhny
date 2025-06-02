@@ -1,5 +1,4 @@
 import {  useState } from "react";
-import adminApis from "../../components/Store/adminApi";
 import useStore from "../../components/Store/Store";
 import { FaTrash, FaEdit } from "react-icons/fa";
 

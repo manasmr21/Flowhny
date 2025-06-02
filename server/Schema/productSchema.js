@@ -14,12 +14,17 @@ const productSchema = new mongoose.Schema({
         type : String,
         required : true
     },
+    category:{
+        type: String,
+        required: true
+    },
     price:{
         type : Number,
         required : true
     },
     discountPercentage: Number,
     rating: Number,
+    brand: String,
     stock: {
         type : Number,
         required: true
@@ -31,16 +36,6 @@ const productSchema = new mongoose.Schema({
     sku:{
         type: String,
         required : true
-    },
-    weight: Number,
-    dimension: {
-        width : Number,
-        length: Number,
-        height: Number
-    },
-    warrantyInformation: {
-        type: String,
-        required: true
     },
     shippingInformation: {
         type: String,
@@ -58,9 +53,14 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    availabilityStatus:{
+        type: String,
+        required: true
+    },
     minimumOrderQuantity: Number,
     images:[{
-        type: String
+        id: String,
+        data: String
     }],
     thumbnail:{
         type: String,

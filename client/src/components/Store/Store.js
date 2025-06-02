@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+const productUrl = import.meta.env.VITE_PRODUCT_URL
+
 const useStore = create(
   persist(
     (set, get) => ({
@@ -12,7 +14,7 @@ const useStore = create(
       //Fetching product
       getProducts: async () => {
         try {
-          const res = await fetch(`https://dummyjson.com/products?limit=0`);
+          const res = await fetch(`${productUrl}/fetch-product`);
           const data = await res.json();
           set({ allProducts: data.products });
         } catch (error) {
@@ -54,6 +56,10 @@ const useStore = create(
         });
 
         set({ cart: newCart });
+      },
+
+      makeCartNull: ()=>{
+        set({cart: []})
       },
 
       //Theme changer
