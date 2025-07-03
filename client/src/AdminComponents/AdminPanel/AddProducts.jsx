@@ -31,8 +31,8 @@ const AddProducts = () => {
 
   const handleFileUpload = (file) => {
     if (!file) return;
-    if (file.type !== "image/jpeg") {
-      alert("Only jpg and jpeg image are supported.");
+    if (!file.startsWith("image/")) {
+      alert("Only images are supported.");
       return;
     }
     const reader = new FileReader();
@@ -140,7 +140,7 @@ const AddProducts = () => {
       <div className="flex flex-col items-center">
         <input
           type="file"
-          accept="image"
+          accept="image/png"
           className="hidden"
           ref={imgRef}
           onChange={uploadThumbnail}

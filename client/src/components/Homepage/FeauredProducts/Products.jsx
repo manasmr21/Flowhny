@@ -23,7 +23,7 @@ function Products() {
         <h1 className="text-center text-4xl font-bold underline text-themegreen">
           Featured Products
         </h1>
-        <section className="all-products max-w-[350px]">
+        <section className="all-products">
           {products?.map((product, index) => (
             <div
               key={product?._id || index}
@@ -33,7 +33,7 @@ function Products() {
                 <img
                   src={product?.thumbnail}
                   alt={product?.title}
-                  className="w-full h-48 object-fit"
+                  className="w-full h-48 object-contain"
                 />
                 
                 {/* Rating badge */}
@@ -42,7 +42,7 @@ function Products() {
                 </div>
                 
                 {/* Simple discount sticker */}
-                {product.discountPercentage && (
+                {product.discountPercentage >0 && (
                   <div className="absolute top-0 right-0">
                     <div className="simple-discount-sticker">
                       <span className="discount-value">{Math.round(product.discountPercentage)}%</span>
@@ -61,16 +61,16 @@ function Products() {
                         : ""
                     }`}
                   >
-                    ${product?.price}
+                    Rs {product?.price}
                   </span>
                   {product.discountPercentage ? (
                     <span>
-                      $
-                      {(
+                      Rs 
+                      {" " + (
                         parseFloat(product?.price) -
                         parseFloat(product?.price) *
                           (parseFloat(product?.discountPercentage) / 100)
-                      ).toFixed(1)}
+                      ).toFixed(1) }
                     </span>
                   ) : (
                     ""

@@ -27,7 +27,7 @@ router.get("/api/product/fetch-product",  productController.fetchAllProduct);
 router.get("/api/product/fetch-single-product", productController.fetchOneProduct);
 router.post("/api/product/add-product", adminMiddleware, productController.addProduct);
 router.patch("/api/product/update-product", adminMiddleware, productController.updateProduct);
-router.delete("api/product/delete-product", adminMiddleware, productController.deleteProduct);
+router.delete("/api/product/delete-product", adminMiddleware, productController.deleteProduct);
 
 //Order Routers
 router.post("/api/orders/make-order", authenticate, orderController.makeOrder);

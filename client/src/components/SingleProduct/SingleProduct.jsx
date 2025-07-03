@@ -352,7 +352,7 @@ function SingleProduct() {
                     SKU
                   </p>
                   <p className="text-gray-900 dark:text-white ">
-                    {product.sku}
+                    {product.productID }
                   </p>
                 </div>
 

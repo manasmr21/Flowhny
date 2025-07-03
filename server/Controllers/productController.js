@@ -71,7 +71,7 @@ exports.addProduct = async(req, res)=>{
 
         const newProduct = new productDb({
             ...productData,
-            availabilityStatus:  product.stock ? true : false, 
+            availabilityStatus:  productData.stock ? true : false, 
             productID
         })
 
@@ -114,7 +114,7 @@ exports.updateProduct = async(req, res)=>{
 //Delete a product
 exports.deleteProduct = async(req, res)=>{
   try {
-    const {productID} = req.body;
+    const  { productID } = req.body;
 
     const findTheProduct = await productDb.findOne({productID});
 
@@ -123,6 +123,8 @@ exports.deleteProduct = async(req, res)=>{
     }
 
     await findTheProduct.deleteOne({productID});
+
+    res.status(200).json({success: true, message: "Product deleted successfully"})
 
   } catch (error) {
     return res.status(error.status || 400).json({success: false, message: error.message || "Error deleting product"});
