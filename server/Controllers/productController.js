@@ -111,7 +111,7 @@ exports.updateProduct = async(req, res)=>{
 }
 
 
-//Delete a product
+//Delete product
 exports.deleteProduct = async(req, res)=>{
   try {
     const  { productID } = req.body;

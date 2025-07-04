@@ -26,8 +26,6 @@ exports.requestAdminRoute = async (req, res) => {
   try {
     const adminMail = process.env.admin;
 
-    console.log(adminMail)
-
     const admin = await adminDb.findOne({  adminMail });
   
     if (admin.role == "admin") {
@@ -64,8 +62,6 @@ exports.loginAdmin = async (req, res) => {
     if (!adminMail || !password) {
       throwError("Please enter valid credentials", 400);
     }
-
-    console.log(admin.route)
 
     if(adminRoute !== admin.route){
       throwError("This page is not authorized.", 401);

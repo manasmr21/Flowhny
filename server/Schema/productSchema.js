@@ -35,7 +35,8 @@ const productSchema = new mongoose.Schema({
     }],
     sku:{
         type: String,
-        required : true
+        required : true,
+        unique: true
     },
     shippingInformation: {
         type: String,
