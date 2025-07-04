@@ -6,31 +6,31 @@ const senderMail = process.env.mail;
 const senderPassword = process.env.password;
 
 const transporter = nodemailer.createTransport({
-  port:465,
-  host:"smtp.gmail.com",
+  port: 465,
+  host: "smtp.gmail.com",
   auth: {
     user: senderMail,
     pass: senderPassword,
   },
 });
 
-const sendMail = async(mail) => {
- try {
-  await new Promise((resolve, reject)=>{
-  transporter.sendMail(mail, (error, info)=>{
-    if(error){
-      console.log(error);
-      reject(error);
-        
-    }else{
-      resolve(info);
-      res.status(200).json({success: true, message: "Email sent", info})
-    }
-  })
- })
- } catch (error) {
-  return { success: false, message: error.message };
- }
+const sendMail = async (mail) => {
+  try {
+    await new Promise((resolve, reject) => {
+      transporter.sendMail(mail, (error, info) => {
+        if (error) {
+          console.log(error);
+          reject(error);
+
+        } else {
+          resolve(info);
+          res.status(200).json({ success: true, message: "Email sent", info })
+        }
+      })
+    })
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
 };
 
 exports.sendVerificationCode = (email, code) => {
