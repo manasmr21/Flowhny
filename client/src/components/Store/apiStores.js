@@ -7,9 +7,11 @@ const apiStore = create(
   persist(
     (set) => ({
       userData: null,
+      userLoggedIn: false,
 
       makeUserNull: () => {
         set({ userData: null });
+        set({ userLoggedIn: false });
       },
 
       changeUserData: (data) => {
@@ -92,7 +94,7 @@ const apiStore = create(
 
           if (response.data.success) {
             set({ userData: response.data.user });
-
+            set({ userLoggedIn: true });
             return response.data;
           } else {
             throw new Error(response.data.message || "Login failed");
@@ -112,6 +114,7 @@ const apiStore = create(
 
           if (response.data.success) {
             set({ userData: null });
+            set({ userLoggedIn: false });
             return response.data;
           } else {
             throw new Error(response.data.message || "Logout failed");
@@ -180,6 +183,7 @@ const apiStore = create(
 
           if (response.data.success) {
             set({ userData: null });
+            set({ userLoggedIn: false });
           }
 
           return response.data;
@@ -216,8 +220,6 @@ const apiStore = create(
               withCredentials: true,
             }
           );
-
-          console.log(response);
 
           if (response.data.success) {
             set({ userData: response.data.userData });
@@ -262,6 +264,7 @@ const apiStore = create(
 
           if (response.data.success) {
             set({ userData: response.data.userData });
+            set({ userLoggedIn: true })
           }
 
           return response.data;

@@ -3,6 +3,7 @@ const throwError = require("../utils/errorHandler");
 const createUserIDGenerator = require("../utils/userID");
 const CryptoJS = require("crypto-js");
 const { sendVerificationCode } = require("../sendMail/sendMail");
+const generateRandomString = require("../utils/randomRouteGenerator");
 const bcrypt = require("bcryptjs");
 const {
   userValidationSchema,
@@ -585,3 +586,17 @@ exports.updateEmail = async (req, res) => {
     });
   }
 };
+
+
+//Reset password APIs
+//First send the route to reset password via gmail
+export const sendResetPasswordRout = async(req, res)=>{
+  try {
+    console.log("Pass");
+  } catch (error) {
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Error updating the user",
+    });
+  }
+}

@@ -4,21 +4,9 @@ const bcrypt = require("bcryptjs")
 const { sendAdminRouteMail } = require("../sendMail/sendMail");
 const dotenv = require("dotenv");
 const adminDb = require("../Schema/adminSchema");
+const  generateRandomString  = require("../utils/randomRouteGenerator");
 
 dotenv.config();
-
-function generateRandomString(length) {
-  const characters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let result = "";
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    result += characters[randomIndex];
-  }
-
-  return result;
-}
 
 
 //Request for admin route
@@ -26,8 +14,8 @@ exports.requestAdminRoute = async (req, res) => {
   try {
     const adminMail = process.env.admin;
 
-    const admin = await adminDb.findOne({  adminMail });
-  
+    const admin = await adminDb.findOne({ adminMail });
+
     if (admin.role == "admin") {
       const route = generateRandomString(20);
       sendAdminRouteMail(adminMail, route);
@@ -63,7 +51,7 @@ exports.loginAdmin = async (req, res) => {
       throwError("Please enter valid credentials", 400);
     }
 
-    if(adminRoute !== admin.route){
+    if (adminRoute !== admin.route) {
       throwError("This page is not authorized.", 401);
     }
 
@@ -87,12 +75,14 @@ exports.loginAdmin = async (req, res) => {
 
     res
       .status(200)
-      .json({ success: true, message: "Admin logged in successfully", admin: {
-        ...admin._doc,
-        password: undefined,
-        route: undefined, 
-        token: undefined
-      } });
+      .json({
+        success: true, message: "Admin logged in successfully", admin: {
+          ...admin._doc,
+          password: undefined,
+          route: undefined,
+          token: undefined
+        }
+      });
   } catch (error) {
     return res.status(error.status || 400).json({
       success: false,
@@ -130,22 +120,24 @@ exports.logoutAdmin = async (req, res) => {
 };
 
 //verify if the admin is logged in
-exports.verifyAdminLogin = async (req, res)=>{
+exports.verifyAdminLogin = async (req, res) => {
   try {
     const _id = req._id
 
-    const admin = await adminDb.findOne({_id});
+    const admin = await adminDb.findOne({ _id });
 
-    if(!admin){
+    if (!admin) {
       throwError("Admin not logged in.", 401);
     }
 
-    res.status(200).json({success: true, message: "Admin logged in", admin: {
-      ...admin._doc,
-      password: undefined,
-      token: undefined,
-      route: undefined
-    }})
+    res.status(200).json({
+      success: true, message: "Admin logged in", admin: {
+        ...admin._doc,
+        password: undefined,
+        token: undefined,
+        route: undefined
+      }
+    })
 
   } catch (error) {
     return res.status(error.status || 400).json({
@@ -155,7 +147,7 @@ exports.verifyAdminLogin = async (req, res)=>{
   }
 }
 
-// Make an admin Account 
+// Make an admin Account
 // exports.createAdmin = async (req, res) => {
 //   try {
 //     const { adminMail, password } = req.body;

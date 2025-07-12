@@ -14,7 +14,7 @@ const useStore = create(
       //Fetching product
       getProducts: async () => {
         try {
-          const res = await fetch(`${productUrl}/fetch-product`);
+          const res = await fetch(`${productUrl}`);
           const data = await res.json();
           set({ allProducts: data.products });
         } catch (error) {
