@@ -96,8 +96,12 @@ const userSchema = new mongoose.Schema({
       enum: ["user", "admin", "delivery"],
       default: "user"
     },
-    resetPasswordRoute: String,
-    resetPasswordRoutExpiresAt: Date,
+    resetPasswordRoute: {
+      type: String,
+      unique: true,
+      sparse: true
+    },
+    resetPasswordRouteExpiresAt: Date,
     verificationCode: String,
     verificationCodeExpiresAt : Date,
     tokens: [

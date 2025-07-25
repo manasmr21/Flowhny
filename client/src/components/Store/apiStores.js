@@ -274,6 +274,36 @@ const apiStore = create(
           return error.response.data.message;
         }
       },
+
+      //Send reset password route 
+      sendResetPasswordRoute: async(useremail)=>{
+        try {
+          const response = await axios.post(`${AUTHAPI}/forgot-password`,
+            {useremail}
+          )
+
+          return response.data
+
+        } catch (error) {
+          console.log(error.response.data.message);
+          return error.response.data.message;
+        }
+      },
+
+      //Reset password
+      resetPassword : async(newPassword, resetPasswordRoute) => {
+        try {
+
+          const response = await axios.post(`${AUTHAPI}/forgot-password/${resetPasswordRoute}`, {newPassword})
+
+          return response.data
+
+        } catch (error) {
+          console.log(error.response.data.message);
+          return error.response.data.message;
+        }
+      }
+
     }),
 
     {

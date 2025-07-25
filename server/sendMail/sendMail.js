@@ -47,6 +47,22 @@ exports.sendVerificationCode = (email, code) => {
   sendMail(mail);
 };
 
+exports.sendMailForForgotPassword = (email, route)=>{
+  const mail = {
+    from: senderMail,
+    to: email,
+    subject: "Link to reset password",
+    html: `
+   <p>Click on the link below to change your password:</p> <br/>
+      <a href="http://localhost:5173/forgot-password/${route}" target="_blank">
+        Click here
+      </a>
+    `
+  }
+
+  sendMail(mail);
+};
+
 exports.sendAdminRouteMail = (email, route) => {
   const mail = {
     from: senderMail,

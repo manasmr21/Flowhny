@@ -3,6 +3,7 @@ const throwError = require("../utils/errorHandler");
 const createUserIDGenerator = require("../utils/userID");
 const CryptoJS = require("crypto-js");
 const { sendVerificationCode } = require("../sendMail/sendMail");
+const { sendMailForForgotPassword } = require("../sendMail/sendMail");
 const generateRandomString = require("../utils/randomRouteGenerator");
 const bcrypt = require("bcryptjs");
 const {
@@ -588,15 +589,79 @@ exports.updateEmail = async (req, res) => {
 };
 
 
-//Reset password APIs
+//Forgot password APIs
 //First send the route to reset password via gmail
-export const sendResetPasswordRout = async(req, res)=>{
+exports.sendForgotPasswordRoute = async (req, res) => {
   try {
-    console.log("Pass");
+    const  { useremail }  = req.body;
+
+    const user = await userDb.findOne({ useremail });
+
+    if (!user) {
+      throwError("User not found", 404);
+    }
+
+    if (!useremail) {
+      throwError("Please provide your email", 400);
+    }
+
+    const resetPasswordRoute = generateRandomString(15);
+
+    user.resetPasswordRoute = resetPasswordRoute;
+    user.resetPasswordRouteExpiresAt = Date.now() + 5 * 60 * 1000;
+
+    await user.save();
+
+    sendMailForForgotPassword(useremail, resetPasswordRoute);
+
+    res.status(200).json({ success: true, message: "Check your email for link to change your password" })
+
   } catch (error) {
     return res.status(error.status || 400).json({
       success: false,
-      message: error.message || "Error updating the user",
+      message: error.message || "Some error occured",
+    });
+  }
+}
+
+//Verify and reset password
+exports.resetPassword = async (req, res) => {
+  try {
+
+    const {resetPasswordRoute} = req.params
+    const {newPassword} = req.body;
+
+    console.log(resetPasswordRoute, newPassword)
+
+    if( !newPassword){
+      throwError("Please enter valid password", 400);
+    }
+
+    const findUser = await userDb.findOne({
+      resetPasswordRoute,
+      resetPasswordRouteExpiresAt : {$gt: Date.now()}
+    })
+
+    if(Date.now() > findUser.resetPasswordRouteExpiresAt){
+      throwError("Invalid Route",401);
+    }
+
+    if(!findUser){
+      throwError("No user found", 404);
+    }
+
+    findUser.password = newPassword;
+    findUser.resetPasswordRoute = null
+    findUser.resetPasswordRouteExpiresAt = null
+
+    await findUser.save();
+
+    res.status(200).json({success: true, message: "Password changed successfully"});
+
+  } catch (error) {
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Error Reseting password",
     });
   }
 }

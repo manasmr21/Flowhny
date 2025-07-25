@@ -21,6 +21,8 @@ router.patch("/api/authentication/update-email",authenticate, controller.updateE
 router.delete("/api/authentication/deleteUser/:userID", authenticate, controller.deleteUser);
 router.delete("/api/authentication/deleteAddress/:addressID", authenticate, controller.deleteAddress);
 router.post("/api/authentication/updateAddress", authenticate, controller.updateAddress);
+router.post("/api/authentication/forgot-password", controller.sendForgotPasswordRoute);
+router.post("/api/authentication/forgot-password/:resetPasswordRoute", controller.resetPassword);
 
 //Product Routers
 router.get("/api/product/fetch-product",  productController.fetchAllProduct);

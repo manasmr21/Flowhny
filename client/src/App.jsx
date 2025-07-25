@@ -1,11 +1,9 @@
 import { BrowserRouter as Routers, Routes, Route } from "react-router-dom";
 import "./index.css";
-import Navbar from "./components/Navbar/Navbar";
 import Home from "./components/Homepage/Home";
 import ProductPage from "./components/Product page/ProductPage";
 import AboutPage from "./components/About/About";
 import { useEffect } from "react";
-import Footer from "./components/Footer/Footer";
 import Contact from "./components/Contact/Contact";
 import "./App.css";
 import SingleProduct from "./components/SingleProduct/SingleProduct";
@@ -26,6 +24,8 @@ import Products from "./AdminComponents/AdminPanel/Products";
 import Layout from "./Layouts/layout";
 import AdminLayout from "./Layouts/AdminLayout";
 import AddProducts from "./AdminComponents/AdminPanel/AddProducts";
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
+import ResetPassword from "./components/ForgotPassword/ResetPassword";
 
 function App() {
   const { getProducts, theme } = useStore();
@@ -55,6 +55,8 @@ function App() {
             />
 
             <Route exact path="*" element={<Error />} />
+            <Route exact path="forgot-password" element={<ForgotPassword/>}/>
+            <Route exact path="forgot-password/:resetPasswordRoute" element={<ResetPassword/>}/>
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/register" element={<Signup />} />
             <Route exact path="/otp" element={<Verification />} />

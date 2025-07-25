@@ -24,8 +24,8 @@ app.use(cookieParser());
 app.use(router)
 app.use(adminRouter)
 
-app.get("/:message", (req, res) => {
-    res.send(req.params.message)
+app.get("/", (req, res) => {
+    res.send("Hello world");
 })
 
 connecToDB().then(() => {
