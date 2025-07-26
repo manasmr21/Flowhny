@@ -135,7 +135,8 @@ const AddProducts = () => {
   console.log(productData);
 
   return (
-    <div className="addProducts w-[95%] md:w-[75%] lg:w-[50%] mx-auto p-4 text-gray-900 dark:text-gray-300">
+    <>
+    <form className="addProducts w-[95%] md:w-[75%] lg:w-[50%] mx-auto p-4 text-gray-900 dark:text-gray-300" encType="multipart/form-data">
       {/* Thumbnail Upload */}
       <div className="flex flex-col items-center">
         <input
@@ -144,6 +145,7 @@ const AddProducts = () => {
           className="hidden"
           ref={imgRef}
           onChange={uploadThumbnail}
+          name="thumbnail"
         />
         <div className="border relative border-gray-500 dark:border-white w-48 h-60 flex justify-center items-center">
           {thumbnail ? (
@@ -407,7 +409,8 @@ const AddProducts = () => {
           Add Product
         </button>
       </div>
-    </div>
+    </form>
+    </>
   );
 };
 

@@ -71,7 +71,7 @@ exports.addProduct = async(req, res)=>{
 
         const newProduct = new productDb({
             ...productData,
-            availabilityStatus:  productData.stock ? true : false, 
+            availabilityStatus:  productData.stock > 0 ? true : false, 
             productID
         })
 

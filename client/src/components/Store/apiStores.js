@@ -296,7 +296,7 @@ const apiStore = create(
 
           const response = await axios.post(`${AUTHAPI}/forgot-password/${resetPasswordRoute}`, {newPassword})
 
-          return response.data
+          return response.data;
 
         } catch (error) {
           console.log(error.response.data.message);
