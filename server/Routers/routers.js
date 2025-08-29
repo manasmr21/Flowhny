@@ -1,4 +1,5 @@
 const express = require("express");
+const router = new express.Router();
 const authenticate = require("../middleware/authentication");
 const adminMiddleware = require("../middleware/adminAuthentication");
 //controllers
@@ -7,7 +8,6 @@ const productController = require("../Controllers/productController");
 const orderController = require("../Controllers/orderController");
 const upload = require("../utils/multer");
 
-const router = new express.Router();
 
 
 //User Routers
@@ -30,9 +30,13 @@ router.post("/api/authentication/forgot-password/:resetPasswordRoute", controlle
 //Product Routers
 router.get("/api/product/fetch-product",  productController.fetchAllProduct);
 router.get("/api/product/fetch-single-product", productController.fetchOneProduct);
-router.post("/api/product/add-product", adminMiddleware, upload,  productController.addProduct);
+router.post("/api/product/add-product", adminMiddleware,  productController.addProduct);
 router.patch("/api/product/update-product", adminMiddleware, productController.updateProduct);
 router.delete("/api/product/delete-product", adminMiddleware, productController.deleteProduct);
+
+//Test multer
+router.post("/test-multer",upload.single("thumbnail"), controller.testMulter);
+router.get("/testMulter/:fileName", controller.showImage);
 
 //Order Routers
 router.post("/api/orders/make-order", authenticate, orderController.makeOrder);

@@ -1,3 +1,8 @@
+//
+const fs = require("fs");
+const path = require("path");
+//
+
 const userDb = require("../Schema/userSchema");
 const throwError = require("../utils/errorHandler");
 const createUserIDGenerator = require("../utils/userID");
@@ -664,4 +669,38 @@ exports.resetPassword = async (req, res) => {
       message: error.message || "Error Reseting password",
     });
   }
+}
+
+//Multer test api
+exports.testMulter = async(req,res, file)=>{
+
+  console.log(req.file);
+  const filePath = `http://localhost:3969/testMulter/${req.file.filename}`
+  console.log(filePath);
+  res.status(200).json({message: "Successful"});
+
+}
+
+//get the image to show in frontend
+exports.showImage = async(req, res)=>{
+
+  try {
+    
+    const fileName = req.params.fileName;
+
+    const filePath = path.join(__dirname, "..", "uploads/thumbnails", fileName);
+
+    if(fs.existsSync(filePath)){
+      res.sendFile(filePath)
+    }else{
+      throwError("Can't find the image", 404);
+    }
+
+  } catch (error) {
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Image not found",
+    });
+  }
+
 }

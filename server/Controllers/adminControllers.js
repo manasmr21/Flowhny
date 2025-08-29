@@ -12,17 +12,18 @@ dotenv.config();
 //Request for admin route
 exports.requestAdminRoute = async (req, res) => {
   try {
-    const adminMail = process.env.admin;
+    // const adminMail = process.env.admin;
 
-    const admin = await adminDb.findOne({ adminMail });
+    const admin = await adminDb.find();
+    const adminMail = admin[0].adminMail;
 
-    if (admin.role == "admin") {
+    if (admin[0].role == "admin") {
       const route = generateRandomString(20);
       sendAdminRouteMail(adminMail, route);
 
-      admin.route = route;
+      admin[0].route = route;
 
-      await admin.save()
+      await admin[0].save()
 
       res.status(200).json({
         success: true,
@@ -46,6 +47,8 @@ exports.loginAdmin = async (req, res) => {
     const { adminMail, password, adminRoute } = req.body;
 
     const admin = await adminDb.findOne({ adminMail });
+
+    console.log(admin.route)
 
     if (!adminMail || !password) {
       throwError("Please enter valid credentials", 400);
@@ -148,35 +151,40 @@ exports.verifyAdminLogin = async (req, res) => {
 }
 
 // Make an admin Account
-// exports.createAdmin = async (req, res) => {
-//   try {
-//     const { adminMail, password } = req.body;
+exports.createAdmin = async (req, res) => {
+  try {
+    const { adminMail, password } = req.body;
 
-//     const adminExist = await adminDb.find();
+    const adminExist = await adminDb.find();
+    const ifUser = await userDb.findOne({useremail: adminMail});
 
-//     if (adminExist.length > 0) {
-//       throwError(
-//         "There is already an admin exists. You cannot create new admin.",
-//         401
-//       );
-//     }
+    if(ifUser){
+      throwError("You are a user and you are not authorized to be an admin.", 401);
+    }
 
-//     const admin = await new adminDb({
-//       adminID: "admin-A964DM98I76N",
-//       adminMail,
-//       password,
-//       role: "admin",
-//     });
+    if (adminExist.length > 0) {
+      throwError(
+        "There is already an admin exists. You cannot create new admin.",
+        401
+      );
+    }
 
-//     await admin.save();
+    const admin = await new adminDb({
+      adminID: "admin-A964DM98I76N",
+      adminMail,
+      password,
+      role: "admin",
+    });
 
-//     res
-//       .status(200)
-//       .json({ success: true, message: "Admin Created successfully" });
-//   } catch (error) {
-//     return res.status(error.status || 400).json({
-//       success: false,
-//       message: error.message || "Error providing route",
-//     });
-//   }
-// };
+    await admin.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "Admin Created successfully" });
+  } catch (error) {
+    return res.status(error.status || 400).json({
+      success: false,
+      message: error.message || "Error providing route",
+    });
+  }
+};
