@@ -5,8 +5,6 @@ const connecToDB = require("./database");
 const router = require("./Routers/routers");
 const adminRouter = require("./Routers/adminRouters")
 const cookieParser = require('cookie-parser');
-const bodyParser = require("body-parser")
-// const cleanExpiredTokens = require("./tokenCleaner/expiredTokenCleaner");
 
 dotenv.config()
 
@@ -29,8 +27,6 @@ app.get("/", (req, res) => {
 })
 
 connecToDB().then(() => {
-
-    // cleanExpiredTokens(); 
 
     app.listen(PORT, () => {
         console.log(`Application is running on http://localhost:${PORT}`)

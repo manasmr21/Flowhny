@@ -297,7 +297,10 @@ function ProductPage() {
           className={`fixed left-5 ${
             scrollDistance < 300 ? "hidden" : "block"
           } hover:scale-[103%] transition cursor-pointer bottom-5 rounded-4xl px-5 py-3 bg-themegreen text-white text-2xl font-bold border border-themegreen active:scale-[95%] `}
-          onClick={() => window.scrollTo(0, 0)}
+          onClick={() => window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          } )}
         >
           &#8593;
         </button>

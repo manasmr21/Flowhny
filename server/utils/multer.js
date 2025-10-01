@@ -3,11 +3,16 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
     destination: (req, file, cb)=>{
-        cb(null, "uploads/thumbnails/");
+        if(file.fieldname == "thumbnail"){
+            cb(null, "uploads/thumbnails/");
+        }else{
+            cb(null, "uploads/images/");
+        }
     },
     filename: (req, file, cb)=>{
-        const suffix = "thumbnail"
-        cb(null, suffix + file.originalname)
+        const suffix = "thumbnail_"
+        const newName = file.originalname.replace(/ /g, "_")
+        cb(null, Date.now() + "_" + suffix + newName)
     }
 })
 

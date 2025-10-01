@@ -2,26 +2,24 @@ import { useRef, useState } from "react";
 import { FaPlusCircle, FaUpload } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import adminApis from "../../components/Store/adminApi";
-import axios from "axios";
-import { useEffect } from "react";
 
 const AddProducts = () => {
-  const [thumbnail, setThumbnail] = useState();
-  const [previewImage, setPreviewImage] = useState();
-  const [fileName, setFileName] = useState("");
+  const [thumbnail, setThumbnail] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
   const imgRef = useRef(null);
   const [tags, setTags] = useState([]);
   const [tagsValue, setTagValue] = useState("");
   const [images, setImages] = useState([]);
+  const [showProductImage, setShowProductImage] = useState([]);
   const [inputKey, setInputKey] = useState(Date.now());
   const [validsku, setValidsku] = useState(true);
   const [productData, setProductData] = useState({
     title: "",
     description: "",
     category: "",
-    discountPercentage: 0,
-    price: 0,
-    stock: 0,
+    discountPercentage: null,
+    price: null,
+    stock: null,
     tags: tags,
     sku: "",
     shippingInformation: "",
@@ -30,43 +28,39 @@ const AddProducts = () => {
 
   const { addProduct } = adminApis();
 
-
   const clickRef = () => {
     if (imgRef.current) imgRef.current.click();
   };
 
   const handleThumbnailUpload = (e) => {
-
     e.preventDefault();
-    const file = e.target.files[0]
+    const file = e.target.files[0];
 
     if (file) {
       const imagUrl = URL.createObjectURL(file);
-      setPreviewImage(imagUrl)
-      setThumbnail(file)
+      setPreviewImage(imagUrl);
+      setThumbnail(file);
+    }
+  };
+
+  const handleUploadImages = (e) => {
+    e.preventDefault();
+    const file = e.target.files;
+
+    const totalImageCount = Array.from(file).length + images.length
+
+    if(totalImageCount > 5){
+      alert("you cannot add more than 5 images")
+      e.target.value = null
+      return
     }
 
-
-  }
-
-  // const handleSomething = async (e) => {
-
-  //   e.preventDefault();
-
-  //   const formData = new FormData();
-
-  //   formData.append("thumbnail", thumbnail);
-
-  //   const response = await axios.post("http://localhost:3969/test-multer", formData, {
-  //     headers: {
-  //       "Content-Type": "multipart/form-data"
-  //     }
-  //   })
-
-  //   console.log(response.data);
-
-  // }
-
+    if (file.length > 0) {
+      const imgUrl = Array.from(file).map((img) => URL.createObjectURL(img));
+      setImages((prev) => [...prev, ...imgUrl]);
+      setShowProductImage(prev=> [...prev, ...file]);
+    }
+  };
   const addTags = (e) => {
     e.preventDefault();
     if (!tagsValue.trim()) return alert("Please add a tag");
@@ -85,50 +79,54 @@ const AddProducts = () => {
     const formData = new FormData();
 
     if(thumbnail) formData.append("thumbnail", thumbnail)
-    // if(images && images.length){
-    //   images.forEach(img, idx) =>{
+    if(images && images.length){
+      showProductImage.forEach((img)=>{
+        formData.append('images', img)
+      })
+    }
 
-    //   }
-    // }
+  Object.entries(productData).forEach(([key, value])=>{
+   if(key === "tags"){
+    if(Array.isArray(value) && value.length > 0){
+      formData.append(key, value)
+    }
+   }else{
+     formData.append(key, value)
+   }
+  })
 
-    formData.append("title", productData.title)
-    formData.append("description", productData.description)
-    formData.append("category", productData.category)
-    formData.append("discountPercentage", productData.discountPercentage)
-    formData.append("price", productData.price)
-    formData.append("stock", productData.stock)
-    formData.append("sku", productData.sku)
-    formData.append("shippingInformation", productData.shippingInformation)
-    formData.append("returnPolicy", productData.returnPolicy)
-
-    formData.append("tags", JSON.stringify(productData.tags));
 
     try {
-      const response = await addProduct(productData);
+      const response = await addProduct(formData);
 
       if (response.success) {
         alert("Product Added successfully");
         setProductData({
           title: "",
           description: "",
-          price: "",
-          stock: "",
+          price: null,
+          stock: null,
           tags: [],
+          discountPercentage: null,
           sku: "",
           shippingInformation: "",
           returnPolicy: "",
           images: [],
         });
 
-        setThumbnail("");
         setImages([]);
+        setShowProductImage([]);
         setTags([]);
         setTagValue("");
+        setThumbnail(null);
+        setPreviewImage(null);
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  
 
   const handleProductData = (e) => {
     const { name, value } = e.target;
@@ -141,7 +139,9 @@ const AddProducts = () => {
 
   return (
     <>
-      <form className="addProducts w-[95%] md:w-[75%] lg:w-[50%] mx-auto p-4 text-gray-900 dark:text-gray-300" encType="multipart/form-data">
+      <form
+        className="addProducts w-[95%] md:w-[75%] lg:w-[50%] mx-auto p-4 text-gray-900 dark:text-gray-300"
+      >
         {/* Thumbnail Upload */}
         <div className="flex flex-col items-center">
           <input
@@ -153,19 +153,15 @@ const AddProducts = () => {
             name="thumbnail"
           />
 
-
           <div className="border relative border-gray-500 dark:border-white w-48 h-60 flex justify-center items-center">
-            {previewImage ?
-
+            {previewImage ? (
               <img src={previewImage} />
-
-              :
+            ) : (
               <button type="button" onClick={clickRef} className="">
                 <FaPlusCircle className="text-5xl text-gray-500 cursor-pointer" />
               </button>
-            }
+            )}
           </div>
-
         </div>
         {/* Product Form */}
         <div className="mt-8 space-y-4">
@@ -284,7 +280,7 @@ const AddProducts = () => {
               </button>
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
-              {tags.map((item, idx) => (
+              {tags?.map((item, idx) => (
                 <span
                   key={idx}
                   className="flex items-center bg-gray-500 text-white px-2 py-1 rounded"
@@ -312,8 +308,9 @@ const AddProducts = () => {
               name="sku"
               placeholder="SKU"
               value={productData.sku.toUpperCase()}
-              className={`w-full p-2 rounded border ${!validsku ? "focus:outline-red-500" : "focus:outline-themegreen"
-                }  uppercase`}
+              className={`w-full p-2 rounded border ${
+                !validsku ? "focus:outline-red-500" : "focus:outline-themegreen"
+              }  uppercase`}
               onChange={(e) => {
                 const input = e.target.value.toUpperCase();
                 const isValid = /^[A-Z0-9-]*$/.test(input);
@@ -364,6 +361,7 @@ const AddProducts = () => {
                 multiple
                 name="images"
                 className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                onChange={handleUploadImages}
               />
               <div className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-500 text-white rounded shadow cursor-pointer">
                 <FaUpload className="text-lg" />
@@ -371,13 +369,13 @@ const AddProducts = () => {
               </div>
             </div>
             <div className="flex flex-wrap gap-5 mt-4">
-              {images.map((img) => (
+              {images?.map((img, idx) => (
                 <div
-                  key={img.id}
+                  key={idx}
                   className="relative w-[120px] h-[150px] border border-gray-500 rounded"
                 >
                   <img
-                    src={img.data}
+                    src={img}
                     alt="product"
                     className="object-contain w-full h-full"
                   />
@@ -385,7 +383,10 @@ const AddProducts = () => {
                     type="button"
                     onClick={(e) => {
                       e.preventDefault();
-                      setImages(images.filter((i) => i.id !== img.id));
+                      setImages((prevImages) =>
+                        prevImages.filter((url) => url !== img)
+                      );
+                      console.log(images);
                     }}
                     className="absolute top-[-8px] right-[-8px] text-white cursor-pointer border  rounded-full p-1 bg-red-500 "
                   >

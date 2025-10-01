@@ -4,7 +4,7 @@ import axios from "axios";
 import useStore from "./Store";
 
 const APIURL = import.meta.env.VITE_ADMIN_URL;
-const productUrl = import.meta.env.VITE_PRODUCT_URL;
+const productUrl = import.meta.env.VITE_ADD_PRODUCT;
 
 const adminApis = create(
   persist(
@@ -84,17 +84,20 @@ const adminApis = create(
         try {
           const response = await axios.post(
             `${productUrl}/add-product`,
-            productData,
+              productData,
             {
+              headers:{
+                "Content-Type" : "multipart/form-data"
+              },
               withCredentials: true,
-            }
+            },
           );
 
-          if (response.data.success) {
-            const setProduct = useStore.getState().updateProductValue;
+          // if (response.data.success) {
+          //   const setProduct = useStore.getState().updateProductValue;
 
-            setProduct(response.data.product);
-          }
+          //   setProduct(response.data.product);
+          // }
 
           return response.data;
         } catch (error) {

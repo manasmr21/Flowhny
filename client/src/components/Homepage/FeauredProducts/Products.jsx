@@ -9,21 +9,19 @@ function Products() {
   const navigate =  useNavigate()
 
   useEffect(() => {
-    // Sort products by rating in descending order (highest rating first)
     const sortedProducts = [...allProducts].sort((a, b) => b.rating - a.rating);
     
-    // Then slice to get the top N products based on screen width
     const displayCount = window.innerWidth < 850 ? 6 : 10;
     setProducts(sortedProducts.slice(0, displayCount));
   }, [allProducts]);
 
   return (
     <>
-      <div className="product-container pt-4 dark:bg-themedark ">
+      <div className="product-container pt-4 dark:bg-themedark">
         <h1 className="text-center text-4xl font-bold underline text-themegreen">
           Featured Products
         </h1>
-        <section className="all-products">
+        <section className="all-products flex justify-center">
           {products?.map((product, index) => (
             <div
               key={product?._id || index}
@@ -41,7 +39,7 @@ function Products() {
                   {product.rating} <span className="text-[gold]">★</span>
                 </div>
                 
-                {/* Simple discount sticker */}
+                {/* discount sticker */}
                 {product.discountPercentage >0 && (
                   <div className="absolute top-0 right-0">
                     <div className="simple-discount-sticker">
