@@ -5,12 +5,18 @@ import useStore from "../../Store/Store";
 
 function Products() {
   const [products, setProducts] = useState([]);
-  const { allProducts } = useStore();
+  const { allProducts, fetchProducts } = useStore();
   const navigate =  useNavigate()
+
+  const fetchProductsFromBackend = async()=>{
+    await fetchProducts()
+  }
+
+  fetchProductsFromBackend()
 
   useEffect(() => {
     const sortedProducts = [...allProducts].sort((a, b) => b.rating - a.rating);
-    
+
     const displayCount = window.innerWidth < 850 ? 6 : 10;
     setProducts(sortedProducts.slice(0, displayCount));
   }, [allProducts]);
@@ -29,7 +35,7 @@ function Products() {
             >
               <div className="relative">
                 <img
-                  src={product?.thumbnail}
+                  src={product?.thumbnail.displayPath}
                   alt={product?.title}
                   className="w-full h-48 object-contain"
                 />
@@ -59,7 +65,7 @@ function Products() {
                         : ""
                     }`}
                   >
-                    Rs {product?.price}
+                    &#8377;{product?.price}
                   </span>
                   {product.discountPercentage ? (
                     <span>
@@ -74,13 +80,16 @@ function Products() {
                     ""
                   )}
                 </p>
-                <p className="text-left my-1 font-semibold break-words max-w-full">
+                <p className="text-left mt-1 font-semibold break-words max-w-full">
                   {product?.title}
+                </p>
+                <p className="text-left italic text-xs break-words max-w-full">
+                  {product?.brand}
                 </p>
                 <div className="mt-auto">
                   <button 
                    onClick={()=>navigate(`/products/${product?._id}`)}
-                    className="hover:bg-transparent active:scale-[95%] transition cursor-pointer border duration-300 border-themegreen hover:text-themegreen w-full rounded py-2 bg-themegreen text-white font-semibold text-center block"
+                    className="hover:bg-transparent mt-2 active:scale-[95%] transition cursor-pointer border duration-300 border-themegreen hover:text-themegreen w-full rounded py-2 bg-themegreen text-white font-semibold text-center block"
                   >
                     Buy Now
                   </button>

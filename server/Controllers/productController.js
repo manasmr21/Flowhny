@@ -65,9 +65,11 @@ exports.addProduct = async (req, res) => {
     const thumbnail = req.files.thumbnail[0];
     const productImages = req.files.images;
 
+    const pathURL = process.env.backend_url
+
     const productID = generateProductID();
     
-    const thumbnailFilePath = path.join(__dirname, "..", "uploads/thumbnails",thumbnail.filename)
+    const thumbnailFilePath = pathURL + "/product/" +thumbnail.filename
 
 
     const images = [];
@@ -75,7 +77,7 @@ exports.addProduct = async (req, res) => {
       images.push({
         typeName: img.fieldname,
         filename: img.filename,
-        displayPath: path.join(__dirname, "..", "uploads/images", img.filename),
+        displayPath: pathURL + "/product/" + img.filename,
         mimetype: img.mimetype,
         originalname: img.originalname,
         size: img.size,
@@ -179,48 +181,43 @@ exports.testMulter = async (req, res) => {
   res.status(200).json({ message: "Successful" });
 };
 
-//get the image to show in frontend
 exports.showImage = async (req, res) => {
-  try {
-    const fileName = req.params.fileName;
+    try {
+        const fileName = req.params.fileName;
 
-    if (!fileName) throwError("No file name found", 404);
+        if (!fileName) {
+            throwError("No file name found", 404);
+        }
 
-    if (fileName.includes("thumbnail_")) {
-      const filePath = path.join(
-        __dirname,
-        "..",
-        "uploads/thumbnails",
-        fileName
-      );
-      if (fs.existsSync(filePath)) {
-        res.sendFile(filePath);
-      } else {
-        throwError("Can't find the image", 404);
-      }
-    } else {
-      throwError("Can't find the image you are looking for.", 404);
+        let directory;
+
+        if (fileName.includes("thumbnail_")) {
+            directory = "uploads/thumbnails";
+        } else if (fileName.includes("product-image_")) {
+            directory = "uploads/images";
+        } else {
+            throwError("Invalid image filename format.", 404);
+        }
+
+
+        const filePath = path.join(
+            __dirname,
+            "..",
+            directory, 
+            fileName
+        );
+
+        if (fs.existsSync(filePath)) {
+            return res.sendFile(filePath); 
+        } else {
+            
+            throwError("Can't find the requested image.", 404);
+        }
+        
+    } catch (error) {
+        return res.status(error.status || 404).json({
+            success: false,
+            message: error.message || "Image not found",
+        });
     }
-
-    if (fileName.includes("product-image_")) {
-      const productImage = path.join(
-        __dirname,
-        "..",
-        "uploads/images",
-        fileName
-      );
-      if (fs.existsSync(productImage)) {
-        res.sendFile(productImage);
-      } else {
-        throwError("Can't find the image", 404);
-      }
-    } else {
-      throwError("Can't find the image you are looking for.", 404);
-    }
-  } catch (error) {
-    return res.status(error.status || 400).json({
-      success: false,
-      message: error.message || "Image not found",
-    });
-  }
 };

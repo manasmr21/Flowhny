@@ -225,7 +225,7 @@ function ProductPage() {
               >
                 <div className="w-[100px] min-w-[100px] sm:w-[120px] sm:min-w-[120px] md:w-[140px] md:min-w-[140px]">
                   <img
-                    src={product?.thumbnail}
+                    src={product?.thumbnail.displayPath}
                     alt={product?.title}
                     className="w-full h-[100px] sm:h-[120px] md:h-[140px] object-cover rounded-md"
                   />
@@ -245,11 +245,11 @@ function ProductPage() {
                           : ""
                       }`}
                     >
-                      ${product?.price}
+                      &#8377;{product?.price}
                     </span>
                     {product.discountPercentage ? (
                       <span className="block">
-                        $
+                        &#8377;
                         {(
                           parseFloat(product?.price) -
                           parseFloat(product?.price) *

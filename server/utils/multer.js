@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
         }
     },
     filename: (req, file, cb)=>{
-        const suffix = "thumbnail_"
+        const suffix = `${file.fieldname === "thumbnail" ? "thumbnail_" : "product-image_"}`
         const newName = file.originalname.replace(/ /g, "_")
         cb(null, Date.now() + "_" + suffix + newName)
     }

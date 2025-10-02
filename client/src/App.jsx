@@ -28,15 +28,15 @@ import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import ResetPassword from "./components/ForgotPassword/ResetPassword";
 
 function App() {
-  const { getProducts, theme } = useStore();
+  const { fetchProducts, theme } = useStore();
 
   useEffect(() => {
     document.documentElement.classList.add(theme);
   }, [theme]);
 
   useEffect(() => {
-    getProducts();
-  }, [getProducts]);
+    fetchProducts();
+  }, [fetchProducts]);
 
   return (
     <div className="all-content dark:bg-themedark">

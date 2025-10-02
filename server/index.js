@@ -10,12 +10,14 @@ dotenv.config()
 
 PORT = process.env.PORT
 
+const frontendUrl = process.env.frontend_url
+
 const app = express()
 
 app.use(express.urlencoded({ limit: "100mb", extended: true }))
 app.use(express.json({limit: "100mb"}))
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: frontendUrl,
     credentials: true
 }))
 app.use(cookieParser());

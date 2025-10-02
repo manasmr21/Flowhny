@@ -389,10 +389,29 @@ exports.login = async (req, res) => {
     const matchPassword = await bcrypt.compare(password, user.password);
 
     if (!matchPassword) {
-      throwError("");
+      if (!Date.now() < user.timeout || user.timeout == null) {
+        user.failedAttempts += 1;
+        await user.save();
+      }
+      if (user.failedAttempts % 5 == 0) {
+        user.timeout = Date.now() + 5 * 60 * 1000;
+        await user.save();
+        throwError("Too many failed attempts try after few mins");
+      }
+      if (Date.now() < user.timeout) {
+        throwError("You are currently timedout please try again later");
+      }
+      throwError("Invalid Credentials", 403);
+    }
+
+    if (Date.now() < user.timeout) {
+      throwError("You are currently timedout please try again later");
     }
 
     const token = await user.generateAuthToken();
+
+    user.timeout = null;
+    user.failedAttempts = 0;
 
     await user.save();
 
@@ -409,6 +428,7 @@ exports.login = async (req, res) => {
         password: undefined,
         tokens: undefined,
       },
+      message: "User logged in successfully",
     });
   } catch (error) {
     return res
@@ -593,12 +613,11 @@ exports.updateEmail = async (req, res) => {
   }
 };
 
-
 //Forgot password APIs
 //First send the route to reset password via gmail
 exports.sendForgotPasswordRoute = async (req, res) => {
   try {
-    const  { useremail }  = req.body;
+    const { useremail } = req.body;
 
     const user = await userDb.findOne({ useremail });
 
@@ -619,54 +638,56 @@ exports.sendForgotPasswordRoute = async (req, res) => {
 
     sendMailForForgotPassword(useremail, resetPasswordRoute);
 
-    res.status(200).json({ success: true, message: "Check your email for link to change your password" })
-
+    res.status(200).json({
+      success: true,
+      message: "Check your email for link to change your password",
+    });
   } catch (error) {
     return res.status(error.status || 400).json({
       success: false,
       message: error.message || "Some error occured",
     });
   }
-}
+};
 
 //Verify and reset password
 exports.resetPassword = async (req, res) => {
   try {
+    const { resetPasswordRoute } = req.params;
+    const { newPassword } = req.body;
 
-    const {resetPasswordRoute} = req.params
-    const {newPassword} = req.body;
+    console.log(resetPasswordRoute, newPassword);
 
-    console.log(resetPasswordRoute, newPassword)
-
-    if( !newPassword){
+    if (!newPassword) {
       throwError("Please enter valid password", 400);
     }
 
     const findUser = await userDb.findOne({
       resetPasswordRoute,
-      resetPasswordRouteExpiresAt : {$gt: Date.now()}
-    })
+      resetPasswordRouteExpiresAt: { $gt: Date.now() },
+    });
 
-    if(Date.now() > findUser.resetPasswordRouteExpiresAt){
-      throwError("Invalid Route",401);
+    if (Date.now() > findUser.resetPasswordRouteExpiresAt) {
+      throwError("Invalid Route", 401);
     }
 
-    if(!findUser){
+    if (!findUser) {
       throwError("No user found", 404);
     }
 
     findUser.password = newPassword;
-    findUser.resetPasswordRoute = null
-    findUser.resetPasswordRouteExpiresAt = null
+    findUser.resetPasswordRoute = null;
+    findUser.resetPasswordRouteExpiresAt = null;
 
     await findUser.save();
 
-    res.status(200).json({success: true, message: "Password changed successfully"});
-
+    res
+      .status(200)
+      .json({ success: true, message: "Password changed successfully" });
   } catch (error) {
     return res.status(error.status || 400).json({
       success: false,
       message: error.message || "Error Reseting password",
     });
   }
-}
+};

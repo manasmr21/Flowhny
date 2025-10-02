@@ -104,6 +104,11 @@ const userSchema = new mongoose.Schema({
     resetPasswordRouteExpiresAt: Date,
     verificationCode: String,
     verificationCodeExpiresAt : Date,
+    failedAttempts:{
+      type: Number,
+      default: 0
+    },
+    timeout:Date,
     tokens: [
         {
           token: {

@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import axios from "axios";
 
 const productUrl = import.meta.env.VITE_PRODUCT_URL
+const PUrl = import.meta.env.VITE_ADD_PRODUCT
 
 const useStore = create(
   persist(
@@ -12,19 +14,30 @@ const useStore = create(
       theme: "dark",
 
       //Fetching product
-      getProducts: async () => {
-        try {
-          const res = await fetch(`${productUrl}`);
-          const data = await res.json();
-          set({ allProducts: data.products });
-        } catch (error) {
-          console.error("Error fetching products:", error);
-        }
-      },
+      // getProducts: async () => {
+      //   try {
+      //     const res = await fetch(`${productUrl}`);
+      //     const data = await res.json();
+      //     set({ allProducts: data.products });
+      //   } catch (error) {
+      //     console.error("Error fetching products:", error);
+      //   }
+      // },
 
       //update product in frontend
       updateProductValue : (newValue)=>{
         set({allProducts : newValue});
+      },
+
+      fetchProducts: async()=>{
+        try {
+          const res = await axios.get(`${PUrl}/fetch-product`);
+
+          set({ allProducts: res.data.products });
+
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
       },
 
       //Add to cart functionality

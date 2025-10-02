@@ -68,9 +68,10 @@ function Login() {
                     password : ""
                 })
 
-                alert(response.success)
+                if(response.success) alert(response.message);
+                else alert(response);
 
-                navigate('/');
+                if(response.success) navigate("/")
             } catch (err) {
                 console.error(err.message || 'Login failed. Please check your credentials.');
             }

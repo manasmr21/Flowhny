@@ -91,10 +91,11 @@ router.delete(
   adminMiddleware,
   productController.deleteProduct
 );
+router.get("/product/:fileName", productController.showImage);
+
 
 //Test multer
 // router.post("/test-multer", , productController.testMulter);
-router.get("/testMulter/:fileName", productController.showImage);
 
 //Order Routers
 router.post("/api/orders/make-order", authenticate, orderController.makeOrder);

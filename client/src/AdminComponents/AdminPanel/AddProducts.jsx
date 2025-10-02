@@ -47,18 +47,18 @@ const AddProducts = () => {
     e.preventDefault();
     const file = e.target.files;
 
-    const totalImageCount = Array.from(file).length + images.length
+    const totalImageCount = Array.from(file).length + images.length;
 
-    if(totalImageCount > 5){
-      alert("you cannot add more than 5 images")
-      e.target.value = null
-      return
+    if (totalImageCount > 5) {
+      alert("you cannot add more than 5 images");
+      e.target.value = null;
+      return;
     }
 
     if (file.length > 0) {
       const imgUrl = Array.from(file).map((img) => URL.createObjectURL(img));
       setImages((prev) => [...prev, ...imgUrl]);
-      setShowProductImage(prev=> [...prev, ...file]);
+      setShowProductImage((prev) => [...prev, ...file]);
     }
   };
   const addTags = (e) => {
@@ -78,23 +78,26 @@ const AddProducts = () => {
 
     const formData = new FormData();
 
-    if(thumbnail) formData.append("thumbnail", thumbnail)
-    if(images && images.length){
-      showProductImage.forEach((img)=>{
-        formData.append('images', img)
-      })
+    if (thumbnail) formData.append("thumbnail", thumbnail);
+    if (images && images.length) {
+      showProductImage.forEach((img) => {
+        formData.append("images", img);
+      });
     }
 
-  Object.entries(productData).forEach(([key, value])=>{
-   if(key === "tags"){
-    if(Array.isArray(value) && value.length > 0){
-      formData.append(key, value)
-    }
-   }else{
-     formData.append(key, value)
-   }
-  })
+    Object.entries(productData).forEach(([key, value]) => {
+      if (key === "tags") {
+        return;
+      } else {
+        formData.append(key, value);
+      }
+    });
 
+    if (tags.length > 0) {
+      tags.forEach((tags) => {
+        formData.append("tags", tags);
+      });
+    }
 
     try {
       const response = await addProduct(formData);
@@ -104,14 +107,16 @@ const AddProducts = () => {
         setProductData({
           title: "",
           description: "",
-          price: null,
-          stock: null,
+          price: "",
+          stock: "",
           tags: [],
-          discountPercentage: null,
+          discountPercentage: "",
           sku: "",
           shippingInformation: "",
           returnPolicy: "",
           images: [],
+          brand: "",
+          category: "",
         });
 
         setImages([]);
@@ -126,8 +131,6 @@ const AddProducts = () => {
     }
   };
 
-  
-
   const handleProductData = (e) => {
     const { name, value } = e.target;
 
@@ -139,9 +142,7 @@ const AddProducts = () => {
 
   return (
     <>
-      <form
-        className="addProducts w-[95%] md:w-[75%] lg:w-[50%] mx-auto p-4 text-gray-900 dark:text-gray-300"
-      >
+      <div className="addProducts w-[95%] md:w-[75%] lg:w-[50%] mx-auto p-4 text-gray-900 dark:text-gray-300">
         {/* Thumbnail Upload */}
         <div className="flex flex-col items-center">
           <input
@@ -155,7 +156,10 @@ const AddProducts = () => {
 
           <div className="border relative border-gray-500 dark:border-white w-48 h-60 flex justify-center items-center">
             {previewImage ? (
-              <img src={previewImage} />
+              <img
+                src={previewImage}
+                className=" object-contain h-full w-full"
+              />
             ) : (
               <button type="button" onClick={clickRef} className="">
                 <FaPlusCircle className="text-5xl text-gray-500 cursor-pointer" />
@@ -265,20 +269,23 @@ const AddProducts = () => {
 
           <div>
             <label htmlFor="tags">Add Tags:</label>
-            <div className="flex flex-wrap items-center gap-2">
-              <input
-                type="text"
-                name="tags"
-                value={tagsValue}
-                onChange={(e) => setTagValue(e.target.value)}
-                maxLength={10}
-                placeholder="Tags"
-                className="flex-1 p-2 rounded border focus:outline-themegreen"
-              />
-              <button type="button" onClick={addTags}>
-                <FaPlusCircle className="text-2xl text-themegreen cursor-pointer" />
-              </button>
-            </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  type="text"
+                  name="tags"
+                  value={tagsValue}
+                  onChange={(e) => setTagValue(e.target.value)}
+                  maxLength={10}
+                  placeholder="Tags"
+                  className="flex-1 p-2 rounded border focus:outline-themegreen"
+                />
+                <button
+                  type="button"
+                  onClick={addTags}
+                >
+                  <FaPlusCircle className="text-2xl text-themegreen cursor-pointer" />
+                </button>
+              </div>
             <div className="flex flex-wrap gap-2 mt-2">
               {tags?.map((item, idx) => (
                 <span
@@ -405,7 +412,7 @@ const AddProducts = () => {
             Add Product
           </button>
         </div>
-      </form>
+      </div>
     </>
   );
 };

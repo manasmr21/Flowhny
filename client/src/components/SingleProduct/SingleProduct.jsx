@@ -76,7 +76,7 @@ function SingleProduct() {
           {/* image section */}
           <div className="bg-white p-4 rounded-lg shadow-md mb-4 dark:bg-lighterthemedark">
             <img
-              src={mainImage || product.thumbnail}
+              src={mainImage || product.thumbnail.displayPath}
               alt={product.title}
               className="w-full h-[300px] sm:h-[400px] object-contain rounded-md"
             />
@@ -86,14 +86,14 @@ function SingleProduct() {
             {/* Thumbnail */}
             <div
               className={`cursor-pointer p-2 border rounded-md ${
-                mainImage === product.thumbnail
+                mainImage === product.thumbnail.displayPath
                   ? "border-themegreen"
                   : "border-gray-200"
               }`}
-              onClick={() => handleImageClick(product.thumbnail)}
+              onClick={() => handleImageClick(product.thumbnail.displayPath)}
             >
               <img
-                src={product.thumbnail}
+                src={product.thumbnail.displayPath}
                 alt="thumbnail"
                 className="h-16 w-full object-cover"
               />
@@ -105,14 +105,14 @@ function SingleProduct() {
                 <div
                   key={index}
                   className={`cursor-pointer p-2 border rounded-md ${
-                    mainImage === img.data
+                    mainImage === img.displayPath
                       ? "border-themegreen"
                       : "border-gray-200"
                   }`}
-                  onClick={() => handleImageClick(img.data)}
+                  onClick={() => handleImageClick(img.displayPath)}
                 >
                   <img
-                    src={img.data}
+                    src={img.displayPath}
                     alt={`product-${index}`}
                     className="h-16 w-full object-cover"
                   />
@@ -131,9 +131,6 @@ function SingleProduct() {
               Product by:{" "}
               <span className="text-themegreen font-medium">
                 {product.brand}
-              </span>
-              <span className="ml-3 text-gray-600 dark:text-gray-300">
-                SKU: {product.sku}
               </span>
             </p>
 
@@ -159,7 +156,7 @@ function SingleProduct() {
                       : "text-themegreen"
                   }
                 >
-                  ${product.price}
+                  &#8377;{product.price}
                 </span>
                 {product.discountPercentage ? (
                   <span className="text-themegreen">
@@ -352,7 +349,7 @@ function SingleProduct() {
                     SKU
                   </p>
                   <p className="text-gray-900 dark:text-white ">
-                    {product.productID }
+                    {product.sku }
                   </p>
                 </div>
 

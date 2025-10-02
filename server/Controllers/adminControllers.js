@@ -48,8 +48,6 @@ exports.loginAdmin = async (req, res) => {
 
     const admin = await adminDb.findOne({ adminMail });
 
-    console.log(admin.route)
-
     if (!adminMail || !password) {
       throwError("Please enter valid credentials", 400);
     }
