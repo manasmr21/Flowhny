@@ -46,7 +46,7 @@ const addressSchema = new mongoose.Schema({
   },
   isDefault: {
     type: Boolean,
-    default: false
+    default: false,
   }
 });
 
@@ -163,6 +163,7 @@ userSchema.pre("save", async function(next){
         next()
     }
 })
+
 
 const userDb = new mongoose.model("users", userSchema);
 

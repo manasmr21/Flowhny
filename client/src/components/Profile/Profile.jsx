@@ -17,7 +17,13 @@ import DelelteUser from "./delelteUser";
 import AddressField from "./AddressField";
 
 function Profile() {
-  const { userData, logoutUser, updateUsername, deleteAddress, sendResetPasswordRoute } = apiStore();
+  const {
+    userData,
+    logoutUser,
+    updateUsername,
+    deleteAddress,
+    sendResetPasswordRoute,
+  } = apiStore();
   const [editUsername, setEditUsername] = useState(false);
   const [editUseremail, setEditUseremail] = useState(false);
   const tabs = ["Details", "Orders", "Address"];
@@ -29,7 +35,7 @@ function Profile() {
   const [deleteOpt, setDeleteOpt] = useState(false);
   const [showAddressField, setShowAddressField] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
-  const [addressID, setAddressID] = useState(null)
+  const [addressID, setAddressID] = useState(null);
 
   const [newData, setNewData] = useState({
     newMail: "",
@@ -38,18 +44,18 @@ function Profile() {
 
   const AUTHAPI = import.meta.env.VITE_AUTHAPI_URL;
 
+
   //send password reset link
-  const resetUserPassword = async()=>{
+  const resetUserPassword = async () => {
     try {
       const response = await sendResetPasswordRoute(userData.useremail);
 
-      if(response.success) alert(response.message);
-      else alert(response)
-
+      if (response.success) alert(response.message);
+      else alert(response);
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   useEffect(() => {
     if (userData) {
@@ -57,18 +63,17 @@ function Profile() {
     }
   }, [userData]);
 
-  const handleLogout = async()=>{
+  const handleLogout = async () => {
     try {
       const response = await logoutUser();
 
-      if(response.success){
+      if (response.success) {
         navigate("/");
       }
-
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   //Update user name Function
   const handleChangeName = async () => {
@@ -86,7 +91,6 @@ function Profile() {
   //Send code for email update
   const sendCodeToOldMail = async () => {
     try {
-
       const response = await axios.patch(
         `${AUTHAPI}/update-email`,
         {
@@ -144,17 +148,14 @@ function Profile() {
     try {
       const response = await deleteAddress(addressId);
 
-      console.log(addressID)
+      console.log(addressID);
 
-      if(response.success){
-        alert(response.message)
+      if (response.success) {
+        alert(response.message);
       }
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
-   
   };
 
   return (
@@ -301,9 +302,13 @@ function Profile() {
                 <div className="flex items-center gap-3 text-themegreen mb-2">
                   <span className="font-semibold">Reset Password</span>
                 </div>
-                <p className="hover:underline cursor-pointer inline" onClick={resetUserPassword}>Send link to reset</p>
+                <p
+                  className="hover:underline cursor-pointer inline"
+                  onClick={resetUserPassword}
+                >
+                  Send link to reset
+                </p>
               </div>
-              
             </div>
           )}
 
@@ -361,7 +366,7 @@ function Profile() {
                           onClick={() => {
                             setShowAddressField(true);
                             setEditAddress(true);
-                            setAddressID(address?._id)
+                            setAddressID(address?._id);
                           }}
                         >
                           <FaEdit />
@@ -483,7 +488,11 @@ function Profile() {
             name={userData?.username}
             editAddress={editAddress}
             setEditAddress={setEditAddress}
-            userAddress={userData.addresses.filter(item=> item._id.toString() === addressID.toString())[0]}
+            userAddress={
+              userData.addresses.filter(
+                (item) => item._id?.toString() === addressID?.toString()
+              )[0]
+            }
           />
         </div>
       )}

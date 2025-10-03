@@ -38,6 +38,7 @@ function Signup() {
 
   // getDeviceInformation();
 
+
   const getUserData = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({

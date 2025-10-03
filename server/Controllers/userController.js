@@ -18,6 +18,7 @@ const {
 
 //Environmental Variable
 const dotenv = require("dotenv");
+const { Console } = require("console");
 dotenv.config();
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -196,15 +197,15 @@ exports.userAddress = async (req, res) => {
 
     const findUser = await userDb.findOne({ _id: userID });
 
-    const { error } = addressSchema.validate(address, {
-      abortEarly: false,
-    });
+    if (Array.isArray(findUser.addresses)) {
+      const defaultAddressIdx = findUser.addresses.findIndex(
+        (addr) => addr?.isDefault === true
+      );
 
-    if (error) {
-      return res.status(400).json({
-        success: false,
-        message: error.details.map((e) => e.message),
-      });
+
+      if (address?.isDefault && defaultAddressIdx !== -1) {
+        findUser.addresses[defaultAddressIdx].isDefault = false;
+      }
     }
 
     if (!findUser) {
@@ -246,6 +247,19 @@ exports.updateAddress = async (req, res) => {
 
     if (!user) {
       throwError("Error finding the user", 404);
+    }
+
+    if (Array.isArray(user.addresses)) {
+      const defaultAddressIdx = user.addresses.findIndex(
+        (addr) => addr?.isDefault === true
+      );
+
+      console.log();
+
+      if (newAddress?.isDefault && defaultAddressIdx !== -1) {
+        console.log("alskhdkj");
+        user.addresses[defaultAddressIdx].isDefault = false;
+      }
     }
 
     const addressIndex = user.addresses
@@ -396,16 +410,28 @@ exports.login = async (req, res) => {
       if (user.failedAttempts % 5 == 0) {
         user.timeout = Date.now() + 5 * 60 * 1000;
         await user.save();
-        throwError(`Too many failed attempts. You're timed out until ${new Date(user.timeout).toLocaleTimeString()}`);
+        throwError(
+          `Too many failed attempts. You're timed out until ${new Date(
+            user.timeout
+          ).toLocaleTimeString()}`
+        );
       }
       if (Date.now() < user.timeout) {
-        throwError(`You are currently timedout please try after ${new Date(user.timeout).toLocaleTimeString()}`);
+        throwError(
+          `You are currently timedout please try after ${new Date(
+            user.timeout
+          ).toLocaleTimeString()}`
+        );
       }
       throwError("Invalid Credentials", 403);
     }
 
     if (Date.now() < user.timeout) {
-      throwError(`You are currently timedout please try after ${new Date(user.timeout).toLocaleTimeString()}`);
+      throwError(
+        `You are currently timedout please try after ${new Date(
+          user.timeout
+        ).toLocaleTimeString()}`
+      );
     }
 
     const token = await user.generateAuthToken();

@@ -27,7 +27,6 @@ import AddProducts from "./AdminComponents/AdminPanel/AddProducts";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import ResetPassword from "./components/ForgotPassword/ResetPassword";
 import ProtectedAuthPages from "./ProtectedRoutes/ProtectedAuthPages";
-import apiStore from "./components/Store/apiStores";
 
 function App() {
   const { fetchProducts, theme } = useStore();
