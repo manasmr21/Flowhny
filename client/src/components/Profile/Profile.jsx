@@ -17,7 +17,7 @@ import DelelteUser from "./delelteUser";
 import AddressField from "./AddressField";
 
 function Profile() {
-  const { userData, logoutUser, updateUsername, deleteAddress } = apiStore();
+  const { userData, logoutUser, updateUsername, deleteAddress, sendResetPasswordRoute } = apiStore();
   const [editUsername, setEditUsername] = useState(false);
   const [editUseremail, setEditUseremail] = useState(false);
   const tabs = ["Details", "Orders", "Address"];
@@ -38,9 +38,20 @@ function Profile() {
 
   const AUTHAPI = import.meta.env.VITE_AUTHAPI_URL;
 
+  //send password reset link
+  const resetUserPassword = async()=>{
+    try {
+      const response = await sendResetPasswordRoute(userData.useremail);
+
+      if(response.success) alert(response.message);
+      else alert(response)
+
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
   useEffect(() => {
-
-
     if (userData) {
       setName(userData?.username);
     }
@@ -280,12 +291,19 @@ function Profile() {
                 <p>{userData?.verified ? "Yes" : "No"}</p>
               </div>
 
-              <div className="bg-white dark:bg-[#2a2a2a] p-4 rounded-lg shadow md:col-span-2">
+              <div className="bg-white dark:bg-[#2a2a2a] p-4 rounded-lg shadow md:col-span-1">
                 <div className="flex items-center gap-3 text-themegreen mb-2">
                   <span className="font-semibold">Account Created</span>
                 </div>
                 <p>{new Date(userData?.createdAt).toLocaleString()}</p>
               </div>
+              <div className="bg-white dark:bg-[#2a2a2a] p-4 rounded-lg shadow md:col-span-1">
+                <div className="flex items-center gap-3 text-themegreen mb-2">
+                  <span className="font-semibold">Reset Password</span>
+                </div>
+                <p className="hover:underline cursor-pointer inline" onClick={resetUserPassword}>Send link to reset</p>
+              </div>
+              
             </div>
           )}
 

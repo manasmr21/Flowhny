@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import apiStore from "./components/Store/apiStores";
+import apiStore from "../components/Store/apiStores";
 import { useEffect, useState } from "react";
 
 const ProtectedRoute = () => {

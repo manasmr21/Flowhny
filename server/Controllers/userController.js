@@ -396,16 +396,16 @@ exports.login = async (req, res) => {
       if (user.failedAttempts % 5 == 0) {
         user.timeout = Date.now() + 5 * 60 * 1000;
         await user.save();
-        throwError("Too many failed attempts try after few mins");
+        throwError(`Too many failed attempts. You're timed out until ${new Date(user.timeout).toLocaleTimeString()}`);
       }
       if (Date.now() < user.timeout) {
-        throwError("You are currently timedout please try again later");
+        throwError(`You are currently timedout please try after ${new Date(user.timeout).toLocaleTimeString()}`);
       }
       throwError("Invalid Credentials", 403);
     }
 
     if (Date.now() < user.timeout) {
-      throwError("You are currently timedout please try again later");
+      throwError(`You are currently timedout please try after ${new Date(user.timeout).toLocaleTimeString()}`);
     }
 
     const token = await user.generateAuthToken();

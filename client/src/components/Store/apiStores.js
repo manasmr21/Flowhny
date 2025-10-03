@@ -30,6 +30,7 @@ const apiStore = create(
           .then((response) => {
             if (response.statusText == "OK") {
               set({ userData: response.data.userData });
+              set({ userLoggedIn: true });
               return response.data;
             }
           })
@@ -52,6 +53,7 @@ const apiStore = create(
           );
 
           set({ userData: response.data.userData });
+          set({userLoggedIn: true})
           return response.data;
         } catch (error) {
           console.log(error.response.data.message);
@@ -264,7 +266,7 @@ const apiStore = create(
 
           if (response.data.success) {
             set({ userData: response.data.userData });
-            set({ userLoggedIn: true })
+            set({ userLoggedIn: true });
           }
 
           return response.data;
@@ -275,15 +277,14 @@ const apiStore = create(
         }
       },
 
-      //Send reset password route 
-      sendResetPasswordRoute: async(useremail)=>{
+      //Send reset password route
+      sendResetPasswordRoute: async (useremail) => {
         try {
-          const response = await axios.post(`${AUTHAPI}/forgot-password`,
-            {useremail}
-          )
+          const response = await axios.post(`${AUTHAPI}/forgot-password`, {
+            useremail,
+          });
 
-          return response.data
-
+          return response.data;
         } catch (error) {
           console.log(error.response.data.message);
           return error.response.data.message;
@@ -291,19 +292,19 @@ const apiStore = create(
       },
 
       //Reset password
-      resetPassword : async(newPassword, resetPasswordRoute) => {
+      resetPassword: async (newPassword, resetPasswordRoute) => {
         try {
-
-          const response = await axios.post(`${AUTHAPI}/forgot-password/${resetPasswordRoute}`, {newPassword})
+          const response = await axios.post(
+            `${AUTHAPI}/forgot-password/${resetPasswordRoute}`,
+            { newPassword }
+          );
 
           return response.data;
-
         } catch (error) {
           console.log(error.response.data.message);
           return error.response.data.message;
         }
-      }
-
+      },
     }),
 
     {

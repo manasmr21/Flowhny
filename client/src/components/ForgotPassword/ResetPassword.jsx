@@ -22,7 +22,7 @@ const ResetPassword = () => {
 
       if(response.success){
         alert("Password reset successfully");
-        navigate("/login");
+        navigate("/");
       }
 
     } catch (error) {

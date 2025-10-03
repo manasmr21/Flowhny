@@ -15,17 +15,19 @@ import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/Signup";
 import Verification from "./components/Verifications/Verification";
 import Profile from "./components/Profile/Profile";
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRoute from "./ProtectedRoutes/ProtectedRoute";
 import AdminLogin from "./AdminComponents/AdminAuthentication/AdminLogin";
 import AdminRoute from "./AdminComponents/AdminAuthentication/AdminRoute";
 import Dashboard from "./AdminComponents/AdminPanel/Dashboard";
-import AdminProtectedRoute from "./AdminProtectedRoute";
+import AdminProtectedRoute from "./ProtectedRoutes/AdminProtectedRoute";
 import Products from "./AdminComponents/AdminPanel/Products";
 import Layout from "./Layouts/layout";
 import AdminLayout from "./Layouts/AdminLayout";
 import AddProducts from "./AdminComponents/AdminPanel/AddProducts";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import ResetPassword from "./components/ForgotPassword/ResetPassword";
+import ProtectedAuthPages from "./ProtectedRoutes/ProtectedAuthPages";
+import apiStore from "./components/Store/apiStores";
 
 function App() {
   const { fetchProducts, theme } = useStore();
@@ -55,11 +57,22 @@ function App() {
             />
 
             <Route exact path="*" element={<Error />} />
-            <Route exact path="forgot-password" element={<ForgotPassword/>}/>
-            <Route exact path="forgot-password/:resetPasswordRoute" element={<ResetPassword/>}/>
-            <Route exact path="/login" element={<Login />} />
-            <Route exact path="/register" element={<Signup />} />
-            <Route exact path="/otp" element={<Verification />} />
+            <Route
+              exact
+              path="forgot-password/:resetPasswordRoute"
+              element={<ResetPassword />}
+            />
+
+            <Route element={<ProtectedAuthPages />}>
+              <Route
+                exact
+                path="forgot-password"
+                element={<ForgotPassword />}
+              />
+              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/register" element={<Signup />} />
+              <Route exact path="/otp" element={<Verification />} />
+            </Route>
 
             <Route element={<ProtectedRoute />}>
               <Route exact path="/cart" element={<Cart />} />

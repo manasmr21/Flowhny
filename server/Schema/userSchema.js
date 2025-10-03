@@ -109,6 +109,18 @@ const userSchema = new mongoose.Schema({
       default: 0
     },
     timeout:Date,
+    device:[{
+      type:{
+        platform: String,
+        brand: String,
+        platformVersion: String,
+        deviceModel: String
+      }
+    }],
+    twoFactorAuth:{
+      type: Boolean,
+      default: false
+    },
     tokens: [
         {
           token: {
