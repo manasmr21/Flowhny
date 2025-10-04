@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import apiStore from "../Store/apiStores";
 import PropTypes from "prop-types";
+import csc from "countries-states-cities";
 
 function AddressField({
   setShowAddressField,
@@ -10,15 +11,17 @@ function AddressField({
   userAddress,
 }) {
   const { addAddress, updateAddress } = apiStore();
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
 
   const [address, setAddress] = useState({
     fullName: name,
     phoneNumber: editAddress ? userAddress.phoneNumber : "",
     addressLine1: editAddress ? userAddress.addressLine1 : "",
     addressLine2: editAddress ? userAddress.addressLine2 : "",
-    city: editAddress ? userAddress.city : "",
-    state: editAddress ? userAddress.state : "",
-    country: editAddress ? userAddress.country : "",
+    city: editAddress ? userAddress.city : city,
+    state: editAddress ? userAddress.state : state,
+    country: editAddress ? userAddress.country : "India",
     postalCode: editAddress ? userAddress.postalCode : "",
     isDefault: editAddress ? userAddress.isDefault : false,
   });
@@ -45,19 +48,18 @@ function AddressField({
     }
   };
 
-  const handleUpdatingAddress = async()=>{
+  const handleUpdatingAddress = async () => {
     try {
-      const response = await updateAddress(userAddress._id, address)
+      const response = await updateAddress(userAddress._id, address);
 
-      if(response.success){
+      if (response.success) {
         alert(response.message);
-        setShowAddressField(false)
+        setShowAddressField(false);
       }
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 grid place-items-center bg-[#00000089] z-50 overflow-y-auto">
@@ -115,45 +117,79 @@ function AddressField({
               <label htmlFor="city" className="block">
                 City:
               </label>
-              <input
+              <select
                 className="w-full border border-themegreen rounded p-1"
-                type="text"
-                name="city"
-                value={address.city}
-                onChange={(e) =>
-                  setAddress({ ...address, city: e.target.value })
-                }
-              />
+                value={city}
+                disabled={state == "" ? true : false}
+                onChange={(e) => {
+                  setCity(e.target.value)
+                  setAddress({
+                    ...address,
+                    city: e.target.value
+                  })
+                }}
+              >
+                <option className="dark:bg-lighterthemedark">
+                  --Select City--
+                </option>
+                {state && csc
+                  .getCitiesOfState(
+                    csc.getStatesOfCountry(101).filter((st) => {
+                      return st.name === state;
+                    })[0].id
+                  )
+                  .map((city) => {
+                    return (
+                      <option
+                        key={city.id}
+                        className=" dark:bg-lighterthemedark"
+                      >
+                        {city.name}
+                      </option>
+                    );
+                  })}
+              </select>
             </div>
 
             <div>
               <label htmlFor="state" className="block">
                 State:
               </label>
-              <input
+              <select
                 className="w-full border border-themegreen rounded p-1"
-                type="text"
-                name="state"
-                value={address.state}
-                onChange={(e) =>
-                  setAddress({ ...address, state: e.target.value })
-                }
-              />
+                value={state}
+                onChange={(e) => {
+                  setState(e.target.value)
+                  setAddress({
+                    ...address,
+                    state: e.target.value
+                  });
+                }}
+              >
+                <option value="" className="dark:bg-lighterthemedark">
+                  --Select state--
+                </option>
+                {csc.getStatesOfCountry(101).map((state) => {
+                  return (
+                    <option
+                      key={state.id}
+                      className=" dark:bg-lighterthemedark"
+                      value={state.name}
+                    >
+                      {state.name}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
 
             <div>
               <label htmlFor="country" className="block">
                 Country:
               </label>
-              <input
-                className="w-full border border-themegreen rounded p-1"
-                type="text"
-                name="country"
-                value={address.country}
-                onChange={(e) =>
-                  setAddress({ ...address, country: e.target.value })
-                }
-              />
+              <p className="w-full border text-gray-400 border-themegreen rounded p-1">
+                {csc.getCountryById(101).name}
+              </p>
             </div>
           </div>
 
@@ -185,22 +221,23 @@ function AddressField({
         </form>
 
         <div className="text-center mt-5">
-         {!editAddress ? <button
-            className=" mx-3 bg-themegreen p-2 rounded w-[30%] hover:scale-[105%] active:scale-[95%] transition cursor-pointer"
-            onClick={handleAddingAddress}
-          >
-            Save
-          </button>
-            :
+          {!editAddress ? (
             <button
-            className=" mx-3 bg-themegreen p-2 rounded w-[30%] hover:scale-[105%] active:scale-[95%] transition cursor-pointer"
-            onClick={handleUpdatingAddress}
-          >
-            Update
-          </button>
-          }
+              className=" mx-3 bg-themegreen text-white p-2 rounded w-[30%] hover:scale-[105%] active:scale-[95%] transition cursor-pointer"
+              onClick={handleAddingAddress}
+            >
+              Save
+            </button>
+          ) : (
+            <button
+              className=" mx-3 bg-themegreen text-white p-2 rounded w-[30%] hover:scale-[105%] active:scale-[95%] transition cursor-pointer"
+              onClick={handleUpdatingAddress}
+            >
+              Update
+            </button>
+          )}
           <button
-            className=" mx-3 bg-[red] p-2 rounded w-[30%] hover:scale-[105%] active:scale-[95%] transition cursor-pointer"
+            className=" mx-3 text-white bg-[red] p-2 rounded w-[30%] hover:scale-[105%] active:scale-[95%] transition cursor-pointer"
             onClick={() => {
               setShowAddressField(false);
               setEditAddress(false);
@@ -219,7 +256,7 @@ AddressField.propTypes = {
   name: PropTypes.string.isRequired,
   editAddress: PropTypes.bool,
   setEditAddress: PropTypes.func,
-  userAddress : PropTypes.object
+  userAddress: PropTypes.object,
 };
 
 export default AddressField;

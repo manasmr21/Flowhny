@@ -3,11 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import apiStore from "../Store/apiStores";
 import CryptoJS from "crypto-js";
+import { useEffect } from "react";
 
 function Signup() {
   //Navigation varible
   const navigate = useNavigate();
 
+  const [location, setLocation] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -15,28 +17,12 @@ function Signup() {
     useremail: "",
     password: "",
     cpassword: "",
-    device: [{}],
+    locations:"",
     terms: false,
   });
   const [errors, setErrors] = useState({});
   const { registerUser } = apiStore();
 
-  // //Get user's device informations
-  // const getDeviceInformation = () => {
-
-  //   if (navigator.userAgentData) {
-  //     navigator.userAgentData
-  //       .getHighEntropyValues(["platformVersion", "model"])
-  //       .then((deviceData) => {
-  //         formData.device.push({ platform: deviceData.platform });
-  //         formData.device.push({ deviceModel: deviceData.model });
-  //         formData.device.push({ brand: deviceData.brands[2].brand });
-  //         formData.device.push({ platformVersion: deviceData.platformVersion });
-  //       });
-  //   }
-  // };
-
-  // getDeviceInformation();
 
 
   const getUserData = (e) => {

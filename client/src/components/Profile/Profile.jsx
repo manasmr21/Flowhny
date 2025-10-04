@@ -44,7 +44,6 @@ function Profile() {
 
   const AUTHAPI = import.meta.env.VITE_AUTHAPI_URL;
 
-
   //send password reset link
   const resetUserPassword = async () => {
     try {

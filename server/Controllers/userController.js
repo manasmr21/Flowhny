@@ -197,6 +197,8 @@ exports.userAddress = async (req, res) => {
 
     const findUser = await userDb.findOne({ _id: userID });
 
+    console.log(address)
+
     if (Array.isArray(findUser.addresses)) {
       const defaultAddressIdx = findUser.addresses.findIndex(
         (addr) => addr?.isDefault === true

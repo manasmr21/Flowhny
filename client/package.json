@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.0.6",
     "axios": "^1.8.3",
+    "countries-states-cities": "^1.0.6",
     "crypto-js": "^4.2.0",
     "node-device-detector": "^2.2.4",
     "prop-types": "^15.8.1",
