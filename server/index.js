@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 
 dotenv.config()
 
-PORT = process.env.PORT
+const PORT = process.env.PORT
 
 const frontendUrl = process.env.frontend_url
 

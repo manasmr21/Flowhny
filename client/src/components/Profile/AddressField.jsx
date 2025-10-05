@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import apiStore from "../Store/apiStores";
 import PropTypes from "prop-types";
 import csc from "countries-states-cities";

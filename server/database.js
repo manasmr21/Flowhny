@@ -3,7 +3,7 @@ const dotenv = require("dotenv")
 
 dotenv.config()
 
-db_url = process.env.database_url
+const db_url = process.env.database_url
 
 
 const connecToDB = async ()=>{
