@@ -3,13 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import apiStore from "../Store/apiStores";
 import CryptoJS from "crypto-js";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
 function Signup() {
   //Navigation varible
   const navigate = useNavigate();
 
-  const [location, setLocation] = useState(null);
+  // const [location, setLocation] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -55,13 +55,11 @@ function Signup() {
     }
 
     //Missing password and confirm password field
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 5) {
-      newErrors.password = "Password must be at least 5 characters";
-    }
+    if (!formData.password || formData.password.length < 5) {
+      newErrors.password = "Invalid Password. Password length must be than 5.";
+    } 
 
-    if (!formData.cpassword) {
+    if (!formData.cpassword || formData.password != formData.cpassword) {
       newErrors.cpassword = "Passwords do not match";
     }
 
