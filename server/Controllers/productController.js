@@ -5,6 +5,7 @@ const throwError = require("../utils/errorHandler");
 const productValidationSchema = require("../validators/productValidator");
 const path = require("path");
 const fs = require("fs");
+const { default: mongoose } = require("mongoose");
 
 //Product ID generator
 function generateProductID() {
@@ -144,19 +145,17 @@ exports.updateProduct = async (req, res) => {
 //Delete product
 exports.deleteProduct = async (req, res) => {
   try {
-    const { productID } = req.body;
+    const products = req.body;
 
-    const findTheProduct = await productDb.findOne({ productID });
+    const ids = products.map(p=> new mongoose.Types.ObjectId(p._id))
 
-    if (!findTheProduct) {
-      throwError("Product Not Found", 404);
-    }
+    await productDb.deleteMany({
+      _id : {$in : ids}
+    })
 
-    await findTheProduct.deleteOne({ productID });
+    const product = await productDb.find();
 
-    res
-      .status(200)
-      .json({ success: true, message: "Product deleted successfully" });
+    res.status(200).json({success: true, message: "Selected products deleted successfully", product});
   } catch (error) {
     return res.status(error.status || 400).json({
       success: false,
@@ -166,21 +165,22 @@ exports.deleteProduct = async (req, res) => {
 };
 
 //Multer test api
-exports.testMulter = async (req, res) => {
-  console.log(req.file);
-  console.log(req.files);
+// exports.testMulter = async (req, res) => {
+//   console.log(req.file);
+//   console.log(req.files);
 
-  const fileNames = [];
+//   const fileNames = [];
 
-  req.files.map((img) => {
-    fileNames.push({ fileName: `${img.filename}` });
-  });
+//   req.files.map((img) => {
+//     fileNames.push({ fileName: `${img.filename}` });
+//   });
 
-  console.log(fileNames);
+//   console.log(fileNames);
 
-  res.status(200).json({ message: "Successful" });
-};
+//   res.status(200).json({ message: "Successful" });
+// };
 
+//display the image
 exports.showImage = async (req, res) => {
     try {
         const fileName = req.params.fileName;

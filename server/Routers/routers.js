@@ -93,7 +93,6 @@ router.delete(
 );
 router.get("/product/:fileName", productController.showImage);
 
-
 //Test multer
 // router.post("/test-multer", , productController.testMulter);
 

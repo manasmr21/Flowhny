@@ -5,10 +5,10 @@ const key = process.env.adminSecreteKey;
 const adminMiddleware = async (req, res, next) => {
   try {
     
-    const token = req.cookies.anotherToken;
+    const token = await req.cookies.anotherToken;
 
     if (!token) {
-      return res.status(401).json({ success: false, message: "No token provided" });
+      return res.status(401).json({ success: false, message: "No admin token provided" });
     }
 
     // Try to verify token

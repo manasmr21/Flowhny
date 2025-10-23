@@ -84,22 +84,47 @@ const adminApis = create(
         try {
           const response = await axios.post(
             `${productUrl}/add-product`,
-              productData,
+            productData,
             {
-              headers:{
-                "Content-Type" : "multipart/form-data"
+              headers: {
+                "Content-Type": "multipart/form-data",
               },
               withCredentials: true,
-            },
+            }
           );
 
-          // if (response.data.success) {
-          //   const setProduct = useStore.getState().updateProductValue;
+          if (response.data.success) {
+            const setProduct = useStore.getState().updateProductValue;
 
-          //   setProduct(response.data.product);
-          // }
+            setProduct(response.data.product);
+          }
 
           return response.data;
+        } catch (error) {
+          console.log(error.response.data.message);
+          return error.response.data.message;
+        }
+      },
+
+      //Delete single or many products
+      removeProducts: async (productData) => {
+        try {
+          const response = await axios.delete(
+            `${productUrl}/delete-product`,
+
+            {
+              data: productData,
+              withCredentials: true,
+            }
+          );
+
+          if (response.data.success) {
+            const setProduct = useStore.getState().updateProductValue;
+
+            setProduct(response.data.product);
+          }
+
+          return response.data
         } catch (error) {
           console.log(error.response.data.message);
           return error.response.data.message;
