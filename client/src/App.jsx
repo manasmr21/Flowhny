@@ -37,7 +37,7 @@ function App() {
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+  }, []);
 
   return (
     <div className="all-content dark:bg-themedark">

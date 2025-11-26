@@ -93,6 +93,8 @@ const adminApis = create(
             }
           );
 
+          console.log(response.data);
+
           if (response.data.success) {
             const setProduct = useStore.getState().updateProductValue;
 

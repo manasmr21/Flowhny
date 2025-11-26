@@ -99,12 +99,14 @@ exports.addProduct = async (req, res) => {
       },
       images,
     });
-
+    
     await newProduct.save();
+
+    const product = await productDb.find();
     res.status(201).json({
       success: true,
       message: "Product Added Successfully",
-      product: newProduct,
+      product
     });
   } catch (error) {
     return res.status(error.status || 400).json({
@@ -128,11 +130,12 @@ exports.updateProduct = async (req, res) => {
     );
 
     await finalProduct.save();
+    const product = await productDb.find();
 
     res.status(201).json({
       success: true,
       message: "Product updated successfully",
-      product: finalProduct,
+      product
     });
   } catch (error) {
     return res.status(error.status || 400).json({

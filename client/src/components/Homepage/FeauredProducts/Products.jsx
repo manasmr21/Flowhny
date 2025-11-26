@@ -12,11 +12,13 @@ function Products() {
     await fetchProducts()
   }
 
-  fetchProductsFromBackend()
-
+  useEffect(()=>{
+    fetchProductsFromBackend()
+  },[]);
+  
   useEffect(() => {
     const sortedProducts = [...allProducts].sort((a, b) => b.rating - a.rating);
-
+    
     const displayCount = window.innerWidth < 850 ? 6 : 10;
     setProducts(sortedProducts.slice(0, displayCount));
   }, [allProducts]);

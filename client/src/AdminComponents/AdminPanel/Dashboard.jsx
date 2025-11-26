@@ -1,10 +1,20 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { FaBars, FaTimes, FaTachometerAlt, FaBoxOpen, FaPlusCircle, FaSignOutAlt } from "react-icons/fa";
+import useStore from "../../components/Store/Store";
+import {
+  FaBars,
+  FaTimes,
+  FaTachometerAlt,
+  FaBoxOpen,
+  FaPlusCircle,
+  FaSignOutAlt,
+  FaMoon,
+} from "react-icons/fa";
 import adminApis from "../../components/Store/adminApi";
 
 export default function Dashboard() {
   const { adminLogout } = adminApis();
+  const {themeToggler} = useStore();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -18,9 +28,21 @@ export default function Dashboard() {
   };
 
   const navItems = [
-    { name: "Dashboard", icon: <FaTachometerAlt size={18} />, path: "/admin/dashboard" },
-    { name: "Product Lists", icon: <FaBoxOpen size={18} />, path: "/admin/product" },
-    { name: "Add Products", icon: <FaPlusCircle size={18} />, path: "/admin/addProduct" },
+    {
+      name: "Dashboard",
+      icon: <FaTachometerAlt size={18} />,
+      path: "/admin/dashboard",
+    },
+    {
+      name: "Product Lists",
+      icon: <FaBoxOpen size={18} />,
+      path: "/admin/product",
+    },
+    {
+      name: "Add Products",
+      icon: <FaPlusCircle size={18} />,
+      path: "/admin/addProduct",
+    },
   ];
 
   return (
@@ -32,12 +54,10 @@ export default function Dashboard() {
         {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
       </button>
 
-
       <aside
         className={`fixed top-0 left-0 h-full w-64 bg-white dark:bg-themedark border-r dark:border-gray-400 flex flex-col justify-between transform transition-transform duration-300 z-40
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       >
-
         <ul className="mt-16 lg:mt-6">
           {navItems.map((item) => (
             <li key={item.name}>
@@ -72,7 +92,11 @@ export default function Dashboard() {
         ></div>
       )}
 
-      
+      <button className="absolute right-5 cursor-pointer active:scale-[95%] hover:scale-[105%] bg-themegreen text-white p-3 rounded-3xl text-lg bottom-5"
+      onClick={themeToggler}
+      >
+        <FaMoon/>
+      </button>
     </div>
   );
 }

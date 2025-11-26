@@ -14,7 +14,7 @@ const Products = () => {
   const [deleteProducts, setDeleteProducts] = useState([]);
   const productsPerPage = 10;
 
-  const filteredProducts = allProducts.filter(
+  const filteredProducts = allProducts?.filter(
     (product) =>
       product?.title.toLowerCase().includes(search.toLowerCase()) ||
       product?.sku.includes(search)
@@ -101,7 +101,15 @@ const Products = () => {
     }
   };
 
-  if(allProducts.length == 0){
+  if(!allProducts){
+    return(
+      <div>
+        Loading...
+      </div>
+    )
+  }
+
+  if(allProducts?.length == 0){
     return(
 
       <>
@@ -115,9 +123,9 @@ const Products = () => {
   }
 
   return (
-    <div className="w-full px-4 py-6">
+    <div className="w-full px-4 py-6 grid">
       {/* Search bar */}
-      <div className="mb-4 flex justify-between">
+      <div className="mb-4 w-full flex justify-end gap-4">
         <div className="">
           <button
             className="bg-themegreen hover:bg-transparent transition align-middle cursor-pointer hover:text-themegreen border text-md h-10 px-5 border-themegreen text-white rounded"
@@ -149,8 +157,8 @@ const Products = () => {
       </div>
 
       {/* Scrollable Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-[800px] w-full border border-gray-300 text-sm text-left">
+      <div className="overflow-x-auto grid place-items-end">
+        <table className="min-w-[800px] w-[80%] border border-gray-300 text-sm text-left">
           <thead className="bg-gray-700 text-white text-center">
             <tr>
               <th
@@ -161,8 +169,8 @@ const Products = () => {
                 <input
                   type="checkbox"
                   checked={
-                    allProducts.length > 0
-                      ? deleteProducts.length == allProducts.length
+                    allProducts?.length > 0
+                      ? deleteProducts.length == allProducts?.length
                       : false
                   }
                   onChange={selectAllProduct}

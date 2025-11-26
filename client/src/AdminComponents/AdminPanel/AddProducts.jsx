@@ -142,7 +142,7 @@ const AddProducts = () => {
 
   return (
     <>
-      <div className="addProducts w-[95%] md:w-[75%] lg:w-[50%] mx-auto p-4 text-gray-900 dark:text-gray-300">
+      <div className=" addProducts w-[95%] md:w-[75%] lg:w-[50%] mx-auto p-4 text-gray-900 dark:text-gray-300">
         {/* Thumbnail Upload */}
         <div className="flex flex-col items-center">
           <input
@@ -165,6 +165,15 @@ const AddProducts = () => {
                 <FaPlusCircle className="text-5xl text-gray-500 cursor-pointer" />
               </button>
             )}
+
+            <div>
+              <button className={`bg-red-600 cursor-pointer p-1 ${!previewImage && "hidden" } top-[-3%] right-[-5%] rounded-2xl border border-white absolute`}
+                onClick={()=> setPreviewImage(null)}
+              >
+                <ImCross/>
+              </button>
+            </div>
+
           </div>
         </div>
         {/* Product Form */}
