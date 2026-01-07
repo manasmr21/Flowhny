@@ -17,7 +17,7 @@ const app = express()
 app.use(express.urlencoded({ limit: "100mb", extended: true }))
 app.use(express.json({limit: "100mb"}))
 app.use(cors({
-    origin: frontendUrl,
+    origin: "https://flowhny.vercel.app/",
     credentials: true
 }))
 app.use(cookieParser());
