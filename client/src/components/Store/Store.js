@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
 
-const productUrl = import.meta.env.VITE_PRODUCT_URL
+// const productUrl = import.meta.env.VITE_PRODUCT_URL
 const PUrl = import.meta.env.VITE_ADD_PRODUCT
 
 const useStore = create(
