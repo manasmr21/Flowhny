@@ -1,7 +1,8 @@
 const userDb = require("../Schema/userSchema");
 const throwError = require("../utils/errorHandler");
 const bcrypt = require("bcryptjs")
-const { sendAdminRouteMail } = require("../sendMail/sendMail");
+// const { sendAdminRouteMail } = require("../sendMail/sendMail");
+const {sendAdminRoute} = require("../sendMail/brevoMailService");
 const dotenv = require("dotenv");
 const adminDb = require("../Schema/adminSchema");
 const  generateRandomString  = require("../utils/randomRouteGenerator");
@@ -19,7 +20,7 @@ exports.requestAdminRoute = async (req, res) => {
 
     if (admin[0].role == "admin") {
       const route = generateRandomString(20);
-      sendAdminRouteMail(adminMail, route);
+      sendAdminRoute(adminMail, route);
 
       admin[0].route = route;
 
@@ -69,8 +70,8 @@ exports.loginAdmin = async (req, res) => {
 
     res.cookie("anotherToken", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       maxAge: 30 * 24 * 60 * 60 * 1000
     });
 

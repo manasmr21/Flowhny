@@ -15,5 +15,16 @@ async function sendTestEmail(useremail, verificationCode) {
     htmlContent: "  <h1>Your verification code is: " + verificationCode + "</h1>",
   })
 }
+async function sendAdminRoute(adminMail) {
+  return await brevo.sendTransacEmail({
+    sender: {
+      email: process.env.mail, // MUST be verified
+      name: "Citizen Portal",
+    },
+    to: [{ email: adminMail }],
+    subject: "Brevo Test Email",
+    htmlContent: "  <h1>Your verification code is: " + verificationCode + "</h1>",
+  })
+}
 
-module.exports = { sendTestEmail }
+module.exports = { sendTestEmail, sendAdminRoute }
