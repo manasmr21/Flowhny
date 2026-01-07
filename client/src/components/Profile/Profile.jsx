@@ -9,12 +9,12 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { RxCheckCircled, RxCrossCircled } from "react-icons/rx";
-import apiStore from "../Store/apiStores";
+import apiStore from "../Store/apiStores.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Otp from "./Otp";
-import DelelteUser from "./DelelteUser";
-import AddressField from "./AddressField";
+import Otp from "./Otp.jsx";
+import DelelteUser from "./DelelteUser.jsx";
+import AddressField from "./AddressField.jsx";
 
 function Profile() {
   const {
