@@ -85,6 +85,8 @@ function Signup() {
         const encryptedData = encryptData(formData);
         const response = await registerUser(encryptedData);
 
+        console.log(response);
+
         if (response.success) {
           setFormData({
             username: "",
