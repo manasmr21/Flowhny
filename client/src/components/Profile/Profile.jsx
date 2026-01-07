@@ -12,7 +12,7 @@ import { RxCheckCircled, RxCrossCircled } from "react-icons/rx";
 import apiStore from "../Store/apiStores";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Otp from "./otp";
+import Otp from "./Otp";
 import DelelteUser from "./delelteUser";
 import AddressField from "./AddressField";
 
