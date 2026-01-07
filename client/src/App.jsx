@@ -21,7 +21,7 @@ import AdminRoute from "./AdminComponents/AdminAuthentication/AdminRoute";
 import Dashboard from "./AdminComponents/AdminPanel/Dashboard";
 import AdminProtectedRoute from "./ProtectedRoutes/AdminProtectedRoute";
 import Products from "./AdminComponents/AdminPanel/Products";
-import Layout from "./Layouts/layout";
+import Layout from "./Layouts/Layout";
 import AdminLayout from "./Layouts/AdminLayout";
 import AddProducts from "./AdminComponents/AdminPanel/AddProducts";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
