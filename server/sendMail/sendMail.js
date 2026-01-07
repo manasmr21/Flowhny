@@ -54,7 +54,7 @@ exports.sendMailForForgotPassword = (email, route)=>{
     subject: "Link to reset password",
     html: `
    <p>Click on the link below to change your password:</p> <br/>
-      <a href="http://localhost:5173/forgot-password/${route}" target="_blank">
+      <a href="https://flowhny.vercel.app/forgot-password/${route}" target="_blank">
         Click here
       </a>
     `
@@ -70,7 +70,7 @@ exports.sendAdminRouteMail = (email, route) => {
     subject: "Route for admin panel",
     html: `
       <p>Click on the link below to navigate to the admin login page:</p> <br/>
-      <a href="http://localhost:5173/admin/${route}" target="_blank">
+      <a href="https://flowhny.vercel.app/admin/${route}" target="_blank">
         Click here
       </a>
     `,
