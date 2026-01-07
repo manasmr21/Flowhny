@@ -13,7 +13,7 @@ import apiStore from "../Store/apiStores";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Otp from "./Otp";
-import DelelteUser from "./delelteUser";
+import DelelteUser from "./DelelteUser";
 import AddressField from "./AddressField";
 
 function Profile() {
