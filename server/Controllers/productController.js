@@ -66,12 +66,11 @@ exports.addProduct = async (req, res) => {
     const thumbnail = req.files.thumbnail[0];
     const productImages = req.files.images;
 
-    const pathURL = process.env.backend_url
+    const pathURL = process.env.backend_url;
 
     const productID = generateProductID();
-    
-    const thumbnailFilePath = pathURL + "/product/" +thumbnail.filename
 
+    const thumbnailFilePath = pathURL + "/product/" + thumbnail.filename;
 
     const images = [];
     productImages?.map((img) => {
@@ -99,14 +98,14 @@ exports.addProduct = async (req, res) => {
       },
       images,
     });
-    
+
     await newProduct.save();
 
     const product = await productDb.find();
     res.status(201).json({
       success: true,
       message: "Product Added Successfully",
-      product
+      product,
     });
   } catch (error) {
     return res.status(error.status || 400).json({
@@ -119,24 +118,28 @@ exports.addProduct = async (req, res) => {
 //Update a product
 exports.updateProduct = async (req, res) => {
   try {
-    const { updatedProduct } = req.body;
+    const updatedProduct = req.body;
 
-    const { productID, updatedFields } = updatedProduct;
+    const { productID, newProductData } = updatedProduct;
+
+    console.log(newProductData)
 
     const finalProduct = await productDb.findOneAndUpdate(
-      { productID },
-      { $set: updatedFields },
+      productID,
+      { $set: newProductData },
       { new: true }
     );
 
-    await finalProduct.save();
-    const product = await productDb.find();
+    // console.log(finalProduct);
 
-    res.status(201).json({
-      success: true,
-      message: "Product updated successfully",
-      product
-    });
+    // await finalProduct.save();
+    // const product = await productDb.find();
+
+    // res.status(201).json({
+    //   success: true,
+    //   message: "Product updated successfully",
+    //   product,
+    // });
   } catch (error) {
     return res.status(error.status || 400).json({
       success: false,
@@ -150,15 +153,21 @@ exports.deleteProduct = async (req, res) => {
   try {
     const products = req.body;
 
-    const ids = products.map(p=> new mongoose.Types.ObjectId(p._id))
+    const ids = products.map((p) => new mongoose.Types.ObjectId(p._id));
 
     await productDb.deleteMany({
-      _id : {$in : ids}
-    })
+      _id: { $in: ids },
+    });
 
     const product = await productDb.find();
 
-    res.status(200).json({success: true, message: "Selected products deleted successfully", product});
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Selected products deleted successfully",
+        product,
+      });
   } catch (error) {
     return res.status(error.status || 400).json({
       success: false,
@@ -167,60 +176,36 @@ exports.deleteProduct = async (req, res) => {
   }
 };
 
-//Multer test api
-// exports.testMulter = async (req, res) => {
-//   console.log(req.file);
-//   console.log(req.files);
-
-//   const fileNames = [];
-
-//   req.files.map((img) => {
-//     fileNames.push({ fileName: `${img.filename}` });
-//   });
-
-//   console.log(fileNames);
-
-//   res.status(200).json({ message: "Successful" });
-// };
-
 //display the image
 exports.showImage = async (req, res) => {
-    try {
-        const fileName = req.params.fileName;
+  try {
+    const fileName = req.params.fileName;
 
-        if (!fileName) {
-            throwError("No file name found", 404);
-        }
-
-        let directory;
-
-        if (fileName.includes("thumbnail_")) {
-            directory = "uploads/thumbnails";
-        } else if (fileName.includes("product-image_")) {
-            directory = "uploads/images";
-        } else {
-            throwError("Invalid image filename format.", 404);
-        }
-
-
-        const filePath = path.join(
-            __dirname,
-            "..",
-            directory, 
-            fileName
-        );
-
-        if (fs.existsSync(filePath)) {
-            return res.sendFile(filePath); 
-        } else {
-            
-            throwError("Can't find the requested image.", 404);
-        }
-        
-    } catch (error) {
-        return res.status(error.status || 404).json({
-            success: false,
-            message: error.message || "Image not found",
-        });
+    if (!fileName) {
+      throwError("No file name found", 404);
     }
+
+    let directory;
+
+    if (fileName.includes("thumbnail_")) {
+      directory = "uploads/thumbnails";
+    } else if (fileName.includes("product-image_")) {
+      directory = "uploads/images";
+    } else {
+      throwError("Invalid image filename format.", 404);
+    }
+
+    const filePath = path.join(__dirname, "..", directory, fileName);
+
+    if (fs.existsSync(filePath)) {
+      return res.sendFile(filePath);
+    } else {
+      throwError("Can't find the requested image.", 404);
+    }
+  } catch (error) {
+    return res.status(error.status || 404).json({
+      success: false,
+      message: error.message || "Image not found",
+    });
+  }
 };

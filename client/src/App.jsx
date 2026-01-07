@@ -8,7 +8,7 @@ import Contact from "./components/Contact/Contact";
 import "./App.css";
 import SingleProduct from "./components/SingleProduct/SingleProduct";
 import useStore from "./components/Store/Store";
-import ScrollToTop from "./ScrollToTop";
+import ScrollToTop from "./scrollToTop";
 import Cart from "./components/Cart/Cart";
 import Error from "./components/Error/Error";
 import Login from "./components/Authentication/Login";
@@ -55,7 +55,6 @@ function App() {
               element={<SingleProduct />}
             />
 
-            <Route exact path="*" element={<Error />} />
             <Route
               exact
               path="forgot-password/:resetPasswordRoute"
@@ -71,6 +70,7 @@ function App() {
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/register" element={<Signup />} />
               <Route exact path="/otp" element={<Verification />} />
+              <Route exact path="/admin" element={<AdminRoute />} />
             </Route>
 
             <Route element={<ProtectedRoute />}>
@@ -79,10 +79,10 @@ function App() {
             </Route>
           </Route>
 
+          <Route exact path="*" element={<Error />} />
+          <Route exact path="/admin/:adminRoute" element={<AdminLogin />} />
           {/* Admin Routes */}
           <Route element={<AdminLayout />}>
-            <Route exact path="/admin" element={<AdminRoute />} />
-            <Route exact path="/admin/:adminRoute" element={<AdminLogin />} />
             <Route element={<AdminProtectedRoute />}>
               <Route exact path="/admin/dashboard" element={<Dashboard />} />
               <Route exact path="/admin/product" element={<Products />} />

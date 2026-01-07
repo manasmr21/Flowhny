@@ -2,8 +2,9 @@ import { useState } from "react";
 import useStore from "../../components/Store/Store";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import adminApis from "../../components/Store/adminApi";
-import noProductIcon from "../../assets/noProducts.png"
-import {NavLink} from "react-router-dom"
+import noProductIcon from "../../assets/noProducts.png";
+import { NavLink } from "react-router-dom";
+import EditProduct from "./EditProduct";
 
 const Products = () => {
   const { allProducts } = useStore();
@@ -12,6 +13,8 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [edit, setEdit] = useState(false);
   const [deleteProducts, setDeleteProducts] = useState([]);
+  const [editProduct, setEditProduct] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
   const productsPerPage = 10;
 
   const filteredProducts = allProducts?.filter(
@@ -19,6 +22,10 @@ const Products = () => {
       product?.title.toLowerCase().includes(search.toLowerCase()) ||
       product?.sku.includes(search)
   );
+
+  const onClose = ()=>{
+    setOpenEdit(!openEdit)
+  }
 
   const selectAllProduct = (e) => {
     if (deleteProducts.length !== filteredProducts.length && e.target.checked) {
@@ -95,31 +102,29 @@ const Products = () => {
       const response = await removeProducts(deleteProducts);
 
       alert(response?.message);
-
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  if(!allProducts){
-    return(
-      <div>
-        Loading...
-      </div>
-    )
+  if (!allProducts) {
+    return <div>Loading...</div>;
   }
 
-  if(allProducts?.length == 0){
-    return(
-
+  if (allProducts?.length == 0) {
+    return (
       <>
         <div className="m-auto text-themegreen text-center">
-        <img className="m-auto" src={noProductIcon}/>
-          <p className="font-semibold text-2xl">No products to show. <NavLink className="hover:underline" to="/admin/addProduct">Add some products</NavLink>  </p>
+          <img className="m-auto" src={noProductIcon} />
+          <p className="font-semibold text-2xl">
+            No products to show.{" "}
+            <NavLink className="hover:underline" to="/admin/addProduct">
+              Add some products
+            </NavLink>{" "}
+          </p>
         </div>
       </>
-
-    )
+    );
   }
 
   return (
@@ -145,8 +150,7 @@ const Products = () => {
             <FaTrash />
           </button>
         </div>
-
-        <div className="w-full sm:w-[50%] md:w-[30%]">
+        <div className="w-[60%] sm:w-[50%] md:w-[30%]">
           <input
             type="text"
             placeholder="Search for products"
@@ -222,7 +226,10 @@ const Products = () => {
                 </td>
                 <td className="p-2 border border-gray-300">
                   <div className="flex items-center justify-center gap-3">
-                    <button className="text-blue-600 cursor-pointer hover:text-blue-800">
+                    <button className="text-blue-600 cursor-pointer hover:text-blue-800" onClick={()=>{
+                      setEditProduct(product)
+                      onClose();
+                    }}>
                       <FaEdit />
                     </button>
                     <button className="text-sm cursor-pointer dark:text-gray-200 hover:underline">
@@ -273,6 +280,9 @@ const Products = () => {
         >
           Next
         </button>
+      </div>
+      <div className={`${openEdit ? "block" : "hidden" }`}>
+        <EditProduct product={editProduct} onClose={onClose} />
       </div>
     </div>
   );

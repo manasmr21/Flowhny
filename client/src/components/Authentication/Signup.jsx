@@ -17,7 +17,6 @@ function Signup() {
     useremail: "",
     password: "",
     cpassword: "",
-    locations:"",
     terms: false,
   });
   const [errors, setErrors] = useState({});

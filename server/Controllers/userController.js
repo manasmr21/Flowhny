@@ -16,6 +16,8 @@ const {
   addressSchema,
 } = require("../validators/userValidator");
 
+const {sendTestEmail} = require("../sendMail/brevoMailService");
+
 //Environmental Variable
 const dotenv = require("dotenv");
 const { Console } = require("console");
@@ -29,7 +31,7 @@ const sendMailsForVerification = (email) => {
   ).toString();
   const expiresAt = Date.now() + 60 * 1000;
 
-  sendVerificationCode(email, verificationCode);
+  sendTestEmail(email, verificationCode);
   return { verificationCode, expiresAt };
 };
 

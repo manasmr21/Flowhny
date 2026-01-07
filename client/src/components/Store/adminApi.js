@@ -126,7 +126,27 @@ const adminApis = create(
             setProduct(response.data.product);
           }
 
-          return response.data
+          return response.data;
+        } catch (error) {
+          console.log(error.response.data.message);
+          return error.response.data.message;
+        }
+      },
+
+      updateProducts: async (productId, newProductData) => {
+        try {
+          const response = await axios.patch(
+            `${productUrl}/update-product`,
+            {
+              data: { productId, newProductData },
+            },
+            {
+              withCredentials: true,
+            }
+          );
+          if (response.data.success) {
+            console.log(response.data);
+          }
         } catch (error) {
           console.log(error.response.data.message);
           return error.response.data.message;

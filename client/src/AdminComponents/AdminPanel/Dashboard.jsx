@@ -92,7 +92,7 @@ export default function Dashboard() {
         ></div>
       )}
 
-      <button className="absolute right-5 cursor-pointer active:scale-[95%] hover:scale-[105%] bg-themegreen text-white p-3 rounded-3xl text-lg bottom-5"
+      <button className="fixed right-5 cursor-pointer active:scale-[95%] hover:scale-[105%] bg-themegreen text-white p-3 rounded-3xl text-lg bottom-5"
       onClick={themeToggler}
       >
         <FaMoon/>
