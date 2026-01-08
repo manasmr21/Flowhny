@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { FaHome, FaArrowLeft, FaExclamationTriangle } from 'react-icons/fa';
 
-function Error({ statusCode = 404, message = "Page not found" }) {
+function Error({ statusCode = 404, message = "Something went wrong" }) {
   const navigate = useNavigate();
 
   return (
